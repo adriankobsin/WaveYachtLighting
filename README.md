@@ -129,8 +129,9 @@ npx serve demo/dist         # or any static web server
 ```
 
 The demo runs the same app code as the server. `demo/demo-shim.js` answers
-the `/api` calls in the browser and simulates a QSX processor, with an
-on-screen **Press Access button** for pairing. The hosted copy on claude.ai
+the `/api` calls in the browser and simulates a QSX processor. Its panel
+(**Press Access button**, **Processor online**) is only shown to admins on
+the Lutron setup page. The hosted copy on claude.ai
 is built from this too. Outside claude.ai the demo has no shared store, so
 saved layouts last only until the page is reloaded.
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1 – 2026-11-15
+
+- Browser demo: the simulated-processor panel (Access button, "Processor online") is hidden from normal users and only shown to admins on the Lutron setup page. The processor status in the top bar is still shown to everyone.
+
 ## 1.1.0 – 2026-11-15
 
 - New **At anchor** scene: anchor floods (GR2) on, walkways and side decks at 30 %, ship name at 70 %, deck downlights at 20 %, everything else off.

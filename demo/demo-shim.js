@@ -255,8 +255,15 @@
   // ---------- floating "simulated processor" panel ----------
   var panel = null, flashMsg = '', flashT = null;
   function flash(m) { flashMsg = m; renderPanel(); clearTimeout(flashT); flashT = setTimeout(function () { flashMsg = ''; renderPanel(); }, 3000); }
+  // Only admins see the simulated processor, and only on the Lutron setup page.
+  function updateVisibility() {
+    if (!panel) return;
+    var show = admin && !!document.querySelector('[data-act="lxSave"]');
+    panel.style.display = show ? 'flex' : 'none';
+  }
   function renderPanel() {
     if (!panel) return;
+    updateVisibility();
     var waiting = lx.pairing.stage === 'waiting-button';
     panel.innerHTML =
       '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><b style="font:600 13px Inter,sans-serif;letter-spacing:.06em">DEMO · SIMULATED QSX</b>' +
@@ -271,7 +278,7 @@
   function mountPanel() {
     panel = document.createElement('aside');
     panel.setAttribute('aria-label', 'Simulated processor');
-    panel.style.cssText = 'position:fixed;right:16px;bottom:16px;width:250px;z-index:30;background:#1A1408;border:1px solid #6B4E1E;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;color:#F6D8A8;font-family:Inter,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.45)';
+    panel.style.cssText = 'position:fixed;right:16px;bottom:16px;width:250px;z-index:30;background:#1A1408;border:1px solid #6B4E1E;border-radius:12px;padding:12px;display:none;flex-direction:column;gap:10px;color:#F6D8A8;font-family:Inter,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.45)';
     document.body.appendChild(panel);
     panel.addEventListener('click', function (e) {
       var t = e.target.closest('[data-demo]'); if (!t) return;
@@ -283,6 +290,8 @@
       if (e.target.getAttribute('data-demo') === 'online') { proc.online = e.target.checked; if (proc.online && lx.paired) connect(); renderPanel(); }
     });
     renderPanel();
+    var app = document.getElementById('app');
+    if (app && window.MutationObserver) new MutationObserver(updateVisibility).observe(app, { childList: true });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountPanel); else mountPanel();
   connect();
