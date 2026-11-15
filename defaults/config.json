@@ -1,0 +1,1538 @@
+{
+ "decks": [
+  {
+   "id": "sundeck",
+   "name": "Sundeck",
+   "fr": "Pont soleil",
+   "img": "img/sundeck.png",
+   "r": 2.549,
+   "note": "",
+   "circuits": [
+    {
+     "id": "GR7",
+     "label": "GR7",
+     "name": "Aft perimeter & funnel",
+     "ref": "SP006A · 17DL16",
+     "tag": "walk",
+     "def": 40,
+     "on": true,
+     "z": [
+      [
+       [
+        7,
+        24
+       ],
+       [
+        21,
+        24
+       ],
+       [
+        22,
+        50
+       ],
+       [
+        21,
+        74
+       ],
+       [
+        7,
+        74
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR30",
+     "label": "GR30",
+     "name": "Lounge & bar spots",
+     "ref": "SP006 · 7DL16 / 3ELD10",
+     "tag": "lounge",
+     "def": 70,
+     "on": true,
+     "z": [
+      [
+       [
+        21,
+        50
+       ],
+       [
+        27,
+        30
+       ],
+       [
+        46,
+        25
+       ],
+       [
+        63,
+        25
+       ],
+       [
+        63,
+        77
+       ],
+       [
+        46,
+        77
+       ],
+       [
+        27,
+        71
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "DL31",
+     "label": "31/32DL16",
+     "name": "Deck downlights",
+     "ref": "SP007 · pantry 661",
+     "tag": "walk",
+     "def": 60,
+     "on": true,
+     "z": [
+      [
+       [
+        44,
+        6
+       ],
+       [
+        67,
+        6
+       ],
+       [
+        67,
+        17
+       ],
+       [
+        44,
+        17
+       ]
+      ],
+      [
+       [
+        44,
+        84
+       ],
+       [
+        67,
+        84
+       ],
+       [
+        67,
+        94
+       ],
+       [
+        44,
+        94
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "OL1",
+     "label": "OL1",
+     "name": "Owner lights",
+     "ref": "28A / 28B-DL16 · DLC61",
+     "tag": "lounge",
+     "def": 40,
+     "on": false,
+     "z": [
+      [
+       [
+        39,
+        9
+       ],
+       [
+        42,
+        13
+       ],
+       [
+        39,
+        17
+       ],
+       [
+        36,
+        13
+       ]
+      ],
+      [
+       [
+        60,
+        9
+       ],
+       [
+        63,
+        13
+       ],
+       [
+        60,
+        17
+       ],
+       [
+        57,
+        13
+       ]
+      ],
+      [
+       [
+        39,
+        83
+       ],
+       [
+        42,
+        87
+       ],
+       [
+        39,
+        91
+       ],
+       [
+        36,
+        87
+       ]
+      ],
+      [
+       [
+        60,
+        83
+       ],
+       [
+        63,
+        87
+       ],
+       [
+        60,
+        91
+       ],
+       [
+        57,
+        87
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "LED33",
+     "label": "33DL16",
+     "name": "Jacuzzi lounge LED strip",
+     "ref": "DLC61 · pantry 661",
+     "tag": "feature",
+     "def": 50,
+     "on": true,
+     "z": [
+      [
+       [
+        69,
+        30
+       ],
+       [
+        84,
+        28
+       ],
+       [
+        86,
+        50
+       ],
+       [
+        84,
+        79
+       ],
+       [
+        69,
+        77
+       ],
+       [
+        67,
+        50
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "P01",
+     "label": "P01",
+     "name": "Forward floods P/S",
+     "ref": "1DL16 / 2DL16 · 34–35DL16",
+     "tag": "flood",
+     "def": 100,
+     "on": false,
+     "z": [
+      [
+       [
+        86,
+        5
+       ],
+       [
+        100,
+        0
+       ],
+       [
+        100,
+        26
+       ]
+      ],
+      [
+       [
+        86,
+        95
+       ],
+       [
+        100,
+        74
+       ],
+       [
+        100,
+        100
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "bridge",
+   "name": "Bridge deck",
+   "fr": "Pont principal +2",
+   "img": "img/bridge.png",
+   "r": 3.919,
+   "note": "",
+   "circuits": [
+    {
+     "id": "GR9",
+     "label": "GR9",
+     "name": "Aft floodlights P/S",
+     "ref": "PF1 · 6A / 6B-DL16",
+     "tag": "flood",
+     "def": 100,
+     "on": false,
+     "z": [
+      [
+       [
+        36,
+        22
+       ],
+       [
+        10,
+        6
+       ],
+       [
+        22,
+        50
+       ]
+      ],
+      [
+       [
+        36,
+        78
+       ],
+       [
+        22,
+        50
+       ],
+       [
+        10,
+        94
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR18",
+     "label": "GR18",
+     "name": "Aft deck / observatory",
+     "ref": "SP006 · 4ELD10 / 8DL16",
+     "tag": "lounge",
+     "def": 70,
+     "on": true,
+     "z": [
+      [
+       [
+        33,
+        22
+       ],
+       [
+        40,
+        22
+       ],
+       [
+        40,
+        78
+       ],
+       [
+        33,
+        78
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR19",
+     "label": "GR19",
+     "name": "Lifeboat lighting",
+     "ref": "11-ELD10",
+     "tag": "flood",
+     "def": 100,
+     "on": false,
+     "z": [
+      [
+       [
+        47,
+        2
+       ],
+       [
+        58,
+        2
+       ],
+       [
+        58,
+        20
+       ],
+       [
+        47,
+        20
+       ]
+      ],
+      [
+       [
+        47,
+        80
+       ],
+       [
+        58,
+        80
+       ],
+       [
+        58,
+        98
+       ],
+       [
+        47,
+        98
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR16",
+     "label": "GR16",
+     "name": "Port side deck",
+     "ref": "SP006 · 9DL16 / 5ELD10",
+     "tag": "walk",
+     "def": 60,
+     "on": true,
+     "z": [
+      [
+       [
+        39,
+        16
+       ],
+       [
+        58,
+        16
+       ],
+       [
+        61,
+        26
+       ],
+       [
+        39,
+        28
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR17",
+     "label": "GR17",
+     "name": "Starboard side deck",
+     "ref": "SP006 · 10DL16 / 6ELD10",
+     "tag": "walk",
+     "def": 60,
+     "on": true,
+     "z": [
+      [
+       [
+        39,
+        72
+       ],
+       [
+        61,
+        74
+       ],
+       [
+        58,
+        84
+       ],
+       [
+        39,
+        84
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR8",
+     "label": "GR8",
+     "name": "Ship name lighting",
+     "ref": "15A / 15B-DL16",
+     "tag": "sign",
+     "def": 80,
+     "on": true,
+     "z": [
+      [
+       [
+        62,
+        3
+       ],
+       [
+        73,
+        3
+       ],
+       [
+        73,
+        8
+       ],
+       [
+        62,
+        8
+       ]
+      ],
+      [
+       [
+        62,
+        92
+       ],
+       [
+        73,
+        92
+       ],
+       [
+        73,
+        97
+       ],
+       [
+        62,
+        97
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR4",
+     "label": "GR4",
+     "name": "Port wing flood",
+     "ref": "PF2 · 2ELD10",
+     "tag": "flood",
+     "def": 100,
+     "on": false,
+     "z": [
+      [
+       [
+        80,
+        9
+       ],
+       [
+        72,
+        0
+       ],
+       [
+        88,
+        0
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR3",
+     "label": "GR3",
+     "name": "Starboard wing flood",
+     "ref": "PF2 · 1ELD10",
+     "tag": "flood",
+     "def": 100,
+     "on": false,
+     "z": [
+      [
+       [
+        80,
+        91
+       ],
+       [
+        72,
+        100
+       ],
+       [
+        88,
+        100
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR15",
+     "label": "GR15",
+     "name": "Forward bridge deck",
+     "ref": "SP006 · 11DL16 / 7ELD10",
+     "tag": "walk",
+     "def": 50,
+     "on": true,
+     "z": [
+      [
+       [
+        60,
+        9
+       ],
+       [
+        86,
+        9
+       ],
+       [
+        91,
+        20
+       ],
+       [
+        91,
+        80
+       ],
+       [
+        86,
+        91
+       ],
+       [
+        60,
+        91
+       ],
+       [
+        60,
+        83
+       ],
+       [
+        84,
+        83
+       ],
+       [
+        86,
+        50
+       ],
+       [
+        84,
+        17
+       ],
+       [
+        60,
+        17
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR6",
+     "label": "GR6",
+     "name": "Port forward flood",
+     "ref": "PF4 · 5DL16",
+     "tag": "flood",
+     "def": 100,
+     "on": false,
+     "z": [
+      [
+       [
+        88,
+        8
+       ],
+       [
+        100,
+        0
+       ],
+       [
+        100,
+        32
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR5",
+     "label": "GR5",
+     "name": "Starboard forward flood",
+     "ref": "PF4 · 4DL16",
+     "tag": "flood",
+     "def": 100,
+     "on": false,
+     "z": [
+      [
+       [
+        88,
+        92
+       ],
+       [
+        100,
+        68
+       ],
+       [
+        100,
+        100
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "owners",
+   "name": "Owner's deck",
+   "fr": "Pont principal +1",
+   "img": "img/owners.png",
+   "r": 5.623,
+   "note": "",
+   "circuits": [
+    {
+     "id": "GR10",
+     "label": "GR10",
+     "name": "Aft floodlights P/S",
+     "ref": "PF3 · 14DUL1",
+     "tag": "flood",
+     "def": 100,
+     "on": false,
+     "z": [
+      [
+       [
+        5,
+        36
+       ],
+       [
+        0,
+        20
+       ],
+       [
+        0,
+        46
+       ]
+      ],
+      [
+       [
+        5,
+        64
+       ],
+       [
+        0,
+        54
+       ],
+       [
+        0,
+        80
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR22",
+     "label": "GR22",
+     "name": "Aft lounge",
+     "ref": "SP006 · 12DL16 / 8ELD10 · DLC401",
+     "tag": "lounge",
+     "def": 70,
+     "on": true,
+     "z": [
+      [
+       [
+        31,
+        14
+       ],
+       [
+        40,
+        14
+       ],
+       [
+        40,
+        88
+       ],
+       [
+        31,
+        88
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR21",
+     "label": "GR21",
+     "name": "Side decks P/S",
+     "ref": "SP006 · 13A / 13B-DL16 · 9ELD10",
+     "tag": "walk",
+     "def": 60,
+     "on": true,
+     "z": [
+      [
+       [
+        40,
+        4
+       ],
+       [
+        66,
+        4
+       ],
+       [
+        66,
+        13
+       ],
+       [
+        40,
+        13
+       ]
+      ],
+      [
+       [
+        40,
+        87
+       ],
+       [
+        66,
+        87
+       ],
+       [
+        66,
+        96
+       ],
+       [
+        40,
+        96
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR20",
+     "label": "GR20",
+     "name": "Owner's foredeck",
+     "ref": "14DL16 / 10ELD10 · local 420",
+     "tag": "lounge",
+     "def": 50,
+     "on": true,
+     "z": [
+      [
+       [
+        65,
+        4
+       ],
+       [
+        79,
+        6
+       ],
+       [
+        81,
+        50
+       ],
+       [
+        79,
+        94
+       ],
+       [
+        65,
+        96
+       ],
+       [
+        65,
+        84
+       ],
+       [
+        76,
+        84
+       ],
+       [
+        77,
+        50
+       ],
+       [
+        76,
+        16
+       ],
+       [
+        65,
+        16
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR2",
+     "label": "GR2",
+     "name": "Anchor floods P/S",
+     "ref": "PF6 · 13ELD10",
+     "tag": "flood",
+     "def": 100,
+     "on": false,
+     "z": [
+      [
+       [
+        86,
+        46
+       ],
+       [
+        93,
+        26
+       ],
+       [
+        97,
+        40
+       ]
+      ],
+      [
+       [
+        86,
+        54
+       ],
+       [
+        97,
+        60
+       ],
+       [
+        93,
+        74
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR1",
+     "label": "GR1",
+     "name": "Bow floodlight",
+     "ref": "PF6 · 12ELD10",
+     "tag": "flood",
+     "def": 100,
+     "on": false,
+     "z": [
+      [
+       [
+        98,
+        50
+       ],
+       [
+        83,
+        30
+       ],
+       [
+        83,
+        70
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "main",
+   "name": "Main deck",
+   "fr": "Pont principal",
+   "img": "img/main.png",
+   "r": 5.196,
+   "note": "",
+   "circuits": [
+    {
+     "id": "GR28",
+     "label": "GR28",
+     "name": "Swim platform & garage",
+     "ref": "SP006 · 21DL12 / 46ELD7",
+     "tag": "walk",
+     "def": 60,
+     "on": true,
+     "z": [
+      [
+       [
+        6,
+        24
+       ],
+       [
+        15,
+        24
+       ],
+       [
+        16,
+        50
+       ],
+       [
+        15,
+        78
+       ],
+       [
+        6,
+        78
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR27",
+     "label": "GR27",
+     "name": "Aft quarters P/S",
+     "ref": "SP006 · 20DL12 / 45ELD7",
+     "tag": "walk",
+     "def": 50,
+     "on": true,
+     "z": [
+      [
+       [
+        6,
+        6
+       ],
+       [
+        14,
+        6
+       ],
+       [
+        15,
+        22
+       ],
+       [
+        6,
+        22
+       ]
+      ],
+      [
+       [
+        6,
+        80
+       ],
+       [
+        15,
+        80
+       ],
+       [
+        14,
+        95
+       ],
+       [
+        6,
+        95
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR26",
+     "label": "GR26",
+     "name": "Port tender bay",
+     "ref": "19DL12 / 44ELD7",
+     "tag": "deck",
+     "def": 80,
+     "on": false,
+     "z": [
+      [
+       [
+        15,
+        6
+       ],
+       [
+        30,
+        6
+       ],
+       [
+        30,
+        26
+       ],
+       [
+        15,
+        26
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR25",
+     "label": "GR25",
+     "name": "Starboard tender bay",
+     "ref": "18DL12 / 43ELD7",
+     "tag": "deck",
+     "def": 80,
+     "on": false,
+     "z": [
+      [
+       [
+        15,
+        68
+       ],
+       [
+        30,
+        68
+       ],
+       [
+        30,
+        92
+       ],
+       [
+        15,
+        92
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR24",
+     "label": "GR24",
+     "name": "Port side deck & gangway",
+     "ref": "SP006 · 21DL11 / 7A-ELD6",
+     "tag": "walk",
+     "def": 60,
+     "on": true,
+     "z": [
+      [
+       [
+        30,
+        3
+       ],
+       [
+        54,
+        3
+       ],
+       [
+        54,
+        10
+       ],
+       [
+        30,
+        10
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR23",
+     "label": "GR23",
+     "name": "Stbd side deck & gangway",
+     "ref": "SP006 · 22DL11 / 7B-ELD6",
+     "tag": "walk",
+     "def": 60,
+     "on": true,
+     "z": [
+      [
+       [
+        31,
+        90
+       ],
+       [
+        54,
+        90
+       ],
+       [
+        54,
+        97
+       ],
+       [
+        31,
+        97
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR13",
+     "label": "GR13",
+     "name": "Starboard floodlight",
+     "ref": "PF3 · 17DUL1",
+     "tag": "flood",
+     "def": 100,
+     "on": false,
+     "z": [
+      [
+       [
+        36,
+        93
+       ],
+       [
+        29,
+        100
+       ],
+       [
+        43,
+        100
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR14",
+     "label": "GR14",
+     "name": "Aft starboard floodlight",
+     "ref": "PF3 · 18DUL1",
+     "tag": "flood",
+     "def": 100,
+     "on": false,
+     "z": [
+      [
+       [
+        10,
+        93
+       ],
+       [
+        4,
+        100
+       ],
+       [
+        16,
+        100
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR11",
+     "label": "GR11",
+     "name": "Port floodlight",
+     "ref": "PF3 · 15DUL1",
+     "tag": "flood",
+     "def": 0,
+     "on": false,
+     "z": [],
+     "ni": true,
+     "lutron": {
+      "zones": []
+     }
+    },
+    {
+     "id": "GR12",
+     "label": "GR12",
+     "name": "Aft port floodlight",
+     "ref": "PF3 · 16DUL1",
+     "tag": "flood",
+     "def": 0,
+     "on": false,
+     "z": [],
+     "ni": true,
+     "lutron": {
+      "zones": []
+     }
+    }
+   ]
+  },
+  {
+   "id": "mast",
+   "name": "Mast deck",
+   "fr": "Pont mât",
+   "img": "img/mast.png",
+   "r": 5.801,
+   "note": "Drawing 2139145-451 only shows the funnel lighting (GR7) at this level. GR7 is shared with the Sundeck aft perimeter spots, so it changes on both screens. Add the mast and navigation circuits here once they are scheduled.",
+   "circuits": [
+    {
+     "id": "GR7",
+     "label": "GR7",
+     "name": "Funnel lighting P/S",
+     "ref": "PF4 2×10W · 17DL16",
+     "tag": "walk",
+     "def": 40,
+     "on": true,
+     "z": [
+      [
+       [
+        41,
+        35
+       ],
+       [
+        50,
+        30
+       ],
+       [
+        52,
+        50
+       ],
+       [
+        50,
+        70
+       ],
+       [
+        41,
+        65
+       ]
+      ]
+     ],
+     "lutron": {
+      "zones": []
+     }
+    }
+   ]
+  }
+ ],
+ "scenes": [
+  {
+   "id": "off",
+   "name": "All off",
+   "levels": {}
+  },
+  {
+   "id": "evening",
+   "name": "Evening",
+   "levels": {
+    "GR7": 60,
+    "GR30": 70,
+    "DL31": 60,
+    "OL1": 70,
+    "LED33": 50,
+    "P01": 0,
+    "GR9": 0,
+    "GR18": 70,
+    "GR19": 0,
+    "GR16": 60,
+    "GR17": 60,
+    "GR8": 80,
+    "GR4": 0,
+    "GR3": 0,
+    "GR15": 60,
+    "GR6": 0,
+    "GR5": 0,
+    "GR10": 0,
+    "GR22": 70,
+    "GR21": 60,
+    "GR20": 70,
+    "GR2": 0,
+    "GR1": 0,
+    "GR28": 60,
+    "GR27": 60,
+    "GR26": 0,
+    "GR25": 0,
+    "GR24": 60,
+    "GR23": 60,
+    "GR13": 0,
+    "GR14": 0
+   }
+  },
+  {
+   "id": "night",
+   "name": "Night cruise",
+   "levels": {
+    "GR7": 25,
+    "GR30": 0,
+    "DL31": 25,
+    "OL1": 0,
+    "LED33": 0,
+    "P01": 0,
+    "GR9": 0,
+    "GR18": 0,
+    "GR19": 0,
+    "GR16": 25,
+    "GR17": 25,
+    "GR8": 40,
+    "GR4": 0,
+    "GR3": 0,
+    "GR15": 25,
+    "GR6": 0,
+    "GR5": 0,
+    "GR10": 0,
+    "GR22": 0,
+    "GR21": 25,
+    "GR20": 0,
+    "GR2": 0,
+    "GR1": 0,
+    "GR28": 25,
+    "GR27": 25,
+    "GR26": 0,
+    "GR25": 0,
+    "GR24": 25,
+    "GR23": 25,
+    "GR13": 0,
+    "GR14": 0
+   }
+  },
+  {
+   "id": "arrival",
+   "name": "Guest arrival",
+   "levels": {
+    "GR7": 100,
+    "GR30": 60,
+    "DL31": 100,
+    "OL1": 60,
+    "LED33": 40,
+    "P01": 0,
+    "GR9": 0,
+    "GR18": 60,
+    "GR19": 0,
+    "GR16": 100,
+    "GR17": 100,
+    "GR8": 100,
+    "GR4": 0,
+    "GR3": 0,
+    "GR15": 100,
+    "GR6": 0,
+    "GR5": 0,
+    "GR10": 0,
+    "GR22": 60,
+    "GR21": 100,
+    "GR20": 60,
+    "GR2": 0,
+    "GR1": 0,
+    "GR28": 100,
+    "GR27": 100,
+    "GR26": 50,
+    "GR25": 50,
+    "GR24": 100,
+    "GR23": 100,
+    "GR13": 0,
+    "GR14": 0
+   }
+  },
+  {
+   "id": "work",
+   "name": "Deck work",
+   "levels": {
+    "GR7": 80,
+    "GR30": 0,
+    "DL31": 80,
+    "OL1": 0,
+    "LED33": 0,
+    "P01": 100,
+    "GR9": 100,
+    "GR18": 0,
+    "GR19": 100,
+    "GR16": 80,
+    "GR17": 80,
+    "GR8": 0,
+    "GR4": 100,
+    "GR3": 100,
+    "GR15": 80,
+    "GR6": 100,
+    "GR5": 100,
+    "GR10": 100,
+    "GR22": 0,
+    "GR21": 80,
+    "GR20": 0,
+    "GR2": 100,
+    "GR1": 100,
+    "GR28": 80,
+    "GR27": 80,
+    "GR26": 100,
+    "GR25": 100,
+    "GR24": 80,
+    "GR23": 80,
+    "GR13": 100,
+    "GR14": 100
+   }
+  },
+  {
+   "id": "full",
+   "name": "Full",
+   "levels": {
+    "GR7": 100,
+    "GR30": 100,
+    "DL31": 100,
+    "OL1": 100,
+    "LED33": 100,
+    "P01": 100,
+    "GR9": 100,
+    "GR18": 100,
+    "GR19": 100,
+    "GR16": 100,
+    "GR17": 100,
+    "GR8": 100,
+    "GR4": 100,
+    "GR3": 100,
+    "GR15": 100,
+    "GR6": 100,
+    "GR5": 100,
+    "GR10": 100,
+    "GR22": 100,
+    "GR21": 100,
+    "GR20": 100,
+    "GR2": 100,
+    "GR1": 100,
+    "GR28": 100,
+    "GR27": 100,
+    "GR26": 100,
+    "GR25": 100,
+    "GR24": 100,
+    "GR23": 100,
+    "GR13": 100,
+    "GR14": 100
+   }
+  }
+ ]
+}

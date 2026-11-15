@@ -1,0 +1,17 @@
+[Unit]
+Description=Wave AVI exterior lighting control (Lutron HomeWorks QSX)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=wave
+WorkingDirectory=/opt/wave-lighting
+Environment=PORT=8080
+ExecStart=/usr/bin/node /opt/wave-lighting/server.js
+Restart=always
+RestartSec=3
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

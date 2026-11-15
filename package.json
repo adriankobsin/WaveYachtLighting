@@ -1,0 +1,21 @@
+{
+  "name": "wave-exterior-lighting",
+  "version": "1.0.0",
+  "description": "Wave AVI exterior lighting control for Lutron HomeWorks QSX (LEAP)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "set-password": "node scripts/set-password.js",
+    "fetch-certs": "node scripts/fetch-lap-certs.js",
+    "mock-processor": "node test/mock-processor.js",
+    "build-demo": "node scripts/build-demo.js"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "node-forge": "^1.4.3"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  }
+}

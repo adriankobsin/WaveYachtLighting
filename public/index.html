@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Exterior Lighting Control – Wave AVI</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2210%22 fill=%22%23F2B45A%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0B1622;--panel:#112131;--panel2:#0F1E2D;--rail:#0E1B28;--line:#22344A;--line2:#3A5069;--text:#E7EEF5;--muted:#9FB2C6;--amber:#F2B45A;--glow:#FFB347}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
+button,input,select{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.app{display:flex;flex-direction:column;min-height:100vh}
+header{min-height:64px;display:flex;align-items:center;justify-content:space-between;padding:10px 24px;background:var(--rail);border-bottom:1px solid var(--line);gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.brand b{font:600 18px 'Space Grotesk',sans-serif;letter-spacing:.12em}
+.muted{color:var(--muted)}
+.hright{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.btn{height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--line2);background:#16283A;display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:#5B7390}
+.btn.primary{background:var(--amber);color:#0B1622;border-color:var(--amber)}
+.btn.danger{border-color:#8A4B4B;color:#F3C1C1}
+.btn[disabled]{opacity:.45;cursor:default}
+.btn.sm{height:38px;padding:0 12px;font-size:13px}
+.layout{flex:1;display:flex;min-height:0;flex-wrap:wrap}
+nav{width:200px;flex:none;background:var(--rail);border-right:1px solid var(--line);padding:16px 10px;display:flex;flex-direction:column;gap:4px}
+.ritem{min-height:60px;padding:0 14px;border:none;border-left:3px solid transparent;border-radius:8px;background:transparent;text-align:left;cursor:pointer;display:flex;flex-direction:column;justify-content:center;gap:2px;color:#C9D6E3}
+.ritem.on{background:#1C3047;border-left-color:var(--amber);color:#fff}
+.ritem span{font-weight:600;font-size:15px}.ritem small{font-size:12px;color:var(--muted)}
+main{flex:999 1 560px;min-width:0;padding:22px 28px;display:flex;flex-direction:column;gap:16px}
+h1{margin:0;font:600 26px 'Space Grotesk',sans-serif}
+h2{margin:0;font:600 18px 'Space Grotesk',sans-serif}
+.row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.between{justify-content:space-between}
+.chip{min-height:44px;padding:0 18px;border-radius:22px;border:1px solid var(--line2);background:#16283A;font-weight:600;font-size:14px;cursor:pointer}
+.chip.on{background:var(--amber);color:#0B1622;border-color:var(--amber)}
+.lbl{font-weight:600;font-size:12px;color:var(--muted);letter-spacing:.08em}
+.plan{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;justify-content:center}
+.pbox{position:relative;max-width:100%;touch-action:none}
+.pbox img{position:absolute;inset:0;width:100%;height:100%;opacity:.6;pointer-events:none;user-select:none;-webkit-user-drag:none}
+.glow{position:absolute;inset:0;mix-blend-mode:screen;pointer-events:none}
+.glow>div{position:absolute;inset:0;background:var(--glow)}
+.core{position:absolute;inset:0;border:0;margin:0;padding:0;cursor:pointer}
+svg.edit{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+svg.edit polygon{cursor:move}
+.handle{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:4px;background:#fff;border:2px solid var(--amber);cursor:grab;touch-action:none;padding:0}
+.grid4{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.card.sel{border-color:var(--amber)}
+.badge{min-width:42px;height:34px;flex:none;border-radius:8px;border:2px solid #7F93A8;background:rgba(11,22,34,.9);font-size:10px;font-weight:600;cursor:pointer;padding:0 4px}
+.name{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ref{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sw{width:52px;height:32px;flex:none;border-radius:16px;border:none;background:#2A3D53;position:relative;cursor:pointer;padding:0}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:13px;background:#fff;transition:left .15s}
+.sw[aria-checked="true"]{background:var(--amber)}.sw[aria-checked="true"]::after{left:23px}
+input[type=range]{flex:1;min-width:0;height:28px;margin:0;accent-color:var(--amber)}
+.pct{width:46px;text-align:right;font:600 14px 'Space Grotesk',sans-serif;color:var(--muted)}.pct.on{color:var(--amber)}
+.decks{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.dcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;text-align:left;cursor:pointer}
+.dcard:hover{border-color:var(--line2)}
+.thumb{height:120px;background:var(--bg);border-radius:10px;display:flex;align-items:center;justify-content:center;padding:10px;width:100%}
+.bar{height:4px;background:var(--line);border-radius:2px;width:100%}.bar>div{height:4px;background:var(--amber);border-radius:2px}
+.note{background:var(--panel);border:1px dashed var(--line2);border-radius:12px;padding:12px 16px;font-size:13px;color:#C9D6E3}
+.adminbar{background:#2A1F0E;border:1px solid #6B4E1E;color:#F6D8A8;border-radius:12px;padding:10px 14px;font-size:13px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.tab{height:40px;padding:0 16px;border-radius:8px;border:1px solid var(--line2);background:transparent;cursor:pointer;font-weight:600}
+.tab.on{background:#1C3047;border-color:var(--amber)}
+.split{display:grid;grid-template-columns:minmax(220px,280px) minmax(0,1fr);gap:16px}
+@media (max-width:900px){.split{grid-template-columns:1fr}}
+.form{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted)}
+label.f input,label.f select,.inp{height:40px;border-radius:8px;border:1px solid var(--line2);background:var(--bg);padding:0 10px;font-size:14px;color:var(--text)}
+label.chk{display:flex;align-items:center;gap:8px;font-size:14px;height:40px;align-self:end}
+label.chk input{width:20px;height:20px;accent-color:var(--amber)}
+.list{display:flex;flex-direction:column;gap:4px;max-height:330px;overflow:auto}
+.li{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;border:1px solid transparent;background:transparent;text-align:left;cursor:pointer;width:100%}
+.li.on{border-color:var(--amber);background:#1C3047}
+.li .sq{width:12px;height:12px;border-radius:3px;flex:none}
+.srow{display:grid;grid-template-columns:minmax(0,1fr) 52px minmax(120px,220px) 46px;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.modal{position:fixed;inset:0;background:rgba(5,10,16,.72);display:flex;align-items:center;justify-content:center;z-index:10;padding:16px}
+.dialog{width:min(380px,100%);background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:14px}
+.err{color:#F3A6A6;font-size:13px;min-height:18px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#1C3047;border:1px solid var(--amber);padding:10px 16px;border-radius:10px;font-size:14px;z-index:20}
+.empty{padding:40px;text-align:center;color:var(--muted)}
+@media (max-width:700px){nav{width:100%;flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line)}.ritem{min-width:140px}main{padding:16px}}
+.pill{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:16px;font-size:13px;font-weight:600;border:1px solid var(--line2);background:#16283A}
+.pill i{width:9px;height:9px;border-radius:5px;display:inline-block;background:#7F93A8}
+.pill.ok i{background:#5BD18B}.pill.warn i{background:#F2B45A}.pill.bad i{background:#F07C7C}
+.kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px 18px;font-size:14px}
+.kv div span{display:block;font-size:12px;color:var(--muted)}
+.tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
+.tbl th{text-align:left;font-size:12px;color:var(--muted);font-weight:600;padding:10px 12px;background:var(--panel2);border-bottom:1px solid var(--line)}
+.tbl td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+.tbl tr.deckrow td{background:#0F1E2D;font-weight:600;color:#C9D6E3;font-size:12px;letter-spacing:.06em}
+.tbl input,.tbl select{height:36px;border-radius:8px;border:1px solid var(--line2);background:var(--bg);padding:0 8px;font-size:13px;color:var(--text);width:100%}
+.result{border-radius:10px;padding:12px 14px;font-size:13px;border:1px solid var(--line2);background:var(--panel2)}
+.result.ok{border-color:#2F7A52;background:#0F2A1D}.result.bad{border-color:#8A4B4B;background:#2A1414}
+.ritem.admin small{color:#F6D8A8}
+</style>
+</head>
+<body>
+<div class="app" id="app"><div class="empty">Loading lighting layout…</div></div>
+<div id="modal"></div>
+<div id="toast"></div>
+<script>
+(function () {
+  'use strict';
+  var TYPES = [['walk', 'Walkway / side deck'], ['lounge', 'Lounge / seating'], ['feature', 'Feature / LED'], ['sign', 'Signage'], ['deck', 'Working deck'], ['flood', 'Floodlight (beam)']];
+  var S = {
+    config: null, saved: null, levels: {}, sceneBy: {}, admin: false, adminConfigured: true,
+    lutron: { state: 'idle', connected: false }, lx: null, lxTest: null, lxBusy: '',
+    view: 'home', sel: '', tab: 'lights', selZone: null, sceneSel: '', dirty: false, saving: false, loadError: ''
+  };
+
+  function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function uid(p) { return p + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); }
+  function toast(msg) { var t = document.getElementById('toast'); t.innerHTML = '<div class="toast" role="status">' + esc(msg) + '</div>'; clearTimeout(toast._t); toast._t = setTimeout(function () { t.innerHTML = ''; }, 3200); }
+  function api(method, url, body) {
+    return fetch(url, { method: method, credentials: 'same-origin', headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status)); return j; }); });
+  }
+  function warn(res) { if (res && res.warnings && res.warnings.length) toast('Lutron: ' + res.warnings[0] + (res.warnings.length > 1 ? ' (+' + (res.warnings.length - 1) + ' more)' : '')); }
+  function fail(e) { toast(e.message || String(e)); }
+
+  // ---------- model ----------
+  function decks() { return (S.config && S.config.decks) || []; }
+  function scenes() { return (S.config && S.config.scenes) || []; }
+  function deckById(id) { return decks().filter(function (d) { return d.id === id; })[0] || null; }
+  function allCircuits() { var seen = {}, out = []; decks().forEach(function (d) { (d.circuits || []).forEach(function (c) { if (!seen[c.id]) { seen[c.id] = 1; out.push(c); } }); }); return out; }
+  function circuitIn(deck, cid) { return (deck.circuits || []).filter(function (c) { return c.id === cid; })[0] || null; }
+  function lv(c) { return S.levels[c.id] || { on: false, level: c.def || 0 }; }
+  function isOn(c) { return !c.ni && lv(c).on; }
+  function zonesStr(c) { return ((c.lutron && c.lutron.zones) || []).join(', '); }
+  function parseZones(v) { return String(v || '').split(/[^0-9]+/).filter(Boolean).slice(0, 32); }
+  function markDirty() { S.dirty = true; }
+
+  // ---------- plan rendering ----------
+  function clipOf(p) { return 'polygon(' + p.map(function (q) { return q[0] + '% ' + q[1] + '%'; }).join(', ') + ')'; }
+  function glowLayers(deck, scale) {
+    var h = '';
+    (deck.circuits || []).forEach(function (c) {
+      if (!isOn(c)) return;
+      var l = lv(c).level / 100, blur = Math.max(3, Math.round((c.tag === 'flood' ? 14 : 9) * scale));
+      (c.z || []).forEach(function (p) { if (p && p.length >= 3) h += '<div class="glow" style="filter:blur(' + blur + 'px);opacity:' + (0.35 + 0.65 * l).toFixed(2) + '"><div style="clip-path:' + clipOf(p) + '"></div></div>'; });
+    });
+    return h;
+  }
+  function coreBg(c) {
+    var sel = S.sel === c.id;
+    if (isOn(c)) return 'rgba(255,196,107,' + (0.2 + 0.35 * lv(c).level / 100 + (sel ? 0.15 : 0)).toFixed(2) + ')';
+    return sel ? 'rgba(255,255,255,0.22)' : 'rgba(127,147,168,0.12)';
+  }
+  function planInner(deck) {
+    var h = glowLayers(deck, 1);
+    if (!S.admin) {
+      (deck.circuits || []).forEach(function (c) {
+        (c.z || []).forEach(function (p) { if (p && p.length >= 3) h += '<button class="core" data-act="pick" data-cid="' + esc(c.id) + '" aria-label="' + esc(c.label + ' ' + c.name) + '" style="clip-path:' + clipOf(p) + ';background:' + coreBg(c) + '"></button>'; });
+      });
+      return h + '<img src="' + esc(deck.img) + '" alt="' + esc(deck.name) + ' general arrangement">';
+    }
+    h += '<img src="' + esc(deck.img) + '" alt="' + esc(deck.name) + ' general arrangement">';
+    var svg = '<svg class="edit" viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="Lighting areas – drag to move">';
+    (deck.circuits || []).forEach(function (c) {
+      var selC = S.sel === c.id;
+      (c.z || []).forEach(function (p, zi) {
+        if (!p || p.length < 3) return;
+        var selZ = S.selZone && S.selZone.cid === c.id && S.selZone.zi === zi;
+        svg += '<polygon data-drag="zone" data-cid="' + esc(c.id) + '" data-zi="' + zi + '" points="' + p.map(function (q) { return q[0] + ',' + q[1]; }).join(' ') + '" fill="' + coreBg(c) + '" stroke="' + (selZ ? '#FFFFFF' : selC ? '#F2B45A' : '#7F93A8') + '" stroke-width="' + (selZ ? 2.5 : 1.5) + '" stroke-dasharray="' + (selC ? '' : '4 3') + '" vector-effect="non-scaling-stroke"></polygon>';
+      });
+    });
+    h += svg + '</svg>';
+    if (S.selZone) {
+      var c = circuitIn(deck, S.selZone.cid), p = c && c.z && c.z[S.selZone.zi];
+      if (p) p.forEach(function (q, vi) { h += '<button class="handle" data-drag="vtx" data-vi="' + vi + '" aria-label="Corner ' + (vi + 1) + '" style="left:' + q[0] + '%;top:' + q[1] + '%"></button>'; });
+    }
+    return h;
+  }
+  function boxStyle(deck, maxH) { return 'aspect-ratio:' + deck.r + ';width:min(100%,' + Math.round(maxH * deck.r) + 'px)'; }
+
+  // ---------- chrome ----------
+  function lutronPill(full) {
+    var st = S.lutron.state, cls = 'bad', txt = 'Processor offline';
+    if (st === 'connected') { cls = 'ok'; txt = 'Processor connected'; }
+    else if (st === 'connecting') { cls = 'warn'; txt = 'Connecting…'; }
+    else if (st === 'unpaired') { cls = 'warn'; txt = 'Processor not paired'; }
+    else if (st === 'idle') { cls = 'warn'; txt = 'No processor set up'; }
+    else if (st === 'disabled') { cls = 'warn'; txt = 'Lutron link switched off'; }
+    return '<span class="pill ' + cls + '" title="' + esc(S.lutron.lastError || '') + '"><i></i>' + esc(txt) + '</span>';
+  }
+  function header() {
+    var inst = allCircuits().filter(function (c) { return !c.ni; }), onN = inst.filter(isOn).length;
+    var h = '<header><div class="brand"><b>M/Y ALBATROSS</b><span class="muted">Exterior lighting</span></div><div class="hright">' + lutronPill();
+    h += '<span class="muted" style="font-size:14px">' + onN + ' of ' + inst.length + ' circuits on</span>';
+    h += '<button class="btn" data-act="alloff"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v8"/><path d="M6.3 7.3a8 8 0 1 0 11.4 0"/></svg>All exterior off</button>';
+    if (!S.admin) h += '<button class="btn" data-act="login"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Admin</button>';
+    else {
+      h += '<button class="btn primary" data-act="save"' + (S.dirty && !S.saving ? '' : ' disabled') + '>' + (S.saving ? 'Saving…' : 'Save &amp; deploy') + '</button>';
+      h += '<button class="btn" data-act="discard"' + (S.dirty ? '' : ' disabled') + '>Discard changes</button>';
+      h += '<button class="btn" data-act="logout">Exit admin</button>';
+    }
+    return h + '</div></header>';
+  }
+  function rail() {
+    var h = '<nav aria-label="Decks"><button class="ritem' + (S.view === 'home' ? ' on' : '') + '" data-act="go" data-id="home"><span>Overview</span><small>All decks</small></button>';
+    decks().forEach(function (d) {
+      var inst = (d.circuits || []).filter(function (c) { return !c.ni; });
+      h += '<button class="ritem' + (S.view === d.id ? ' on' : '') + '" data-act="go" data-id="' + esc(d.id) + '"><span>' + esc(d.name) + '</span><small>' + inst.filter(isOn).length + ' of ' + inst.length + ' on</small></button>';
+    });
+    if (S.admin) h += '<button class="ritem admin' + (S.view === 'lutron' ? ' on' : '') + '" data-act="go" data-id="lutron"><span>Lutron setup</span><small>Processor &amp; addresses</small></button>';
+    return h + '</nav>';
+  }
+  function sceneChips(key) {
+    return scenes().map(function (sc) { return '<button class="chip' + (S.sceneBy[key] === sc.id ? ' on' : '') + '" data-act="scene" data-key="' + esc(key) + '" data-sid="' + esc(sc.id) + '">' + esc(sc.name) + '</button>'; }).join('');
+  }
+
+  // ---------- views ----------
+  function homeView() {
+    var h = '<div class="row between"><h1>Select a deck</h1><span class="muted" style="font-size:13px">Ship-wide scenes apply to every deck</span></div><div class="row">' + sceneChips('all') + '</div><div class="decks">';
+    decks().forEach(function (d) {
+      var inst = (d.circuits || []).filter(function (c) { return !c.ni; }), onN = inst.filter(isOn).length;
+      h += '<button class="dcard" data-act="go" data-id="' + esc(d.id) + '"><div class="thumb"><div class="pbox" style="' + boxStyle(d, 100) + '">' + glowLayers(d, 0.35) + '<img src="' + esc(d.img) + '" alt="' + esc(d.name) + ' plan" style="opacity:.7"></div></div>';
+      h += '<div class="row between" style="width:100%"><span style="font:600 20px \'Space Grotesk\',sans-serif">' + esc(d.name) + '</span><span class="muted" style="font-size:12px">' + esc(d.fr) + '</span></div>';
+      h += '<div class="row between muted" style="width:100%;font-size:13px"><span>' + onN + ' of ' + inst.length + ' circuits on</span><span style="color:var(--amber)">Open</span></div>';
+      h += '<div class="bar"><div style="width:' + (inst.length ? Math.round(100 * onN / inst.length) : 0) + '%"></div></div></button>';
+    });
+    return h + '</div>';
+  }
+  function circuitCard(c) {
+    var on = isOn(c), st = lv(c);
+    var h = '<div class="card' + (S.sel === c.id ? ' sel' : '') + '"><div class="row" style="flex-wrap:nowrap">';
+    h += '<button class="badge" data-act="pick" data-cid="' + esc(c.id) + '" aria-label="Show ' + esc(c.name) + ' on plan" style="' + (on ? 'background:rgba(242,180,90,' + (0.45 + 0.55 * st.level / 100).toFixed(2) + ');color:#0B1622;border-color:#F2B45A' : '') + '">' + esc(c.label) + '</button>';
+    h += '<div style="flex:1;min-width:0"><div class="name">' + esc(c.name) + '</div><div class="ref">' + esc(c.ref) + '</div></div>';
+    if (!c.ni) h += '<button class="sw" role="switch" aria-checked="' + on + '" aria-label="' + esc(c.name) + ' power" data-act="toggle" data-cid="' + esc(c.id) + '"></button>';
+    h += '</div>';
+    if (!c.ni) h += '<div class="row" style="flex-wrap:nowrap"><input type="range" min="0" max="100" value="' + st.level + '" data-act="level" data-cid="' + esc(c.id) + '" aria-label="' + esc(c.name) + ' dim level"><span class="pct' + (on ? ' on' : '') + '">' + (on ? st.level + '%' : 'Off') + '</span></div>';
+    else h += '<div class="muted" style="font-size:12px;height:28px;display:flex;align-items:center">Not installed – cable spare only</div>';
+    return h + '</div>';
+  }
+  function deckView(d) {
+    var inst = (d.circuits || []).filter(function (c) { return !c.ni; });
+    var h = '<div class="row between"><div class="row" style="align-items:baseline"><h1>' + esc(d.name) + '</h1><span class="muted" style="font-size:13px">' + esc(d.fr) + '</span></div>';
+    h += '<span class="muted" style="font-size:13px">' + inst.filter(isOn).length + ' of ' + inst.length + ' on · ' + (S.admin ? 'drag an area to move it, drag the white corners to reshape' : 'tap a lit area to find its circuit') + '</span></div>';
+    if (S.admin) h += '<div class="adminbar">Admin mode – changes stay on this screen until you press <b>Save &amp; deploy</b>. Then every control panel gets the new layout, scenes and Lutron addresses.</div>';
+    h += '<div class="plan"><div class="pbox" id="pbox" style="' + boxStyle(d, 230) + '">' + planInner(d) + '</div></div>';
+    h += '<div class="row"><span class="lbl">SCENES</span>' + sceneChips(d.id) + '</div>';
+    if (d.note) h += '<div class="note">' + esc(d.note) + '</div>';
+    if (S.admin) h += adminPanel(d);
+    h += '<div class="grid4">' + (d.circuits || []).map(circuitCard).join('') + '</div>';
+    if (!(d.circuits || []).length) h += '<div class="empty">No circuits on this deck yet.' + (S.admin ? ' Use <b>Add circuit</b> above.' : '') + '</div>';
+    return h;
+  }
+  function adminPanel(d) {
+    return '<section class="panel" aria-label="Admin tools"><div class="row"><button class="tab' + (S.tab === 'lights' ? ' on' : '') + '" data-act="tab" data-id="lights">Lights</button><button class="tab' + (S.tab === 'scenes' ? ' on' : '') + '" data-act="tab" data-id="scenes">Scenes</button></div>' + (S.tab === 'lights' ? lightsTab(d) : scenesTab(d)) + '</section>';
+  }
+  function lightsTab(d) {
+    var c = circuitIn(d, S.sel);
+    var h = '<div class="split"><div style="display:flex;flex-direction:column;gap:10px"><div class="row between"><h2>Circuits</h2><button class="btn sm" data-act="addCircuit">+ Add circuit</button></div><div class="list">';
+    (d.circuits || []).forEach(function (x) {
+      h += '<button class="li' + (S.sel === x.id ? ' on' : '') + '" data-act="pick" data-cid="' + esc(x.id) + '"><span class="sq" style="background:' + (isOn(x) ? '#F2B45A' : '#3A5069') + '"></span><span style="font-weight:600;font-size:13px;width:48px">' + esc(x.label) + '</span><span style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(x.name) + '</span></button>';
+    });
+    h += '</div></div><div style="display:flex;flex-direction:column;gap:12px">';
+    if (!c) return h + '<div class="muted" style="padding:20px 0">Select a circuit in the list or tap an area on the plan to edit it.</div></div></div>';
+    h += '<div class="form">';
+    h += '<label class="f">Circuit no.<input data-edit="label" value="' + esc(c.label) + '" maxlength="12"></label>';
+    h += '<label class="f">Name<input data-edit="name" value="' + esc(c.name) + '" maxlength="40"></label>';
+    h += '<label class="f">Cable / fitting ref<input data-edit="ref" value="' + esc(c.ref) + '" maxlength="60"></label>';
+    h += '<label class="f">Type<select data-edit="tag">' + TYPES.map(function (t) { return '<option value="' + t[0] + '"' + (c.tag === t[0] ? ' selected' : '') + '>' + t[1] + '</option>'; }).join('') + '</select></label>';
+    h += '<label class="f">Lutron zone IDs<input data-edit="zones" value="' + esc(zonesStr(c)) + '" placeholder="e.g. 1234, 1235" inputmode="numeric"></label>';
+    h += '<label class="f">Start-up level %<input data-edit="def" type="number" min="0" max="100" value="' + (c.def || 0) + '"></label>';
+    h += '<label class="chk"><input type="checkbox" data-edit="on"' + (c.on ? ' checked' : '') + '>On at start-up</label>';
+    h += '<label class="chk"><input type="checkbox" data-edit="ni"' + (c.ni ? ' checked' : '') + '>Not installed</label>';
+    h += '</div><div class="lbl">LIT AREAS ON THE GA (' + (c.z || []).length + ')</div><div class="row">';
+    h += '<button class="btn sm" data-act="addArea">+ Area</button><button class="btn sm" data-act="addBeam">+ Floodlight beam</button>';
+    var hasZ = S.selZone && S.selZone.cid === c.id && c.z && c.z[S.selZone.zi];
+    h += '<button class="btn sm" data-act="addCorner"' + (hasZ ? '' : ' disabled') + '>+ Corner</button><button class="btn sm" data-act="delCorner"' + (hasZ && c.z[S.selZone.zi].length > 3 ? '' : ' disabled') + '>− Corner</button>';
+    h += '<button class="btn sm danger" data-act="delArea"' + (hasZ ? '' : ' disabled') + '>Delete area</button></div>';
+    h += '<div class="muted" style="font-size:12px">' + (hasZ ? 'Area selected: drag it to move, drag the white squares to reshape.' : 'Tap one of this circuit\'s areas on the plan to select it.') + '</div>';
+    h += '<div class="row" style="justify-content:flex-end"><button class="btn sm danger" data-act="delCircuit">Delete circuit</button></div>';
+    return h + '</div></div>';
+  }
+  function curScene() { return scenes().filter(function (s) { return s.id === S.sceneSel; })[0] || null; }
+  function scenesTab(d) {
+    var sc = curScene() || scenes()[0];
+    if (sc) S.sceneSel = sc.id;
+    var h = '<div class="row"><span class="lbl">EDIT SCENE</span>';
+    scenes().forEach(function (s) { h += '<button class="chip' + (sc && s.id === sc.id ? ' on' : '') + '" data-act="sceneSel" data-sid="' + esc(s.id) + '">' + esc(s.name) + '</button>'; });
+    h += '<button class="btn sm" data-act="addScene">+ New scene</button></div>';
+    if (!sc) return h + '<div class="muted">No scenes yet.</div>';
+    h += '<div class="row"><label class="f" style="flex:1;min-width:200px">Scene name<input data-scene="name" value="' + esc(sc.name) + '" maxlength="30"></label>';
+    h += '<button class="btn sm" data-act="sceneCapture" style="align-self:end">Copy current lighting</button>';
+    h += '<button class="btn sm" data-act="scenePreview" style="align-self:end">Preview on this deck</button>';
+    h += '<button class="btn sm danger" data-act="sceneDelete" style="align-self:end">Delete scene</button></div>';
+    h += '<div class="muted" style="font-size:12px">Levels this scene sets on ' + esc(d.name) + '. Other decks keep their own levels for the same scene. To use a scene programmed in Lutron instead, link it under <b>Lutron setup</b>.</div><div>';
+    (d.circuits || []).filter(function (c) { return !c.ni; }).forEach(function (c) {
+      var v = (sc.levels && sc.levels[c.id]) || 0;
+      h += '<div class="srow"><div style="min-width:0"><div class="name">' + esc(c.label + ' · ' + c.name) + '</div></div>';
+      h += '<button class="sw" role="switch" aria-checked="' + (v > 0) + '" aria-label="' + esc(c.name) + ' in scene" data-act="sceneToggle" data-cid="' + esc(c.id) + '"></button>';
+      h += '<input type="range" min="0" max="100" value="' + v + '" data-act="sceneLevel" data-cid="' + esc(c.id) + '" aria-label="' + esc(c.name) + ' scene level">';
+      h += '<span class="pct' + (v > 0 ? ' on' : '') + '">' + (v > 0 ? v + '%' : 'Off') + '</span></div>';
+    });
+    return h + '</div>';
+  }
+
+  // ---------- Lutron setup ----------
+  var STAGES = { connecting: 'Connecting to the processor…', 'generating-key': 'Preparing a secure key…', 'waiting-button': 'Press the Access button on the HomeWorks QSX processor now (within 3 minutes).', signing: 'Button pressed – getting the certificate…', verifying: 'Checking the new pairing…', done: 'Paired successfully.', failed: 'Pairing failed.' };
+  function fmtTime(iso) { if (!iso) return '–'; var d = new Date(iso); return d.toLocaleDateString() + ' ' + d.toLocaleTimeString(); }
+  function lutronView() {
+    var L = S.lx;
+    if (!L) return '<h1>Lutron setup</h1><div class="empty">Loading processor status…</div>';
+    var st = L.status, disc = L.discovery || { zones: [], buttons: [] };
+    var h = '<div class="row between"><h1>Lutron setup</h1>' + lutronPill() + '</div>';
+    h += '<div class="adminbar">HomeWorks QSX is controlled over Lutron LEAP (secure TLS on port 8081). Pairing uses port 8083 and needs someone at the processor to press its Access button. Address changes below are saved with <b>Save &amp; deploy</b>.</div>';
+
+    // connection card
+    h += '<section class="panel"><h2>Processor</h2><div class="form">';
+    h += '<label class="f">Processor IP address<input id="lxHost" value="' + esc(st.host) + '" placeholder="e.g. 192.168.10.20" inputmode="decimal"></label>';
+    h += '<label class="f">LEAP port<input id="lxPort" type="number" min="1" max="65535" value="' + esc(st.port || 8081) + '"></label>';
+    h += '<label class="f">Default fade time (s)<input id="lxFade" type="number" min="0" max="3600" step="1" value="' + esc(st.fadeSeconds) + '"></label>';
+    h += '<label class="chk"><input type="checkbox" id="lxEnabled"' + (st.enabled ? ' checked' : '') + '>Lutron link on</label></div>';
+    h += '<div class="row"><button class="btn sm primary" data-act="lxSave"' + (S.lxBusy ? ' disabled' : '') + '>Save connection settings</button>';
+    h += '<button class="btn sm" data-act="lxTest"' + (S.lxBusy ? ' disabled' : '') + '>' + (S.lxBusy === 'test' ? 'Testing…' : 'Test connection') + '</button>';
+    h += '<button class="btn sm" data-act="lxPair"' + (S.lxBusy || pairingActive(st) ? ' disabled' : '') + '>' + (st.paired ? 'Pair again' : 'Pair with processor') + '</button>';
+    h += '<button class="btn sm" data-act="lxReconnect">Reconnect</button>';
+    if (st.paired) h += '<button class="btn sm danger" data-act="lxUnpair">Forget pairing</button>';
+    h += '</div>';
+    if (!st.lapReady) h += '<div class="result bad">The LAP pairing certificates are missing on this server. Run <code>npm run fetch-certs</code> once on the mini PC while it has internet, then pair.</div>';
+    if (pairingActive(st) || st.pairing.stage === 'failed' || st.pairing.stage === 'done') {
+      var bad = st.pairing.stage === 'failed', ok = st.pairing.stage === 'done';
+      h += '<div class="result' + (bad ? ' bad' : ok ? ' ok' : '') + '" role="status"><b>' + esc(STAGES[st.pairing.stage] || st.pairing.stage) + '</b>' + (bad ? '<br>' + esc(st.pairing.error) : '') + '</div>';
+    }
+    if (S.lxTest) {
+      var t = S.lxTest;
+      h += t.ok
+        ? '<div class="result ok" role="status"><b>Connection OK.</b> Connected in ' + t.connectMs + ' ms, ping ' + t.latencyMs + ' ms, LEAP version ' + esc(t.leapVersion) + (t.processor ? '. Processor: ' + esc(t.processor.name) + ' (' + esc(t.processor.model) + ', serial ' + esc(t.processor.serial) + ')' : '') + (t.project ? '. Project: ' + esc(t.project.name) : '') + '.</div>'
+        : '<div class="result bad" role="status"><b>Connection failed.</b> ' + esc(t.error) + '</div>';
+    }
+    h += '<div class="kv">';
+    h += '<div><span>Status</span>' + esc(st.state) + '</div><div><span>Paired</span>' + (st.paired ? 'Yes' + (st.pairedHost ? ' (' + esc(st.pairedHost) + ')' : '') : 'No') + '</div>';
+    h += '<div><span>LEAP version</span>' + esc(st.leapVersion || '–') + '</div><div><span>Project</span>' + esc(st.project ? st.project.name + (st.project.productType ? ' · ' + st.project.productType : '') : '–') + '</div>';
+    h += '<div><span>Last ping</span>' + (st.latencyMs != null ? st.latencyMs + ' ms · ' : '') + esc(fmtTime(st.lastPingAt)) + '</div><div><span>Last error</span>' + esc(st.lastError || '–') + '</div>';
+    h += '</div></section>';
+
+    // discovery
+    h += '<section class="panel"><div class="row between"><h2>Zones and scenes on the processor</h2><button class="btn sm" data-act="lxDiscover"' + (S.lutron.connected && !S.lxBusy ? '' : ' disabled') + '>' + (S.lxBusy === 'discover' ? 'Reading…' : 'Read from processor') + '</button></div>';
+    h += '<div class="muted" style="font-size:13px">' + disc.zones.length + ' zones and ' + disc.buttons.length + ' scene buttons read ' + esc(fmtTime(disc.readAt)) + '. Pick them below to fill in the integration addresses, or type a zone ID directly (the number the processor uses for the zone, as in /zone/1234).</div></section>';
+
+    // addresses
+    var opts = '<option value="">Add zone…</option>' + disc.zones.map(function (z) { return '<option value="' + esc(z.id) + '">' + esc((z.area ? z.area + ' – ' : '') + z.name + ' (#' + z.id + ', ' + (z.controlType || '?') + ')') + '</option>'; }).join('');
+    h += '<section class="panel"><h2>Integration addresses – circuits</h2><div class="tblwrap"><table class="tbl"><thead><tr><th style="width:80px">Circuit</th><th>Name</th><th style="width:200px">Lutron zone IDs</th><th style="width:230px">From processor</th><th style="width:130px">Processor reports</th><th style="width:150px">Test</th></tr></thead><tbody>';
+    decks().forEach(function (d) {
+      h += '<tr class="deckrow"><td colspan="6">' + esc(d.name.toUpperCase()) + '</td></tr>';
+      (d.circuits || []).forEach(function (c) {
+        var zs = (c.lutron && c.lutron.zones) || [];
+        var rep = zs.map(function (z) { var v = L.zoneLevels[z]; var zn = disc.zones.filter(function (x) { return x.id === z; })[0]; return '#' + esc(z) + ': ' + (v === undefined ? (zn ? '–' : '<span style="color:#F3A6A6">unknown</span>') : v + '%'); }).join('<br>');
+        h += '<tr><td><b>' + esc(c.label) + '</b></td><td>' + esc(c.name) + (c.ni ? ' <span class="muted">(not installed)</span>' : '') + '</td>';
+        h += '<td><input data-lz="' + esc(d.id) + '|' + esc(c.id) + '" value="' + esc(zs.join(', ')) + '" placeholder="Zone ID(s)" inputmode="numeric" aria-label="' + esc(c.label) + ' Lutron zone IDs"></td>';
+        h += '<td><select data-lzadd="' + esc(d.id) + '|' + esc(c.id) + '" aria-label="Add a discovered zone to ' + esc(c.label) + '"' + (disc.zones.length ? '' : ' disabled') + '>' + opts + '</select></td>';
+        h += '<td style="font-size:12px">' + (rep || '<span class="muted">–</span>') + '</td>';
+        h += '<td><div class="row" style="flex-wrap:nowrap;gap:6px"><button class="btn sm" data-act="lxZoneTest" data-key="' + esc(d.id) + '|' + esc(c.id) + '" data-level="100"' + (zs.length && S.lutron.connected ? '' : ' disabled') + '>On</button><button class="btn sm" data-act="lxZoneTest" data-key="' + esc(d.id) + '|' + esc(c.id) + '" data-level="0"' + (zs.length && S.lutron.connected ? '' : ' disabled') + '>Off</button></div></td></tr>';
+      });
+    });
+    h += '</tbody></table></div><div class="muted" style="font-size:12px">A circuit can drive several Lutron zones (for example port and starboard floods). Test sends straight to the zones you typed, even before saving.</div></section>';
+
+    // scenes
+    var bopts = disc.buttons.map(function (b) { return '<option value="' + esc(b.id) + '">' + esc(b.name + ' (#' + b.id + ')') + '</option>'; }).join('');
+    h += '<section class="panel"><h2>Integration addresses – scenes</h2><div class="muted" style="font-size:13px">Optional. Link a ship-wide scene to a scene programmed in Lutron (a virtual button). When linked and connected, pressing the scene on the overview presses the Lutron scene instead of sending each level.</div><div class="tblwrap"><table class="tbl"><thead><tr><th>Scene</th><th style="width:220px">Lutron scene button ID</th><th style="width:260px">From processor</th><th style="width:110px">Test</th></tr></thead><tbody>';
+    scenes().forEach(function (sc) {
+      h += '<tr><td><b>' + esc(sc.name) + '</b></td><td><input data-sbtn="' + esc(sc.id) + '" value="' + esc(sc.lutronButton || '') + '" placeholder="None – use levels" inputmode="numeric" aria-label="' + esc(sc.name) + ' Lutron button ID"></td>';
+      h += '<td><select data-sbtnpick="' + esc(sc.id) + '"' + (disc.buttons.length ? '' : ' disabled') + '><option value="">Pick a Lutron scene…</option>' + bopts + '</select></td>';
+      h += '<td><button class="btn sm" data-act="lxBtnTest" data-sid="' + esc(sc.id) + '"' + (sc.lutronButton && S.lutron.connected ? '' : ' disabled') + '>Press</button></td></tr>';
+    });
+    h += '</tbody></table></div></section>';
+    return h;
+  }
+  function pairingActive(st) { return ['connecting', 'generating-key', 'waiting-button', 'signing', 'verifying'].indexOf(st.pairing.stage) >= 0; }
+  function refreshLutron() {
+    return api('GET', '/api/lutron').then(function (r) { S.lx = r; if (S.view === 'lutron') render(); }).catch(function (e) { if (/Admin/.test(e.message)) { S.admin = false; render(); } });
+  }
+  var lxPoll = null;
+  function lutronPolling() {
+    clearInterval(lxPoll);
+    if (S.view !== 'lutron' || !S.admin) return;
+    refreshLutron();
+    lxPoll = setInterval(function () {
+      var a = document.activeElement;
+      if (a && (a.tagName === 'INPUT' || a.tagName === 'SELECT')) return; // don't disturb typing
+      refreshLutron();
+    }, S.lx && pairingActive(S.lx.status) ? 1500 : 4000);
+  }
+
+  // ---------- render ----------
+  function render() {
+    var app = document.getElementById('app');
+    if (!S.config) { app.innerHTML = '<div class="empty">' + esc(S.loadError || 'Loading lighting layout…') + '</div>'; return; }
+    var active = document.activeElement;
+    var keepSel = null;
+    ['data-edit', 'data-scene', 'data-lz', 'data-sbtn', 'id'].some(function (a) { var v = active && active.getAttribute && active.getAttribute(a); if (v && active.tagName === 'INPUT') { keepSel = '[' + a + '="' + v.replace(/"/g, '\\"') + '"]'; return true; } return false; });
+    if (S.view === 'lutron' && !S.admin) S.view = 'home';
+    var d = (S.view === 'home' || S.view === 'lutron') ? null : deckById(S.view);
+    if (S.view !== 'home' && S.view !== 'lutron' && !d) S.view = 'home';
+    var main = S.view === 'lutron' ? lutronView() : d ? deckView(d) : homeView();
+    app.innerHTML = header() + '<div class="layout">' + rail() + '<main>' + main + '</main></div>';
+    if (keepSel) {
+      var el = app.querySelector(keepSel);
+      if (el) { el.focus(); try { var n = el.value.length; el.setSelectionRange(n, n); } catch (e) {} }
+    }
+  }
+  function renderPlan() { var box = document.getElementById('pbox'), d = deckById(S.view); if (box && d) box.innerHTML = planInner(d); else render(); }
+  var rT = null;
+  function scheduleRender() { clearTimeout(rT); rT = setTimeout(function () { var a = document.activeElement; if (a && a.type === 'range') return scheduleRender(); render(); }, 450); }
+
+  // ---------- control actions (sent to the server) ----------
+  function sendCircuit(id, body) { api('POST', '/api/circuit', Object.assign({ id: id }, body)).then(warn).catch(fail); }
+  var levelTimers = {};
+  function sendLevelThrottled(id, v) {
+    if (levelTimers[id]) { levelTimers[id].v = v; return; }
+    sendCircuit(id, { level: v });
+    levelTimers[id] = { v: v };
+    setTimeout(function () { var t = levelTimers[id]; delete levelTimers[id]; if (t && t.v !== v) sendCircuit(id, { level: t.v }); }, 300);
+  }
+
+  // ---------- events ----------
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-act]');
+    if (!t || t.tagName === 'INPUT') return;
+    var act = t.getAttribute('data-act'), id = t.getAttribute('data-id'), cid = t.getAttribute('data-cid');
+    var d = deckById(S.view);
+    switch (act) {
+      case 'go': S.view = id; S.sel = ''; S.selZone = null; S.lxTest = null; render(); lutronPolling(); return;
+      case 'pick': S.sel = cid; if (S.admin && d) { var c0 = circuitIn(d, cid); S.selZone = c0 && c0.z && c0.z.length ? { cid: cid, zi: 0 } : null; } break;
+      case 'toggle':
+        var c = allCircuits().filter(function (x) { return x.id === cid; })[0], st = lv(c);
+        var next = st.on ? { on: false, level: st.level } : { on: true, level: st.level > 0 ? st.level : 50 };
+        S.levels[cid] = next; S.sel = cid; S.sceneBy = {};
+        sendCircuit(cid, { on: next.on, level: next.level }); break;
+      case 'alloff':
+        allCircuits().forEach(function (x) { var p = lv(x); S.levels[x.id] = { on: false, level: p.level }; }); S.sceneBy = {};
+        api('POST', '/api/alloff').then(warn).catch(fail); break;
+      case 'scene':
+        api('POST', '/api/scene', { id: t.getAttribute('data-sid'), scope: t.getAttribute('data-key') }).then(warn).catch(fail); return;
+      case 'login': openLogin(); return;
+      case 'logout':
+        if (S.dirty) { askConfirm('Leave admin mode and throw away unsaved changes?', function () { discard(); logout(); }); return; }
+        logout(); return;
+      case 'save': save(); return;
+      case 'discard': askConfirm('Throw away all unsaved changes?', function () { discard(); render(); }); return;
+      case 'tab': S.tab = id; break;
+      case 'addCircuit':
+        if (!d) return;
+        var nc = { id: uid('C'), label: 'GR' + (allCircuits().length + 1), name: 'New circuit', ref: '', tag: 'walk', def: 60, on: false, z: [[[45, 40], [55, 40], [55, 60], [45, 60]]], lutron: { zones: [] } };
+        d.circuits.push(nc); S.levels[nc.id] = { on: false, level: 60 }; S.sel = nc.id; S.selZone = { cid: nc.id, zi: 0 }; markDirty(); break;
+      case 'delCircuit':
+        var dc = d && circuitIn(d, S.sel); if (!dc) return;
+        askConfirm('Delete ' + dc.label + ' ' + dc.name + ' from ' + d.name + '?', function () { d.circuits = d.circuits.filter(function (x) { return x.id !== dc.id; }); S.sel = ''; S.selZone = null; markDirty(); render(); });
+        return;
+      case 'addArea': case 'addBeam':
+        var ca = d && circuitIn(d, S.sel); if (!ca) return;
+        ca.z = ca.z || [];
+        ca.z.push(act === 'addArea' ? [[44, 40], [56, 40], [56, 60], [44, 60]] : [[50, 50], [40, 30], [40, 70]]);
+        S.selZone = { cid: ca.id, zi: ca.z.length - 1 }; markDirty(); break;
+      case 'delArea':
+        var cz = d && S.selZone && circuitIn(d, S.selZone.cid); if (!cz) return;
+        cz.z.splice(S.selZone.zi, 1); S.selZone = null; markDirty(); break;
+      case 'addCorner':
+        var cc = d && S.selZone && circuitIn(d, S.selZone.cid); if (!cc) return;
+        var p = cc.z[S.selZone.zi], bi = 0, best = -1;
+        for (var i = 0; i < p.length; i++) { var a = p[i], b = p[(i + 1) % p.length], L = Math.hypot(a[0] - b[0], a[1] - b[1]); if (L > best) { best = L; bi = i; } }
+        var A = p[bi], B = p[(bi + 1) % p.length];
+        p.splice(bi + 1, 0, [Math.round((A[0] + B[0]) * 5) / 10, Math.round((A[1] + B[1]) * 5) / 10]); markDirty(); break;
+      case 'delCorner':
+        var cr = d && S.selZone && circuitIn(d, S.selZone.cid); if (!cr) return;
+        if (cr.z[S.selZone.zi].length > 3) { cr.z[S.selZone.zi].pop(); markDirty(); } break;
+      case 'sceneSel': S.sceneSel = t.getAttribute('data-sid'); break;
+      case 'addScene':
+        var ns = { id: uid('S'), name: 'New scene', levels: {} };
+        allCircuits().forEach(function (x) { if (isOn(x)) ns.levels[x.id] = lv(x).level; });
+        S.config.scenes.push(ns); S.sceneSel = ns.id; markDirty(); break;
+      case 'sceneCapture':
+        var cs = curScene(); if (!cs || !d) return;
+        d.circuits.forEach(function (x) { if (!x.ni) cs.levels[x.id] = isOn(x) ? lv(x).level : 0; });
+        markDirty(); toast('Copied ' + d.name + ' lighting into ' + cs.name); break;
+      case 'scenePreview':
+        var ps = curScene(); if (!ps || !d) return;
+        d.circuits.forEach(function (x) { if (x.ni) return; var v = (ps.levels || {})[x.id] || 0; var cur = lv(x); var nx = v > 0 ? { on: true, level: v } : { on: false, level: cur.level }; S.levels[x.id] = nx; sendCircuit(x.id, nx); });
+        break;
+      case 'sceneDelete':
+        var ds = curScene(); if (!ds) return;
+        askConfirm('Delete the scene "' + ds.name + '" on every deck?', function () { S.config.scenes = S.config.scenes.filter(function (s) { return s.id !== ds.id; }); S.sceneSel = ''; markDirty(); render(); });
+        return;
+      case 'sceneToggle':
+        var tsc = curScene(); if (!tsc) return;
+        tsc.levels = tsc.levels || {}; tsc.levels[cid] = tsc.levels[cid] > 0 ? 0 : 60; markDirty(); break;
+      // Lutron setup
+      case 'lxSave':
+        var lxBody = { host: val('lxHost').trim(), port: Number(val('lxPort')), fadeSeconds: Number(val('lxFade')), enabled: document.getElementById('lxEnabled').checked };
+        S.lxBusy = 'save'; render();
+        api('PUT', '/api/lutron/settings', lxBody)
+          .then(function () { toast('Connection settings saved'); }).catch(fail).then(function () { S.lxBusy = ''; refreshLutron(); });
+        return;
+      case 'lxTest':
+        S.lxBusy = 'test'; S.lxTest = null; render();
+        api('POST', '/api/lutron/test').then(function (r) { S.lxTest = r; }).catch(function (e2) { S.lxTest = { ok: false, error: e2.message }; }).then(function () { S.lxBusy = ''; refreshLutron(); });
+        return;
+      case 'lxPair':
+        var go = function () {
+          api('POST', '/api/lutron/pair').then(function () { S.lxTest = null; refreshLutron().then(lutronPolling); }).catch(fail);
+        };
+        if (S.lx && S.lx.status.paired) askConfirm('Pair again? The current pairing is replaced once the new one succeeds.', go); else go();
+        return;
+      case 'lxReconnect': api('POST', '/api/lutron/reconnect').then(function () { toast('Reconnecting…'); refreshLutron(); }).catch(fail); return;
+      case 'lxUnpair':
+        askConfirm('Forget the pairing with the processor? Lights stop responding until you pair again.', function () { api('POST', '/api/lutron/unpair').then(refreshLutron).catch(fail); });
+        return;
+      case 'lxDiscover':
+        S.lxBusy = 'discover'; render();
+        api('POST', '/api/lutron/discover').then(function (r) { toast('Read ' + r.discovery.zones.length + ' zones and ' + r.discovery.buttons.length + ' scene buttons'); }).catch(fail).then(function () { S.lxBusy = ''; refreshLutron(); });
+        return;
+      case 'lxZoneTest':
+        var k = t.getAttribute('data-key').split('|'), cd = deckById(k[0]), cx = cd && circuitIn(cd, k[1]);
+        if (!cx) return;
+        api('POST', '/api/lutron/zone-test', { zones: (cx.lutron && cx.lutron.zones) || [], level: Number(t.getAttribute('data-level')) })
+          .then(function (r) { var bad = r.results.filter(function (x) { return !x.ok; }); toast(bad.length ? 'Zone ' + bad[0].zone + ': ' + bad[0].error : cx.label + ' test sent to ' + r.results.length + ' zone(s)'); setTimeout(refreshLutron, 800); }).catch(fail);
+        return;
+      case 'lxBtnTest':
+        var bs = scenes().filter(function (s) { return s.id === t.getAttribute('data-sid'); })[0];
+        if (bs && bs.lutronButton) api('POST', '/api/lutron/button-test', { id: bs.lutronButton }).then(function () { toast('Pressed Lutron scene #' + bs.lutronButton); }).catch(fail);
+        return;
+      default: return;
+    }
+    render();
+  });
+  function val(id) { var el = document.getElementById(id); return el ? el.value : ''; }
+
+  document.addEventListener('input', function (e) {
+    var t = e.target, act = t.getAttribute('data-act'), cid = t.getAttribute('data-cid');
+    if (act === 'level') {
+      var v = Number(t.value), cur = S.levels[cid] || {};
+      S.levels[cid] = { on: v > 0, level: v > 0 ? v : (cur.level || 0) }; S.sel = cid; S.sceneBy = {};
+      var pct = t.parentNode.querySelector('.pct'); if (pct) { pct.textContent = v > 0 ? v + '%' : 'Off'; pct.className = 'pct' + (v > 0 ? ' on' : ''); }
+      sendLevelThrottled(cid, v); renderPlan(); scheduleRender(); return;
+    }
+    if (act === 'sceneLevel') {
+      var sc = curScene(); if (!sc) return;
+      sc.levels = sc.levels || {}; sc.levels[cid] = Number(t.value); markDirty();
+      var p2 = t.parentNode.querySelector('.pct'); if (p2) { p2.textContent = t.value > 0 ? t.value + '%' : 'Off'; p2.className = 'pct' + (t.value > 0 ? ' on' : ''); }
+      var sw = t.parentNode.querySelector('.sw'); if (sw) sw.setAttribute('aria-checked', String(t.value > 0));
+      scheduleRender(); return;
+    }
+    var f = t.getAttribute('data-edit');
+    if (f) {
+      var d = deckById(S.view), c = d && circuitIn(d, S.sel); if (!c) return;
+      if (f === 'on' || f === 'ni') c[f] = t.checked;
+      else if (f === 'def') c.def = Math.max(0, Math.min(100, Number(t.value) || 0));
+      else if (f === 'zones') c.lutron = { zones: parseZones(t.value) };
+      else c[f] = t.value;
+      markDirty();
+      if (f === 'on' || f === 'ni' || f === 'tag') render(); else scheduleRender();
+      return;
+    }
+    if (t.getAttribute('data-scene') === 'name') { var s2 = curScene(); if (s2) { s2.name = t.value; markDirty(); scheduleRender(); } return; }
+    var lz = t.getAttribute('data-lz');
+    if (lz) { var k = lz.split('|'), cd = deckById(k[0]), cx = cd && circuitIn(cd, k[1]); if (cx) { cx.lutron = { zones: parseZones(t.value) }; markDirty(); updateHeaderOnly(); } return; }
+    var sb = t.getAttribute('data-sbtn');
+    if (sb) { var scn = scenes().filter(function (s) { return s.id === sb; })[0]; if (scn) { var idv = String(t.value).replace(/[^0-9]/g, ''); if (idv) scn.lutronButton = idv; else delete scn.lutronButton; markDirty(); updateHeaderOnly(); } }
+  });
+  document.addEventListener('change', function (e) {
+    var t = e.target;
+    if (t.type === 'range') { render(); return; }
+    var add = t.getAttribute && t.getAttribute('data-lzadd');
+    if (add && t.value) {
+      var k = add.split('|'), cd = deckById(k[0]), cx = cd && circuitIn(cd, k[1]);
+      if (cx) { var zs = (cx.lutron && cx.lutron.zones) || []; if (zs.indexOf(t.value) < 0) zs.push(t.value); cx.lutron = { zones: zs }; markDirty(); render(); }
+      return;
+    }
+    var pick = t.getAttribute && t.getAttribute('data-sbtnpick');
+    if (pick && t.value) { var scn = scenes().filter(function (s) { return s.id === pick; })[0]; if (scn) { scn.lutronButton = t.value; markDirty(); render(); } }
+  });
+  function updateHeaderOnly() {
+    var hdr = document.querySelector('header'); if (!hdr) return;
+    var tmp = document.createElement('div'); tmp.innerHTML = header(); hdr.replaceWith(tmp.firstChild);
+  }
+
+  // ---------- dragging on the GA ----------
+  var drag = null;
+  function ptFrom(e) {
+    var box = document.getElementById('pbox'); if (!box) return null;
+    var r = box.getBoundingClientRect();
+    return [Math.round(Math.max(0, Math.min(100, (e.clientX - r.left) / r.width * 100)) * 10) / 10, Math.round(Math.max(0, Math.min(100, (e.clientY - r.top) / r.height * 100)) * 10) / 10];
+  }
+  document.addEventListener('pointerdown', function (e) {
+    if (!S.admin) return;
+    var t = e.target.closest('[data-drag]'); if (!t) return;
+    var d = deckById(S.view); if (!d) return;
+    var pt = ptFrom(e); if (!pt) return;
+    e.preventDefault();
+    if (t.getAttribute('data-drag') === 'zone') {
+      var cid = t.getAttribute('data-cid'), zi = Number(t.getAttribute('data-zi')), c = circuitIn(d, cid), changed = S.sel !== cid;
+      S.sel = cid; S.selZone = { cid: cid, zi: zi };
+      drag = { type: 'zone', c: c, zi: zi, start: pt, orig: clone(c.z[zi]), moved: false };
+      if (changed) render(); else renderPlan();
+    } else {
+      drag = { type: 'vtx', c: circuitIn(d, S.selZone.cid), zi: S.selZone.zi, vi: Number(t.getAttribute('data-vi')), moved: false };
+    }
+  });
+  document.addEventListener('pointermove', function (e) {
+    if (!drag) return;
+    var pt = ptFrom(e); if (!pt) return;
+    var p = drag.c.z[drag.zi];
+    if (drag.type === 'zone') {
+      var dx = pt[0] - drag.start[0], dy = pt[1] - drag.start[1];
+      for (var i = 0; i < p.length; i++) p[i] = [Math.round(Math.max(0, Math.min(100, drag.orig[i][0] + dx)) * 10) / 10, Math.round(Math.max(0, Math.min(100, drag.orig[i][1] + dy)) * 10) / 10];
+    } else p[drag.vi] = pt;
+    drag.moved = true; markDirty(); renderPlan();
+  });
+  document.addEventListener('pointerup', function () { if (drag) { var m = drag.moved; drag = null; if (m) render(); } });
+
+  // ---------- login / dialogs ----------
+  function closeModal() { document.getElementById('modal').innerHTML = ''; }
+  function openLogin() {
+    var m = document.getElementById('modal');
+    m.innerHTML = '<div class="modal"><form class="dialog" id="loginForm" role="dialog" aria-modal="true" aria-labelledby="lt"><h2 id="lt">Admin login</h2><label class="f">Password<input type="password" id="pw" autocomplete="current-password" required></label><div class="err" id="pwErr" role="alert"></div><div class="row" style="justify-content:flex-end"><button type="button" class="btn" id="pwCancel">Cancel</button><button type="submit" class="btn primary">Log in</button></div></form></div>';
+    document.getElementById('pw').focus();
+    document.getElementById('pwCancel').onclick = closeModal;
+    document.getElementById('loginForm').onsubmit = function (ev) {
+      ev.preventDefault();
+      api('POST', '/api/login', { password: document.getElementById('pw').value })
+        .then(function () { closeModal(); S.admin = true; S.tab = 'lights'; S.selZone = null; toast('Admin mode on'); render(); })
+        .catch(function (e) { document.getElementById('pwErr').textContent = e.message; });
+    };
+  }
+  function logout() { api('POST', '/api/logout').catch(function () {}).then(function () { S.admin = false; S.selZone = null; if (S.view === 'lutron') S.view = 'home'; clearInterval(lxPoll); render(); }); }
+  function askConfirm(msg, ok) {
+    var m = document.getElementById('modal');
+    m.innerHTML = '<div class="modal"><div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="ct"><h2 id="ct">Are you sure?</h2><div style="font-size:14px">' + esc(msg) + '</div><div class="row" style="justify-content:flex-end"><button class="btn" id="cNo">Cancel</button><button class="btn primary" id="cYes">Yes</button></div></div></div>';
+    document.getElementById('cNo').onclick = closeModal;
+    document.getElementById('cYes').onclick = function () { closeModal(); ok(); };
+    document.getElementById('cYes').focus();
+  }
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.getElementById('modal').innerHTML) closeModal(); });
+
+  // ---------- persistence ----------
+  function discard() { S.config = clone(S.saved); S.dirty = false; S.selZone = null; }
+  function save() {
+    S.saving = true; render();
+    api('PUT', '/api/config', { decks: S.config.decks, scenes: S.config.scenes })
+      .then(function () { S.saved = clone(S.config); S.dirty = false; toast('Saved – the new layout is live on all control panels'); })
+      .catch(function (e) { if (/Admin/.test(e.message)) { toast('Your admin session expired. Log in again, then press Save.'); openLogin(); } else fail(e); })
+      .then(function () { S.saving = false; render(); });
+  }
+
+  // ---------- start ----------
+  function connectEvents() {
+    var es = new EventSource('/api/events');
+    es.addEventListener('state', function (ev) {
+      var m = JSON.parse(ev.data);
+      S.levels = m.levels || {}; S.sceneBy = m.sceneBy || {};
+      if (drag) return;
+      var a = document.activeElement;
+      if (a && a.type === 'range') return scheduleRender();
+      if (a && (a.tagName === 'INPUT' || a.tagName === 'SELECT') && a.type !== 'range') { updateHeaderOnly(); return; }
+      render();
+    });
+    es.addEventListener('lutron', function (ev) { S.lutron = JSON.parse(ev.data); var a = document.activeElement; if (a && (a.tagName === 'INPUT' || a.tagName === 'SELECT')) updateHeaderOnly(); else render(); });
+    es.addEventListener('config', function (ev) { var c = JSON.parse(ev.data); S.saved = clone(c); if (!S.dirty) { S.config = c; render(); } });
+    es.onerror = function () { S.lutron = Object.assign({}, S.lutron, { state: 'error', connected: false, lastError: 'Lost connection to the lighting server' }); updateHeaderOnly(); };
+  }
+  api('GET', '/api/bootstrap').then(function (b) {
+    S.config = b.config; S.saved = clone(b.config); S.levels = b.levels || {}; S.sceneBy = b.sceneBy || {};
+    S.admin = !!b.admin; S.lutron = b.lutron || S.lutron; S.adminConfigured = b.adminConfigured;
+    render(); connectEvents();
+  }).catch(function (e) { S.loadError = 'Cannot reach the lighting server: ' + e.message; render(); setTimeout(function () { location.reload(); }, 10000); });
+})();
+</script>
+</body>
+</html>

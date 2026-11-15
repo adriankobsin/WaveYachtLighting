@@ -1,0 +1,8 @@
+{
+  "algo": "scrypt",
+  "N": 16384,
+  "r": 8,
+  "p": 1,
+  "salt": "9ced2a0d6883ddd634baed5aca9a6741",
+  "hash": "f38c799d814efef379926cd3651d57d62a5a13014d94f39e5e346f0009a4a8e954c6bf721b56f5796d161dcea69ea309f0b4baa054e6c4810739e4229f420814"
+}
