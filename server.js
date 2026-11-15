@@ -175,7 +175,7 @@ function cleanConfig(body) {
   }));
   const scenes = body.scenes.slice(0, 50).map((s) => {
     const lv = {};
-    Object.keys(s.levels || {}).slice(0, 500).forEach((k) => { lv[str(k, 40)] = num(s.levels[k], 0, 100, 0); });
+    Object.keys(s.levels || {}).slice(0, 500).forEach((k) => { const v = num(s.levels[k], -1, 100, 0); lv[str(k, 40)] = v < 0 ? -1 : Math.round(v); });
     const o = { id: str(s.id, 40), name: str(s.name, 40), levels: lv };
     if (s.lutronButton) o.lutronButton = str(s.lutronButton, 12).replace(/[^0-9]/g, '');
     return o;
@@ -224,8 +224,9 @@ async function api(req, res, url) {
     else { const d = (config.decks || []).find((x) => x.id === scope); if (!d) throw Object.assign(new Error('Unknown deck'), { status: 404 }); list = d.circuits || []; }
     let warnings = [];
     const useButton = scope === 'all' && sc.lutronButton && lutron.isConnected();
+    // A level of -1 means "don't change" for that circuit.
+    list = list.filter((c) => !c.ni && !((sc.levels || {})[c.id] < 0));
     list.forEach((c) => {
-      if (c.ni) return;
       const v = (sc.levels || {})[c.id] || 0;
       const prev = levels[c.id] || { level: 50 };
       levels[c.id] = v > 0 ? { on: true, level: v } : { on: false, level: prev.level };
@@ -236,7 +237,7 @@ async function api(req, res, url) {
     if (useButton) {
       await lutron.pressButton(sc.lutronButton).catch((e) => warnings.push('Lutron scene button ' + sc.lutronButton + ': ' + e.message));
     } else {
-      const results = await Promise.all(list.filter((c) => !c.ni).map((c) => drive(c, levels[c.id])));
+      const results = await Promise.all(list.map((c) => drive(c, levels[c.id])));
       warnings = [].concat.apply([], results);
     }
     return send(res, 200, { ok: true, warnings });

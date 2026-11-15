@@ -79,7 +79,12 @@ label.chk input{width:20px;height:20px;accent-color:var(--amber)}
 .li{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;border:1px solid transparent;background:transparent;text-align:left;cursor:pointer;width:100%}
 .li.on{border-color:var(--amber);background:#1C3047}
 .li .sq{width:12px;height:12px;border-radius:3px;flex:none}
-.srow{display:grid;grid-template-columns:minmax(0,1fr) 52px minmax(120px,220px) 46px;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.srow{display:grid;grid-template-columns:minmax(0,1fr) 150px minmax(120px,240px) 60px;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.srow select{height:40px;border-radius:8px;border:1px solid var(--line2);background:var(--bg);padding:0 8px;font-size:13px;color:var(--text)}
+.srow input[type=range][disabled]{opacity:.35}
+.pct.keep{color:#8FB8E8}
+.sgroup{margin-top:12px;font-weight:600;font-size:12px;color:var(--muted);letter-spacing:.08em}
+@media (max-width:700px){.srow{grid-template-columns:minmax(0,1fr) 130px;}.srow input[type=range]{grid-column:1/2}}
 .modal{position:fixed;inset:0;background:rgba(5,10,16,.72);display:flex;align-items:center;justify-content:center;z-index:10;padding:16px}
 .dialog{width:min(380px,100%);background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:14px}
 .err{color:#F3A6A6;font-size:13px;min-height:18px}
@@ -228,7 +233,9 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
       h += '<div class="row between muted" style="width:100%;font-size:13px"><span>' + onN + ' of ' + inst.length + ' circuits on</span><span style="color:var(--amber)">Open</span></div>';
       h += '<div class="bar"><div style="width:' + (inst.length ? Math.round(100 * onN / inst.length) : 0) + '%"></div></div></button>';
     });
-    return h + '</div>';
+    h += '</div>';
+    if (S.admin) h += '<section class="panel" aria-label="Scene editor"><h2>Scenes – all decks</h2>' + sceneEditor(decks(), 'All decks', 'all') + '</section>';
+    return h;
   }
   function circuitCard(c) {
     var on = isOn(c), st = lv(c);
@@ -284,26 +291,51 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     return h + '</div></div>';
   }
   function curScene() { return scenes().filter(function (s) { return s.id === S.sceneSel; })[0] || null; }
-  function scenesTab(d) {
+  function sceneVal(sc, cid) { var v = sc && sc.levels ? sc.levels[cid] : undefined; return typeof v === 'number' ? v : 0; }
+  function scopeCircuits(scope) {
+    var list = scope === 'all' ? allCircuits() : ((deckById(scope) || {}).circuits || []);
+    return list.filter(function (c) { return !c.ni; });
+  }
+  function scenesTab(d) { return sceneEditor([d], d.name, d.id); }
+  /** Full scene editor. groups = decks shown, scope = 'all' or a deck id. */
+  function sceneEditor(groups, scopeName, scope) {
     var sc = curScene() || scenes()[0];
     if (sc) S.sceneSel = sc.id;
+    var list = scenes(), idx = sc ? list.indexOf(sc) : -1;
     var h = '<div class="row"><span class="lbl">EDIT SCENE</span>';
-    scenes().forEach(function (s) { h += '<button class="chip' + (sc && s.id === sc.id ? ' on' : '') + '" data-act="sceneSel" data-sid="' + esc(s.id) + '">' + esc(s.name) + '</button>'; });
+    list.forEach(function (x) { h += '<button class="chip' + (sc && x.id === sc.id ? ' on' : '') + '" data-act="sceneSel" data-sid="' + esc(x.id) + '">' + esc(x.name) + '</button>'; });
     h += '<button class="btn sm" data-act="addScene">+ New scene</button></div>';
-    if (!sc) return h + '<div class="muted">No scenes yet.</div>';
+    if (!sc) return h + '<div class="muted">No scenes yet. Press <b>+ New scene</b>.</div>';
     h += '<div class="row"><label class="f" style="flex:1;min-width:200px">Scene name<input data-scene="name" value="' + esc(sc.name) + '" maxlength="30"></label>';
-    h += '<button class="btn sm" data-act="sceneCapture" style="align-self:end">Copy current lighting</button>';
-    h += '<button class="btn sm" data-act="scenePreview" style="align-self:end">Preview on this deck</button>';
+    h += '<button class="btn sm" data-act="sceneMove" data-dir="-1" style="align-self:end"' + (idx > 0 ? '' : ' disabled') + '>◀ Move earlier</button>';
+    h += '<button class="btn sm" data-act="sceneMove" data-dir="1" style="align-self:end"' + (idx < list.length - 1 ? '' : ' disabled') + '>Move later ▶</button>';
+    h += '<button class="btn sm" data-act="sceneDup" style="align-self:end">Duplicate</button>';
     h += '<button class="btn sm danger" data-act="sceneDelete" style="align-self:end">Delete scene</button></div>';
-    h += '<div class="muted" style="font-size:12px">Levels this scene sets on ' + esc(d.name) + '. Other decks keep their own levels for the same scene. To use a scene programmed in Lutron instead, link it under <b>Lutron setup</b>.</div><div>';
-    (d.circuits || []).filter(function (c) { return !c.ni; }).forEach(function (c) {
-      var v = (sc.levels && sc.levels[c.id]) || 0;
-      h += '<div class="srow"><div style="min-width:0"><div class="name">' + esc(c.label + ' · ' + c.name) + '</div></div>';
-      h += '<button class="sw" role="switch" aria-checked="' + (v > 0) + '" aria-label="' + esc(c.name) + ' in scene" data-act="sceneToggle" data-cid="' + esc(c.id) + '"></button>';
-      h += '<input type="range" min="0" max="100" value="' + v + '" data-act="sceneLevel" data-cid="' + esc(c.id) + '" aria-label="' + esc(c.name) + ' scene level">';
-      h += '<span class="pct' + (v > 0 ? ' on' : '') + '">' + (v > 0 ? v + '%' : 'Off') + '</span></div>';
+    var sa = ' data-scope="' + esc(scope) + '"';
+    h += '<div class="row"><span class="lbl">' + esc(scopeName.toUpperCase()) + '</span>';
+    h += '<button class="btn sm" data-act="sceneCapture"' + sa + '>Copy current lighting</button>';
+    h += '<button class="btn sm" data-act="scenePreview"' + sa + '>Preview</button>';
+    h += '<span class="muted" style="font-size:13px;margin-left:6px">Set all:</span>';
+    [[0, 'Off'], [25, '25%'], [50, '50%'], [100, '100%'], [-1, 'Don\'t change']].forEach(function (o) { h += '<button class="btn sm" data-act="sceneAll" data-v="' + o[0] + '"' + sa + '>' + o[1] + '</button>'; });
+    h += '</div>';
+    h += '<div class="muted" style="font-size:12px">' + (scope === 'all'
+      ? 'Every light on every deck. <b>Off</b> switches a light off, <b>On</b> sets it to the level on the slider, <b>Don\'t change</b> leaves it as it is when the scene runs.'
+      : 'Lights on ' + esc(scopeName) + '. The same scene also sets the other decks: edit them on their own deck, or edit every deck at once on the Overview.') + '</div>';
+    if (sc.lutronButton) h += '<div class="note">This scene is linked to Lutron scene #' + esc(sc.lutronButton) + '. When the processor is connected, the ship-wide button presses the Lutron scene and the processor sets the levels. The levels below are used for deck buttons and when the processor is offline.</div>';
+    var seen = {};
+    groups.forEach(function (g) {
+      var rows = (g.circuits || []).filter(function (c) { if (c.ni || seen[c.id]) return false; seen[c.id] = 1; return true; });
+      if (!rows.length) return;
+      if (groups.length > 1) h += '<div class="sgroup">' + esc(g.name.toUpperCase()) + '</div>';
+      rows.forEach(function (c) {
+        var v = sceneVal(sc, c.id), mode = v < 0 ? 'keep' : v > 0 ? 'on' : 'off';
+        h += '<div class="srow"><div style="min-width:0"><div class="name">' + esc(c.label + ' · ' + c.name) + '</div></div>';
+        h += '<select data-act="sceneMode" data-cid="' + esc(c.id) + '" aria-label="' + esc(c.name) + ' in this scene"><option value="off"' + (mode === 'off' ? ' selected' : '') + '>Off</option><option value="on"' + (mode === 'on' ? ' selected' : '') + '>On</option><option value="keep"' + (mode === 'keep' ? ' selected' : '') + '>Don\'t change</option></select>';
+        h += '<input type="range" min="1" max="100" value="' + (v > 0 ? v : 60) + '" data-act="sceneLevel" data-cid="' + esc(c.id) + '" aria-label="' + esc(c.name) + ' scene level"' + (mode === 'on' ? '' : ' disabled') + '>';
+        h += '<span class="pct' + (mode === 'on' ? ' on' : mode === 'keep' ? ' keep' : '') + '">' + (mode === 'on' ? v + '%' : mode === 'keep' ? 'Keep' : 'Off') + '</span></div>';
+      });
     });
-    return h + '</div>';
+    return h;
   }
 
   // ---------- Lutron setup ----------
@@ -442,6 +474,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
         allCircuits().forEach(function (x) { var p = lv(x); S.levels[x.id] = { on: false, level: p.level }; }); S.sceneBy = {};
         api('POST', '/api/alloff').then(warn).catch(fail); break;
       case 'scene':
+        if (S.admin) { S.sceneSel = t.getAttribute('data-sid'); if (S.view !== 'home') S.tab = 'scenes'; setTimeout(render, 0); }
         api('POST', '/api/scene', { id: t.getAttribute('data-sid'), scope: t.getAttribute('data-key') }).then(warn).catch(fail); return;
       case 'login': openLogin(); return;
       case 'logout':
@@ -478,23 +511,42 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
       case 'sceneSel': S.sceneSel = t.getAttribute('data-sid'); break;
       case 'addScene':
         var ns = { id: uid('S'), name: 'New scene', levels: {} };
-        allCircuits().forEach(function (x) { if (isOn(x)) ns.levels[x.id] = lv(x).level; });
-        S.config.scenes.push(ns); S.sceneSel = ns.id; markDirty(); break;
+        allCircuits().forEach(function (x) { if (!x.ni) ns.levels[x.id] = isOn(x) ? lv(x).level : 0; });
+        var at = scenes().indexOf(curScene());
+        S.config.scenes.splice(at < 0 ? S.config.scenes.length : at + 1, 0, ns); S.sceneSel = ns.id; markDirty();
+        toast('New scene made from the current lighting – rename it and adjust the levels'); break;
+      case 'sceneDup':
+        var src = curScene(); if (!src) return;
+        var dup = { id: uid('S'), name: (src.name + ' copy').slice(0, 30), levels: clone(src.levels || {}) };
+        S.config.scenes.splice(scenes().indexOf(src) + 1, 0, dup); S.sceneSel = dup.id; markDirty(); break;
+      case 'sceneMove':
+        var ms = curScene(); if (!ms) return;
+        var i0 = S.config.scenes.indexOf(ms), i1 = i0 + Number(t.getAttribute('data-dir'));
+        if (i1 < 0 || i1 >= S.config.scenes.length) return;
+        S.config.scenes.splice(i0, 1); S.config.scenes.splice(i1, 0, ms); markDirty(); break;
       case 'sceneCapture':
-        var cs = curScene(); if (!cs || !d) return;
-        d.circuits.forEach(function (x) { if (!x.ni) cs.levels[x.id] = isOn(x) ? lv(x).level : 0; });
-        markDirty(); toast('Copied ' + d.name + ' lighting into ' + cs.name); break;
+        var cs = curScene(); if (!cs) return;
+        cs.levels = cs.levels || {};
+        scopeCircuits(t.getAttribute('data-scope')).forEach(function (x) { cs.levels[x.id] = isOn(x) ? lv(x).level : 0; });
+        markDirty(); toast('Copied the current lighting into ' + cs.name); break;
       case 'scenePreview':
-        var ps = curScene(); if (!ps || !d) return;
-        d.circuits.forEach(function (x) { if (x.ni) return; var v = (ps.levels || {})[x.id] || 0; var cur = lv(x); var nx = v > 0 ? { on: true, level: v } : { on: false, level: cur.level }; S.levels[x.id] = nx; sendCircuit(x.id, nx); });
-        break;
+        var ps = curScene(); if (!ps) return;
+        scopeCircuits(t.getAttribute('data-scope')).forEach(function (x) {
+          var v = sceneVal(ps, x.id); if (v < 0) return;
+          var nx = v > 0 ? { on: true, level: v } : { on: false, level: lv(x).level };
+          S.levels[x.id] = nx; sendCircuit(x.id, nx);
+        });
+        S.sceneBy = {}; break;
+      case 'sceneAll':
+        var as = curScene(); if (!as) return;
+        as.levels = as.levels || {};
+        var av = Number(t.getAttribute('data-v'));
+        scopeCircuits(t.getAttribute('data-scope')).forEach(function (x) { as.levels[x.id] = av; });
+        markDirty(); break;
       case 'sceneDelete':
         var ds = curScene(); if (!ds) return;
-        askConfirm('Delete the scene "' + ds.name + '" on every deck?', function () { S.config.scenes = S.config.scenes.filter(function (s) { return s.id !== ds.id; }); S.sceneSel = ''; markDirty(); render(); });
+        askConfirm('Delete the scene "' + ds.name + '" on every deck?', function () { S.config.scenes = S.config.scenes.filter(function (x) { return x.id !== ds.id; }); S.sceneSel = ''; markDirty(); render(); });
         return;
-      case 'sceneToggle':
-        var tsc = curScene(); if (!tsc) return;
-        tsc.levels = tsc.levels || {}; tsc.levels[cid] = tsc.levels[cid] > 0 ? 0 : 60; markDirty(); break;
       // Lutron setup
       case 'lxSave':
         var lxBody = { host: val('lxHost').trim(), port: Number(val('lxPort')), fadeSeconds: Number(val('lxFade')), enabled: document.getElementById('lxEnabled').checked };
@@ -546,10 +598,9 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     }
     if (act === 'sceneLevel') {
       var sc = curScene(); if (!sc) return;
-      sc.levels = sc.levels || {}; sc.levels[cid] = Number(t.value); markDirty();
-      var p2 = t.parentNode.querySelector('.pct'); if (p2) { p2.textContent = t.value > 0 ? t.value + '%' : 'Off'; p2.className = 'pct' + (t.value > 0 ? ' on' : ''); }
-      var sw = t.parentNode.querySelector('.sw'); if (sw) sw.setAttribute('aria-checked', String(t.value > 0));
-      scheduleRender(); return;
+      sc.levels = sc.levels || {}; sc.levels[cid] = Math.max(1, Number(t.value)); markDirty();
+      var p2 = t.parentNode.querySelector('.pct'); if (p2) p2.textContent = sc.levels[cid] + '%';
+      updateHeaderOnly(); return;
     }
     var f = t.getAttribute('data-edit');
     if (f) {
@@ -570,7 +621,14 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
   });
   document.addEventListener('change', function (e) {
     var t = e.target;
-    if (t.type === 'range') { render(); return; }
+    if (t.getAttribute && t.getAttribute('data-act') === 'sceneMode') {
+      var sm = curScene(); if (!sm) return;
+      sm.levels = sm.levels || {};
+      var cidm = t.getAttribute('data-cid'), prevv = sceneVal(sm, cidm);
+      sm.levels[cidm] = t.value === 'keep' ? -1 : t.value === 'off' ? 0 : (prevv > 0 ? prevv : 60);
+      markDirty(); render(); return;
+    }
+    if (t.type === 'range') { if (t.getAttribute('data-act') === 'sceneLevel') return; render(); return; }
     var add = t.getAttribute && t.getAttribute('data-lzadd');
     if (add && t.value) {
       var k = add.split('|'), cd = deckById(k[0]), cx = cd && circuitIn(cd, k[1]);

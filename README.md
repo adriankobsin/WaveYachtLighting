@@ -102,8 +102,11 @@ downloaded `pylutron_caseta-*.tar.gz` to the mini PC and run
 8. Optionally, link ship-wide scenes to Lutron scenes (virtual buttons) under **Integration addresses – scenes**. Use **Press** to test them.
 9. Press **Save & deploy**. Every panel updates immediately.
 
-The deck screens (Lights / Scenes tabs) work as before: add, edit, move or
-delete circuits and their lit areas on the GA, and edit scene levels per deck.
+The deck screens (Lights / Scenes tabs) let you add, edit, move or delete
+circuits and their lit areas on the GA. Scenes can be edited on each deck
+(Scenes tab) or for every deck at once on the Overview: each light is
+**Off**, **On** at a level, or **Don't change**. You can also rename, add,
+duplicate, reorder and delete scenes.
 
 ## Repository layout
 

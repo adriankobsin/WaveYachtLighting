@@ -131,7 +131,7 @@
           var scope = body.scope || 'all', list;
           if (scope === 'all') list = circuits(); else { var dk = config.decks.filter(function (x) { return x.id === scope; })[0]; list = dk ? dk.circuits : []; }
           var w = [];
-          list.forEach(function (x) { if (x.ni) return; var v = (sc.levels || {})[x.id] || 0, p = levels[x.id] || { level: 50 }; levels[x.id] = v > 0 ? { on: true, level: v } : { on: false, level: p.level }; w = w.concat(drive(x, levels[x.id])); });
+          list.forEach(function (x) { if (x.ni || (sc.levels || {})[x.id] < 0) return; var v = (sc.levels || {})[x.id] || 0, p = levels[x.id] || { level: 50 }; levels[x.id] = v > 0 ? { on: true, level: v } : { on: false, level: p.level }; w = w.concat(drive(x, levels[x.id])); });
           if (scope === 'all') { sceneBy = { all: sc.id }; config.decks.forEach(function (d) { sceneBy[d.id] = sc.id; }); } else { sceneBy = Object.assign({}, sceneBy, { all: null }); sceneBy[scope] = sc.id; }
           stateEv();
           return json(200, { ok: true, warnings: scope === 'all' && sc.lutronButton && lx.state === 'connected' ? [] : w });

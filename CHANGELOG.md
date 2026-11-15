@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.0 – 2026-11-15
+
+- New **At anchor** scene: anchor floods (GR2) on, walkways and side decks at 30 %, ship name at 70 %, deck downlights at 20 %, everything else off.
+- Scenes are fully editable in admin, both on the Overview (all decks at once) and on each deck:
+  - each light can be **Off**, **On** at a set level, or **Don't change** (left as it is when the scene runs);
+  - rename, add, duplicate, delete and reorder scenes;
+  - "Set all" (Off / 25 / 50 / 100 % / Don't change), "Copy current lighting" and "Preview" for the deck or for all decks;
+  - pressing a scene button while in admin opens it in the editor.
+- Server and demo: a scene level of -1 means "don't change".
+
 ## 1.0.0 – 2026-11-15
 
 First version in Git.
