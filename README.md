@@ -54,7 +54,7 @@ sudo -u wave git clone https://github.com/adriankobsin/WaveYachtLighting.git /op
 cd /opt/wave-lighting
 sudo -u wave npm ci --omit=dev
 sudo -u wave npm run fetch-certs               # once, needs internet – see below
-sudo -u wave npm run set-password              # optional: change the admin password
+sudo -u wave npm run set-password              # optional: change the Wave AVI master password
 sudo cp deploy/wave-lighting.service /etc/systemd/system/
 sudo systemctl daemon-reload
 sudo systemctl enable --now wave-lighting
@@ -92,7 +92,7 @@ downloaded `pylutron_caseta-*.tar.gz` to the mini PC and run
 
 ## Commissioning steps (admin)
 
-1. Open the app and press **Admin**. The password is the one Wave set; change it with `npm run set-password`.
+1. Open the app and press **Admin**. Log in with the Wave AVI master password or your own user password.
 2. Go to **Lutron setup** and enter the processor IP address. Leave the LEAP port at 8081 and set the default fade time. Press **Save connection settings**.
 3. Press **Pair with processor**. When the screen says so, press the **Access button** on the HomeWorks QSX processor within 3 minutes. The status turns **Processor connected**.
 4. Press **Test connection**. It shows the ping time, LEAP version, processor model/serial and project name.
@@ -107,6 +107,20 @@ circuits and their lit areas on the GA. Scenes can be edited on each deck
 (Scenes tab) or for every deck at once on the Overview: each light is
 **Off**, **On** at a level, or **Don't change**. You can also rename, add,
 duplicate, reorder and delete scenes.
+
+## Admin users and passwords
+
+Admins log in with **their password only**, so every user needs a different password.
+
+* **Wave AVI** is the master account. It always exists and cannot be deleted, and only Wave AVI can change its password.
+* Other users, such as the ETO or a service engineer, have the **same admin access** as Wave AVI: layout, scenes, Lutron setup and users. The only exceptions are changing the master password and deleting the master account.
+* In the app: **Admin** → left menu **Users & passwords**.
+  * **Your password**: change your own password. Your current password is needed.
+  * **Users**: rename users, set a new password for another user (they are logged out on other screens), or delete them.
+  * **Add a user**: name and password, at least 8 characters.
+* Locked out? On the mini PC, run `npm run set-password` (Wave AVI) or `npm run set-password -- --user "ETO"`, then `sudo systemctl restart wave-lighting`.
+
+Users are stored in `data/users.json` as scrypt hashes, readable only by the service user. Servers installed with 1.0/1.1 move the old `admin.json` password into the Wave AVI account automatically.
 
 ## Repository layout
 
@@ -143,9 +157,9 @@ saved layouts last only until the page is reloaded.
 | `lib/leap.js` | LEAP client (TLS, JSON lines, requests, subscriptions) |
 | `lib/pair.js` | Pairing flow (CSR, Access-button wait, certificate) |
 | `lib/lutron.js` | Connection manager, discovery, zone status, commands |
-| `lib/auth.js` | Admin password (scrypt hash), sessions, login rate limit |
+| `lib/auth.js` | Admin users (master + others), scrypt hashes, sessions, login rate limit |
 | `public/` | Touch-panel web app and deck plan images |
-| `defaults/` | Starting layout and admin password, copied to `data/` on first run |
+| `defaults/` | Starting layout and the initial Wave AVI password hash, copied to `data/` on first run |
 | `data/config.json` | Live layout: decks, circuits, lit areas, scenes, Lutron addresses (30 automatic backups in `data/backups/`) |
 | `data/settings.json` | Processor IP, ports, fade time |
 | `data/lutron/` | Pairing certificates and the last zone discovery. **Keep private** |
@@ -167,7 +181,7 @@ keypad.
 
 ## Security notes
 
-* The admin password is stored as a scrypt hash on the server. Admin sessions use an HttpOnly cookie, last 12 h, and login is limited to 5 attempts per minute.
+* Admin passwords are stored as scrypt hashes on the server (`data/users.json`). Admin sessions use an HttpOnly cookie and last 12 h. Login is limited to 5 attempts per minute, and changing a user's password logs that user out everywhere else.
 * Normal lighting control has no login, so anyone on the same network as the panels can use it. Keep the server on the crew/AV network, not guest Wi-Fi.
 * The app uses plain HTTP inside the boat. For HTTPS, put a reverse proxy (Caddy or nginx) in front of it.
 * `data/lutron/client.key` is the key the processor trusts. If the mini PC is replaced or the key is exposed, use **Forget pairing**, pair again, and remove the old integration in Lutron Designer if it is listed there.

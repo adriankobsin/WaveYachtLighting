@@ -24,18 +24,20 @@ function writeJson(file, value) { fs.writeFileSync(file + '.tmp', JSON.stringify
 const F = {
   config: path.join(DATA, 'config.json'),
   settings: path.join(DATA, 'settings.json'),
-  admin: path.join(DATA, 'admin.json')
+  admin: path.join(DATA, 'admin.json'),
+  users: path.join(DATA, 'users.json')
 };
 for (const name of ['config', 'admin']) {
+  if (name === 'admin' && fs.existsSync(F.users)) continue;
   if (!fs.existsSync(F[name]) && fs.existsSync(path.join(ROOT, 'defaults', name + '.json'))) {
     fs.copyFileSync(path.join(ROOT, 'defaults', name + '.json'), F[name]);
   }
 }
-if (!fs.existsSync(F.admin) && process.env.ADMIN_PASSWORD) writeJson(F.admin, hashPassword(process.env.ADMIN_PASSWORD));
+if (!fs.existsSync(F.admin) && !fs.existsSync(F.users) && process.env.ADMIN_PASSWORD) writeJson(F.admin, hashPassword(process.env.ADMIN_PASSWORD));
 
 let config = readJson(F.config, { decks: [], scenes: [] });
 let settings = readJson(F.settings, { lutron: {} });
-const auth = new Auth(F.admin);
+const auth = new Auth(F.users, F.admin);
 const lutron = new Lutron({ dataDir: DATA, settings: settings.lutron });
 
 // ---------- live lighting state ----------
@@ -139,7 +141,7 @@ function cookie(req, name) {
   const m = new RegExp('(?:^|;\\s*)' + name + '=([^;]+)').exec(req.headers.cookie || '');
   return m ? decodeURIComponent(m[1]) : null;
 }
-function isAdmin(req) { return auth.check(cookie(req, 'wl_session')); }
+function currentUser(req) { return auth.user(cookie(req, 'wl_session')); }
 function clientIp(req) { return (req.socket && req.socket.remoteAddress) || 'unknown'; }
 
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript', '.css': 'text/css', '.png': 'image/png', '.svg': 'image/svg+xml', '.json': 'application/json', '.ico': 'image/x-icon', '.webmanifest': 'application/manifest+json' };
@@ -186,11 +188,12 @@ function cleanConfig(body) {
 // ---------- routes ----------
 async function api(req, res, url) {
   const m = req.method;
-  const admin = isAdmin(req);
+  const me = currentUser(req);
+  const admin = !!me;
   const need = () => { if (!admin) throw Object.assign(new Error('Admin login required'), { status: 401 }); };
 
   if (url === '/api/bootstrap' && m === 'GET') {
-    return send(res, 200, { config, levels, sceneBy, admin, lutron: publicLutron(), adminConfigured: auth.configured() });
+    return send(res, 200, { config, levels, sceneBy, admin, user: me, lutron: publicLutron(), adminConfigured: auth.configured() });
   }
   if (url === '/api/events' && m === 'GET') {
     res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-store', Connection: 'keep-alive' });
@@ -252,8 +255,9 @@ async function api(req, res, url) {
   if (url === '/api/login' && m === 'POST') {
     const b = await readBody(req, 2000);
     if (!auth.configured()) throw Object.assign(new Error('No admin password is set on the server. Run "npm run set-password"'), { status: 503 });
-    const token = auth.login(str(b.password, 200), clientIp(req));
-    return send(res, 200, { ok: true }, { 'Set-Cookie': 'wl_session=' + token + '; HttpOnly; SameSite=Strict; Path=/; Max-Age=43200' });
+    const r = auth.login(str(b.password, 200), clientIp(req));
+    const token = r.token;
+    return send(res, 200, { ok: true, user: r.user }, { 'Set-Cookie': 'wl_session=' + token + '; HttpOnly; SameSite=Strict; Path=/; Max-Age=43200' });
   }
   if (url === '/api/logout' && m === 'POST') {
     auth.logout(cookie(req, 'wl_session'));
@@ -261,6 +265,23 @@ async function api(req, res, url) {
   }
 
   // ----- admin only -----
+  if (url === '/api/users' && m === 'GET') { need(); return send(res, 200, { users: auth.list(), me }); }
+  if (url === '/api/users' && m === 'POST') {
+    need();
+    const b = await readBody(req, 2000);
+    return send(res, 200, { ok: true, user: auth.addUser(me, b.name, b.password) });
+  }
+  let um = /^\/api\/users\/([A-Za-z0-9]+)(\/password)?$/.exec(url);
+  if (um) {
+    need();
+    const id = um[1];
+    if (um[2] && m === 'POST') {
+      const b = await readBody(req, 2000);
+      return send(res, 200, { ok: true, user: auth.setPassword(me, id, b.password, b.currentPassword, cookie(req, 'wl_session')) });
+    }
+    if (!um[2] && m === 'PUT') { const b = await readBody(req, 2000); return send(res, 200, { ok: true, user: auth.renameUser(me, id, b.name) }); }
+    if (!um[2] && m === 'DELETE') { auth.deleteUser(me, id); return send(res, 200, { ok: true }); }
+  }
   if (url === '/api/config' && m === 'PUT') {
     need();
     const next = cleanConfig(await readBody(req, 3 * 1024 * 1024));

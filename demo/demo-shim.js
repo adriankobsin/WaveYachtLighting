@@ -6,7 +6,7 @@
   var PASS_HASH = 'b962512ccc59d87393f9d996dd268c8ce68a1187e8bb60e63f9a098e976d0748';
   var realFetch = window.fetch.bind(window);
   var db = null, docRef = null;
-  var config = null, levels = {}, sceneBy = {}, admin = false;
+  var config = null, levels = {}, sceneBy = {}, admin = false, me = null;
   var listeners = [];
   var proc = { online: true, accessPressed: false, zoneLevels: {} };
   var lx = {
@@ -81,6 +81,77 @@
   function sha256(str) { return crypto.subtle.digest('SHA-256', new TextEncoder().encode(str)).then(function (b) { return Array.prototype.map.call(new Uint8Array(b), function (x) { return ('0' + x.toString(16)).slice(-2); }).join(''); }); }
   function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
+  // ---------- demo users (PBKDF2 in the shared store; same rules as the server) ----------
+  var usersRef = null, usersDoc = null;
+  function hex(buf) { return Array.prototype.map.call(new Uint8Array(buf), function (x) { return ('0' + x.toString(16)).slice(-2); }).join(''); }
+  function pbkdf2(pw, saltHex) {
+    var salt = new Uint8Array(saltHex.match(/../g).map(function (h) { return parseInt(h, 16); }));
+    return crypto.subtle.importKey('raw', new TextEncoder().encode(pw), 'PBKDF2', false, ['deriveBits'])
+      .then(function (k) { return crypto.subtle.deriveBits({ name: 'PBKDF2', hash: 'SHA-256', salt: salt, iterations: 150000 }, k, 256); }).then(hex);
+  }
+  function makeHash(pw) { var salt = hex(crypto.getRandomValues(new Uint8Array(16))); return pbkdf2(pw, salt).then(function (h) { return { salt: salt, hash: h }; }); }
+  function verify(pw, u) { if (u.sha) return sha256(pw).then(function (h) { return h === u.sha; }); return pbkdf2(pw, u.pw.salt).then(function (h) { return h === u.pw.hash; }); }
+  function pubUser(u) { return u ? { id: u.id, name: u.name, master: !!u.master, createdAt: u.createdAt || null, lastLoginAt: u.lastLoginAt || null, passwordChangedAt: u.passwordChangedAt || null } : null; }
+  function loadUsers() {
+    if (usersDoc) return Promise.resolve(usersDoc);
+    var fallback = function () { usersDoc = { users: [{ id: 'master', name: 'Wave AVI', master: true, sha: PASS_HASH, createdAt: null }] }; return usersDoc; };
+    if (!usersRef) return Promise.resolve(fallback());
+    return usersRef.get().then(function (snap) { var d = snap.exists ? snap.data() : null; if (d && d.users) { usersDoc = JSON.parse(JSON.stringify(d)); return usersDoc; } return fallback(); }).catch(fallback);
+  }
+  function saveUsers() { return usersRef ? usersRef.set(JSON.parse(JSON.stringify(usersDoc))) : Promise.resolve(); }
+  function findByPassword(pw, exceptId) {
+    var list = usersDoc.users.filter(function (u) { return u.id !== exceptId; });
+    return Promise.all(list.map(function (u) { return verify(pw, u); })).then(function (r) { var i = r.indexOf(true); return i < 0 ? null : list[i]; });
+  }
+  function checkNew(pw, exceptId) {
+    pw = String(pw || '');
+    if (pw.length < 8) return Promise.reject('Use at least 8 characters');
+    return findByPassword(pw, exceptId).then(function (u) { if (u) throw 'Another user already has that password. Choose a different one'; return pw; });
+  }
+  function usersApi(method, url, body) {
+    return loadUsers().then(function () {
+      if (!me) return err(401, 'Admin login required');
+      if (url === '/api/users' && method === 'GET') return json(200, { users: usersDoc.users.map(pubUser), me: me });
+      if (url === '/api/users' && method === 'POST') {
+        var n = String(body.name || '').trim().replace(/\s+/g, ' ').slice(0, 40);
+        if (!n) return err(400, 'Enter a name');
+        if (usersDoc.users.some(function (u) { return u.name.toLowerCase() === n.toLowerCase(); })) return err(400, 'There is already a user called ' + n);
+        return checkNew(body.password).then(makeHash).then(function (h) {
+          var u = { id: 'u' + hex(crypto.getRandomValues(new Uint8Array(6))), name: n, master: false, pw: h, createdAt: new Date().toISOString(), passwordChangedAt: new Date().toISOString() };
+          usersDoc.users.push(u); return saveUsers().then(function () { return json(200, { ok: true, user: pubUser(u) }); });
+        }).catch(function (m) { return err(400, String(m)); });
+      }
+      var mm = /^\/api\/users\/([A-Za-z0-9]+)(\/password)?$/.exec(url);
+      if (!mm) return err(404, 'Not found');
+      var u = usersDoc.users.filter(function (x) { return x.id === mm[1]; })[0];
+      if (!u) return err(404, 'User not found');
+      if (mm[2]) {
+        var self = u.id === me.id;
+        if (u.master && !self) return err(403, 'Only the Wave AVI master account can change the master password');
+        return (self ? verify(String(body.currentPassword || ''), u) : Promise.resolve(true)).then(function (ok) {
+          if (!ok) return err(401, 'Your current password is wrong');
+          return checkNew(body.password, u.id).then(makeHash).then(function (h) {
+            delete u.sha; u.pw = h; u.passwordChangedAt = new Date().toISOString();
+            return saveUsers().then(function () { return json(200, { ok: true, user: pubUser(u) }); });
+          }).catch(function (m) { return err(400, String(m)); });
+        });
+      }
+      if (method === 'PUT') {
+        if (u.master) return err(403, 'The master account name cannot be changed');
+        var nn = String(body.name || '').trim().slice(0, 40); if (!nn) return err(400, 'Enter a name');
+        u.name = nn; if (me.id === u.id) me.name = nn;
+        return saveUsers().then(function () { return json(200, { ok: true, user: pubUser(u) }); });
+      }
+      if (method === 'DELETE') {
+        if (u.master) return err(403, 'The master account cannot be deleted');
+        if (u.id === me.id) return err(400, 'You cannot delete the account you are logged in with');
+        usersDoc.users = usersDoc.users.filter(function (x) { return x.id !== u.id; });
+        return saveUsers().then(function () { return json(200, { ok: true }); });
+      }
+      return err(404, 'Not found');
+    });
+  }
+
   // Layout: the shared store on claude.ai; elsewhere config.json next to the page.
   function loadFallback() {
     return realFetch('config.json').then(function (r) { return r.json(); })
@@ -93,7 +164,7 @@
     if (!(window.claude && window.claude.use)) return finish();
     window.claude.use('db').then(function (ns) {
       if (!ns) return finish();
-      db = ns; docRef = db.doc('config/layout');
+      db = ns; docRef = db.doc('config/layout'); usersRef = db.doc('auth/users');
       docRef.onSnapshot(function (snap) {
         var data = snap.exists ? snap.data() : null;
         if (data && data.decks) {
@@ -109,14 +180,19 @@
   function handle(method, url, body) {
     if (url === '/api/bootstrap') return ready.then(function () {
       if (!config) return err(503, 'The lighting layout could not be loaded');
-      return json(200, { config: config, levels: levels, sceneBy: sceneBy, admin: admin, lutron: pub(), adminConfigured: true });
+      return json(200, { config: config, levels: levels, sceneBy: sceneBy, admin: admin, user: me, lutron: pub(), adminConfigured: true });
     });
     var need = function () { if (!admin) throw 401; };
+    if (url.indexOf('/api/users') === 0) return usersApi(method, url, body);
     try {
       switch (url) {
         case '/api/login':
-          return sha256(String(body.password || '')).then(function (h) { if (h !== PASS_HASH) return err(401, 'Wrong password'); admin = true; return json(200, { ok: true }); });
-        case '/api/logout': admin = false; return json(200, { ok: true });
+          return loadUsers().then(function () { return findByPassword(String(body.password || '')); }).then(function (u) {
+            if (!u) return err(401, 'Wrong password');
+            u.lastLoginAt = new Date().toISOString(); saveUsers().catch(function () {});
+            admin = true; me = pubUser(u); return json(200, { ok: true, user: me });
+          });
+        case '/api/logout': admin = false; me = null; return json(200, { ok: true });
         case '/api/circuit': {
           var c = circuitById(body.id); if (!c || c.ni) return err(404, 'Unknown circuit — save the layout first');
           var prev = levels[c.id] || { on: false, level: 50 };

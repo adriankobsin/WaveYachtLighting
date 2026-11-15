@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.0 – 2026-11-15
+
+- Admin users: **Wave AVI** stays the master account. Other users (ETO, engineer…) can be added with their own password and the same admin access.
+- New admin page **Users & passwords**: change your own password, add, rename and delete users, set a new password for another user.
+- Rules: the master cannot be deleted and only it can change the master password; you cannot delete yourself; passwords need at least 8 characters and must differ between users (login is by password only); changing a password logs that user out on other screens.
+- The top bar shows who is logged in (Exit admin · name). "Discard changes" is now "Discard" so the admin top bar fits on one line.
+- `npm run set-password` sets the Wave AVI password, or another user's with `-- --user "Name"`.
+- Users are stored in `data/users.json`. The old `data/admin.json` is migrated automatically.
+- Browser demo: same user features, with PBKDF2-hashed passwords in the demo's shared store.
+
 ## 1.1.1 – 2026-11-15
 
 - Browser demo: the simulated-processor panel (Access button, "Processor online") is hidden from normal users and only shown to admins on the Lutron setup page. The processor status in the top bar is still shown to everyone.
