@@ -271,13 +271,13 @@
           var zs = (body.zones || []).map(String).filter(Boolean);
           if (!zs.length) return err(400, 'Enter at least one zone ID');
           var res = zs.map(function (z) { if (!knownZone(z)) return { zone: z, ok: false, error: 'Zone not found' }; proc.zoneLevels[z] = +body.level; return { zone: z, ok: true }; });
-          flash('Zones ' + zs.join(', ') + ' → ' + (+body.level ? 'ON' : 'OFF'));
+          flash(L('Zones ', 'Зоны ') + zs.join(', ') + ' → ' + (+body.level ? L('ON', 'ВКЛ') : L('OFF', 'ВЫКЛ')));
           return json(200, { ok: res.every(function (r) { return r.ok; }), results: res });
         }
         case '/api/lutron/button-test':
           need();
           if (lx.state !== 'connected') return err(500, 'Not connected to the processor');
-          flash('Lutron scene #' + body.id + ' pressed');
+          flash(L('Lutron scene #' + body.id + ' pressed', 'Нажата сцена Lutron №' + body.id));
           return json(200, { ok: true });
       }
     } catch (e) { if (e === 401) return err(401, 'Admin login required'); return err(500, String(e)); }
@@ -324,12 +324,14 @@
     var p = levels.GR24 || { level: 60 };
     levels.GR24 = p.on ? { on: false, level: p.level } : { on: true, level: p.level || 60 };
     zonesOf(c).forEach(function (z) { proc.zoneLevels[z] = levels.GR24.on ? levels.GR24.level : 0; });
-    sceneBy = {}; stateEv(); flash('Keypad: GR24 turned ' + (levels.GR24.on ? 'on' : 'off'));
+    sceneBy = {}; stateEv(); flash(L('Keypad: GR24 turned ' + (levels.GR24.on ? 'on' : 'off'), 'Кнопочная панель: GR24 ' + (levels.GR24.on ? 'включена' : 'выключена')));
   }, 45000);
   setInterval(function () { if (lx.state === 'connected' && !proc.online) { setState('error', 'Connection to the processor was lost'); } }, 2000);
 
   // ---------- floating "simulated processor" panel ----------
-  var panel = null, flashMsg = '', flashT = null;
+  var panel = null, flashMsg = '', flashT = null, panelLang = '';
+  function ru() { return document.documentElement.lang === 'ru'; }
+  function L(en, r) { return ru() ? r : en; }
   function flash(m) { flashMsg = m; renderPanel(); clearTimeout(flashT); flashT = setTimeout(function () { flashMsg = ''; renderPanel(); }, 3000); }
   // Only admins see the simulated processor, and only on the Lutron setup page.
   function updateVisibility() {
@@ -342,13 +344,13 @@
     updateVisibility();
     var waiting = lx.pairing.stage === 'waiting-button';
     panel.innerHTML =
-      '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><b style="font:600 13px Inter,sans-serif;letter-spacing:.06em">DEMO · SIMULATED QSX</b>' +
-      '<button type="button" data-demo="min" aria-label="' + (panel.dataset.min ? 'Expand' : 'Minimise') + ' demo panel" style="height:28px;min-width:28px;border-radius:6px;border:1px solid #3A5069;background:transparent;color:#E7EEF5;cursor:pointer">' + (panel.dataset.min ? '+' : '–') + '</button></div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><b style="font:600 13px Inter,sans-serif;letter-spacing:.06em">' + L('DEMO · SIMULATED QSX', 'ДЕМО · ИМИТАЦИЯ QSX') + '</b>' +
+      '<button type="button" data-demo="min" aria-label="' + (panel.dataset.min ? L('Expand demo panel', 'Развернуть панель') : L('Minimise demo panel', 'Свернуть панель')) + '" style="height:28px;min-width:28px;border-radius:6px;border:1px solid #3A5069;background:transparent;color:#E7EEF5;cursor:pointer">' + (panel.dataset.min ? '+' : '–') + '</button></div>' +
       (panel.dataset.min ? '' :
-      '<div style="font-size:12px;color:#C9D6E3;line-height:1.45">No real processor is connected here. Use any valid IP (e.g. 192.168.10.20) and port 8081 in <b>Lutron setup</b>.</div>' +
-      '<label style="display:flex;align-items:center;gap:8px;font-size:13px"><input type="checkbox" data-demo="online"' + (proc.online ? ' checked' : '') + ' style="width:18px;height:18px;accent-color:#F2B45A">Processor online</label>' +
-      '<button type="button" data-demo="access" style="height:44px;border-radius:10px;border:1px solid ' + (waiting ? '#F2B45A' : '#3A5069') + ';background:' + (waiting ? '#F2B45A' : '#16283A') + ';color:' + (waiting ? '#0B1622' : '#9FB2C6') + ';font:600 14px Inter,sans-serif;cursor:pointer"' + (waiting ? '' : ' disabled') + '>Press Access button</button>' +
-      '<div style="font-size:12px;color:#9FB2C6">Link: ' + lx.state + (lx.paired ? ' · paired' : '') + '</div>') +
+      '<div style="font-size:12px;color:#C9D6E3;line-height:1.45">' + L('No real processor is connected here. Use any valid IP (e.g. 192.168.10.20) and port 8081 in <b>Lutron setup</b>.', 'Реальный процессор не подключён. Укажите любой правильный IP (напр. 192.168.10.20) и порт 8081 в разделе <b>Настройка Lutron</b>.') + '</div>' +
+      '<label style="display:flex;align-items:center;gap:8px;font-size:13px"><input type="checkbox" data-demo="online"' + (proc.online ? ' checked' : '') + ' style="width:18px;height:18px;accent-color:#F2B45A">' + L('Processor online', 'Процессор в сети') + '</label>' +
+      '<button type="button" data-demo="access" style="height:44px;border-radius:10px;border:1px solid ' + (waiting ? '#F2B45A' : '#3A5069') + ';background:' + (waiting ? '#F2B45A' : '#16283A') + ';color:' + (waiting ? '#0B1622' : '#9FB2C6') + ';font:600 14px Inter,sans-serif;cursor:pointer"' + (waiting ? '' : ' disabled') + '>' + L('Press Access button', 'Нажать кнопку Access') + '</button>' +
+      '<div style="font-size:12px;color:#9FB2C6">' + L('Link: ', 'Связь: ') + (ru() ? ({ idle: 'не настроен', unpaired: 'не сопряжён', connecting: 'подключение', connected: 'подключён', error: 'ошибка', disabled: 'выключен' }[lx.state] || lx.state) : lx.state) + (lx.paired ? L(' · paired', ' · сопряжён') : '') + '</div>') +
       (flashMsg ? '<div role="status" style="font-size:12px;color:#F6D8A8">' + flashMsg.replace(/</g, '&lt;') + '</div>' : '');
   }
   function mountPanel() {
@@ -359,7 +361,7 @@
     panel.addEventListener('click', function (e) {
       var t = e.target.closest('[data-demo]'); if (!t) return;
       var a = t.getAttribute('data-demo');
-      if (a === 'access') { proc.accessPressed = true; flash('Access button pressed'); }
+      if (a === 'access') { proc.accessPressed = true; flash(L('Access button pressed', 'Кнопка Access нажата')); }
       if (a === 'min') { if (panel.dataset.min) delete panel.dataset.min; else panel.dataset.min = '1'; renderPanel(); }
     });
     panel.addEventListener('change', function (e) {
@@ -367,7 +369,7 @@
     });
     renderPanel();
     var app = document.getElementById('app');
-    if (app && window.MutationObserver) new MutationObserver(updateVisibility).observe(app, { childList: true });
+    if (app && window.MutationObserver) new MutationObserver(function () { if (panelLang !== document.documentElement.lang) { panelLang = document.documentElement.lang; renderPanel(); } else updateVisibility(); }).observe(app, { childList: true });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountPanel); else mountPanel();
   connect();

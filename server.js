@@ -160,10 +160,17 @@ function serveStatic(req, res, urlPath) {
 // ---------- validation ----------
 function num(v, lo, hi, d) { const n = Number(v); return Number.isFinite(n) ? Math.max(lo, Math.min(hi, n)) : d; }
 function str(v, max) { return String(v == null ? '' : v).slice(0, max); }
+function cleanRu(ru, fields) {
+  if (!ru || typeof ru !== 'object') return undefined;
+  const o = {};
+  fields.forEach(([k, max]) => { if (ru[k]) o[k] = str(ru[k], max); });
+  return Object.keys(o).length ? o : undefined;
+}
 function cleanConfig(body) {
   if (!body || !Array.isArray(body.decks) || !Array.isArray(body.scenes)) throw Object.assign(new Error('Layout must have decks and scenes'), { status: 400 });
   const decks = body.decks.slice(0, 20).map((d) => ({
     id: str(d.id, 40), name: str(d.name, 60), fr: str(d.fr, 60), img: str(d.img, 200), r: num(d.r, 0.2, 20, 4), note: str(d.note, 600),
+    ru: cleanRu(d.ru, [['name', 60], ['note', 600]]),
     circuits: (Array.isArray(d.circuits) ? d.circuits : []).slice(0, 200).map((c) => {
       const o = {
         id: str(c.id, 40), label: str(c.label, 12), name: str(c.name, 60), ref: str(c.ref, 80), tag: str(c.tag, 20),
@@ -172,6 +179,8 @@ function cleanConfig(body) {
         lutron: { zones: ((c.lutron && Array.isArray(c.lutron.zones)) ? c.lutron.zones : []).map((z) => str(z, 12).replace(/[^0-9]/g, '')).filter(Boolean).slice(0, 32) }
       };
       if (c.ni) o.ni = true;
+      const ru = cleanRu(c.ru, [['name', 60]]);
+      if (ru) o.ru = ru;
       return o;
     })
   }));
@@ -180,6 +189,8 @@ function cleanConfig(body) {
     Object.keys(s.levels || {}).slice(0, 500).forEach((k) => { const v = num(s.levels[k], -1, 100, 0); lv[str(k, 40)] = v < 0 ? -1 : Math.round(v); });
     const o = { id: str(s.id, 40), name: str(s.name, 40), levels: lv };
     if (s.lutronButton) o.lutronButton = str(s.lutronButton, 12).replace(/[^0-9]/g, '');
+    const ru = cleanRu(s.ru, [['name', 40]]);
+    if (ru) o.ru = ru;
     return o;
   });
   return { decks, scenes, updatedAt: new Date().toISOString() };

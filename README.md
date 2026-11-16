@@ -108,6 +108,17 @@ circuits and their lit areas on the GA. Scenes can be edited on each deck
 **Off**, **On** at a level, or **Don't change**. You can also rename, add,
 duplicate, reorder and delete scenes.
 
+## Languages (English / Russian)
+
+The **EN / RU** switch in the top bar changes the whole app: menus, buttons, messages and admin pages, plus deck, circuit and scene names. Each panel or browser remembers its own choice.
+
+* Interface text is in `public/i18n.js`. English is the key and Russian the value, so a new text in the app only needs one new line there.
+* Names of decks, circuits and scenes are saved with the layout. Each has an English `name` and an optional `ru.name`, and deck notes have `ru.note`. If no Russian name is set, the English one is shown.
+* To edit names in admin:
+  * **Circuits:** deck → **Lights** tab → **Name (English)** and **Name (Russian)**.
+  * **Scenes:** **Scenes** tab or Overview → **Scene name (English)** and **Scene name (Russian)**.
+* Zone and scene names read from the Lutron processor are shown as they are programmed in Lutron.
+
 ## Admin users and passwords
 
 Admins log in with **their password only**, so every user needs a different password.
@@ -127,7 +138,7 @@ Users are stored in `data/users.json` as scrypt hashes, readable only by the ser
 | Path | What it is |
 |---|---|
 | `server.js`, `lib/` | The local server and the Lutron LEAP integration |
-| `public/` | The touch-panel web app (single `index.html`) and deck images |
+| `public/` | The touch-panel web app (`index.html`), translations (`i18n.js`) and deck images |
 | `defaults/` | Starting layout and admin password hash, copied to `data/` on first run |
 | `demo/` | Browser demo: `demo-shim.js` simulates the server and a QSX processor |
 | `assets/deck-plans/` | Transparent PNGs of the deck GA plans (white and dark lines) |

@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.3.0 – 2026-11-16
+
+- **English / Russian** switch (EN / RU) in the top bar. Each panel remembers its choice.
+- Everything is translated: menus, buttons, admin pages (Lights, Scenes, Lutron setup, Users & passwords), dialogs, messages, server and Lutron error messages, and the demo's simulated-processor panel.
+- Deck, circuit and scene names and deck notes have Russian versions (`ru` in the layout). All current decks, circuits and scenes are translated.
+- Admin can edit **Name (Russian)** for circuits and **Scene name (Russian)** for scenes.
+- Headings fall back to Inter for Cyrillic, since Space Grotesk has no Cyrillic letters.
+- To keep the admin top bar on one line: the subtitle and the "circuits on" count are hidden in admin mode, and in Russian "Save & deploy" reads «Применить».
+- Circuit cards are slightly wider and names can wrap to two lines.
+
 ## 1.2.0 – 2026-11-15
 
 - Admin users: **Wave AVI** stays the master account. Other users (ETO, engineer…) can be added with their own password and the same admin access.

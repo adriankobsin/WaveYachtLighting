@@ -6,7 +6,7 @@
 <title>Exterior Lighting Control – Wave AVI</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%2210%22 fill=%22%23F2B45A%22/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&subset=cyrillic&family=Space+Grotesk:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#0B1622;--panel:#112131;--panel2:#0F1E2D;--rail:#0E1B28;--line:#22344A;--line2:#3A5069;--text:#E7EEF5;--muted:#9FB2C6;--amber:#F2B45A;--glow:#FFB347}
 *{box-sizing:border-box}
@@ -16,7 +16,7 @@ button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid 
 .app{display:flex;flex-direction:column;min-height:100vh}
 header{min-height:64px;display:flex;align-items:center;justify-content:space-between;padding:10px 24px;background:var(--rail);border-bottom:1px solid var(--line);gap:12px;flex-wrap:wrap}
 .brand{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
-.brand b{font:600 18px 'Space Grotesk',sans-serif;letter-spacing:.12em}
+.brand b{font:600 18px 'Space Grotesk',Inter,sans-serif;letter-spacing:.12em}
 .muted{color:var(--muted)}
 .hright{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .btn{height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--line2);background:#16283A;display:inline-flex;align-items:center;gap:8px;font-weight:600;font-size:14px;cursor:pointer;white-space:nowrap}
@@ -31,8 +31,8 @@ nav{width:200px;flex:none;background:var(--rail);border-right:1px solid var(--li
 .ritem.on{background:#1C3047;border-left-color:var(--amber);color:#fff}
 .ritem span{font-weight:600;font-size:15px}.ritem small{font-size:12px;color:var(--muted)}
 main{flex:999 1 560px;min-width:0;padding:22px 28px;display:flex;flex-direction:column;gap:16px}
-h1{margin:0;font:600 26px 'Space Grotesk',sans-serif}
-h2{margin:0;font:600 18px 'Space Grotesk',sans-serif}
+h1{margin:0;font:600 26px 'Space Grotesk',Inter,sans-serif}
+h2{margin:0;font:600 18px 'Space Grotesk',Inter,sans-serif}
 .row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .between{justify-content:space-between}
 .chip{min-height:44px;padding:0 18px;border-radius:22px;border:1px solid var(--line2);background:#16283A;font-weight:600;font-size:14px;cursor:pointer}
@@ -47,17 +47,18 @@ h2{margin:0;font:600 18px 'Space Grotesk',sans-serif}
 svg.edit{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 svg.edit polygon{cursor:move}
 .handle{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:4px;background:#fff;border:2px solid var(--amber);cursor:grab;touch-action:none;padding:0}
-.grid4{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
 .card.sel{border-color:var(--amber)}
 .badge{min-width:42px;height:34px;flex:none;border-radius:8px;border:2px solid #7F93A8;background:rgba(11,22,34,.9);font-size:10px;font-weight:600;cursor:pointer;padding:0 4px}
 .name{font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .name{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;line-height:1.25}
 .ref{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sw{width:52px;height:32px;flex:none;border-radius:16px;border:none;background:#2A3D53;position:relative;cursor:pointer;padding:0}
 .sw::after{content:"";position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:13px;background:#fff;transition:left .15s}
 .sw[aria-checked="true"]{background:var(--amber)}.sw[aria-checked="true"]::after{left:23px}
 input[type=range]{flex:1;min-width:0;height:28px;margin:0;accent-color:var(--amber)}
-.pct{width:46px;text-align:right;font:600 14px 'Space Grotesk',sans-serif;color:var(--muted)}.pct.on{color:var(--amber)}
+.pct{width:46px;text-align:right;font:600 14px 'Space Grotesk',Inter,sans-serif;color:var(--muted)}.pct.on{color:var(--amber)}
 .decks{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
 .dcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;text-align:left;cursor:pointer}
 .dcard:hover{border-color:var(--line2)}
@@ -105,12 +106,16 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
 .result{border-radius:10px;padding:12px 14px;font-size:13px;border:1px solid var(--line2);background:var(--panel2)}
 .result.ok{border-color:#2F7A52;background:#0F2A1D}.result.bad{border-color:#8A4B4B;background:#2A1414}
 .ritem.admin small{color:#F6D8A8}
+.lang{display:inline-flex;border:1px solid var(--line2);border-radius:10px;overflow:hidden;height:44px}
+.lang button{border:0;background:#16283A;padding:0 12px;font-weight:600;font-size:13px;cursor:pointer;color:var(--muted);min-width:44px}
+.lang button[aria-pressed="true"]{background:var(--amber);color:#0B1622}
 </style>
 </head>
 <body>
 <div class="app" id="app"><div class="empty">Loading lighting layout…</div></div>
 <div id="modal"></div>
 <div id="toast"></div>
+<script src="i18n.js?v=1.3.0"></script>
 <script>
 (function () {
   'use strict';
@@ -121,16 +126,40 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     view: 'home', sel: '', tab: 'lights', selZone: null, sceneSel: '', dirty: false, saving: false, loadError: ''
   };
 
+  // ---------- language ----------
+  var LANG = 'en';
+  try { LANG = localStorage.getItem('wl-lang') === 'ru' ? 'ru' : 'en'; } catch (e) {}
+  document.documentElement.lang = LANG;
+  var I18N = window.WL_I18N || { ru: {}, ruPatterns: [] };
+  /** Interface text: English is the key; {name} placeholders are filled from v. */
+  function t(en, v) {
+    var r = (LANG === 'ru' && I18N.ru[en]) || en;
+    if (v) r = r.replace(/\{(\w+)\}/g, function (m, k) { return v[k] !== undefined ? v[k] : m; });
+    return r;
+  }
+  /** Messages from the server: exact match, then patterns with variable parts. */
+  function tm(msg) {
+    msg = String(msg || '');
+    if (LANG !== 'ru') return msg;
+    if (I18N.ru[msg]) return I18N.ru[msg];
+    for (var i = 0; i < I18N.ruPatterns.length; i++) { var m = I18N.ruPatterns[i][0].exec(msg); if (m) return I18N.ruPatterns[i][1].replace(/\$(\d)/g, function (x, n) { return m[+n]; }); }
+    return msg;
+  }
+  /** Names of decks, circuits and scenes: the Russian name when set. */
+  function nm(o) { return (o && LANG === 'ru' && o.ru && o.ru.name) || (o && o.name) || ''; }
+  function noteOf(d) { return (LANG === 'ru' && d.ru && d.ru.note) || d.note || ''; }
+  function setLang(l) { LANG = l === 'ru' ? 'ru' : 'en'; try { localStorage.setItem('wl-lang', LANG); } catch (e) {} document.documentElement.lang = LANG; }
+
   function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   function uid(p) { return p + Date.now().toString(36) + Math.random().toString(36).slice(2, 5); }
-  function toast(msg) { var t = document.getElementById('toast'); t.innerHTML = '<div class="toast" role="status">' + esc(msg) + '</div>'; clearTimeout(toast._t); toast._t = setTimeout(function () { t.innerHTML = ''; }, 3200); }
+  function toast(msg) { var el = document.getElementById('toast'); el.innerHTML = '<div class="toast" role="status">' + esc(msg) + '</div>'; clearTimeout(toast._t); toast._t = setTimeout(function () { el.innerHTML = ''; }, 3200); }
   function api(method, url, body) {
     return fetch(url, { method: method, credentials: 'same-origin', headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { if (!r.ok) throw new Error(j.error || ('HTTP ' + r.status)); return j; }); });
   }
-  function warn(res) { if (res && res.warnings && res.warnings.length) toast('Lutron: ' + res.warnings[0] + (res.warnings.length > 1 ? ' (+' + (res.warnings.length - 1) + ' more)' : '')); }
-  function fail(e) { toast(e.message || String(e)); }
+  function warn(res) { if (res && res.warnings && res.warnings.length) toast('Lutron: ' + tm(res.warnings[0]) + (res.warnings.length > 1 ? ' ' + t('(+{n} more)', { n: res.warnings.length - 1 }) : '')); }
+  function fail(e) { toast(tm(e.message || String(e))); }
 
   // ---------- model ----------
   function decks() { return (S.config && S.config.decks) || []; }
@@ -164,12 +193,12 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     var h = glowLayers(deck, 1);
     if (!S.admin) {
       (deck.circuits || []).forEach(function (c) {
-        (c.z || []).forEach(function (p) { if (p && p.length >= 3) h += '<button class="core" data-act="pick" data-cid="' + esc(c.id) + '" aria-label="' + esc(c.label + ' ' + c.name) + '" style="clip-path:' + clipOf(p) + ';background:' + coreBg(c) + '"></button>'; });
+        (c.z || []).forEach(function (p) { if (p && p.length >= 3) h += '<button class="core" data-act="pick" data-cid="' + esc(c.id) + '" aria-label="' + esc(c.label + ' ' + nm(c)) + '" style="clip-path:' + clipOf(p) + ';background:' + coreBg(c) + '"></button>'; });
       });
-      return h + '<img src="' + esc(deck.img) + '" alt="' + esc(deck.name) + ' general arrangement">';
+      return h + '<img src="' + esc(deck.img) + '" alt="' + esc(t('{deck} general arrangement', { deck: nm(deck) })) + '">';
     }
-    h += '<img src="' + esc(deck.img) + '" alt="' + esc(deck.name) + ' general arrangement">';
-    var svg = '<svg class="edit" viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="Lighting areas – drag to move">';
+    h += '<img src="' + esc(deck.img) + '" alt="' + esc(t('{deck} general arrangement', { deck: nm(deck) })) + '">';
+    var svg = '<svg class="edit" viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="' + esc(t('Lighting areas – drag to move')) + '">';
     (deck.circuits || []).forEach(function (c) {
       var selC = S.sel === c.id;
       (c.z || []).forEach(function (p, zi) {
@@ -181,7 +210,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     h += svg + '</svg>';
     if (S.selZone) {
       var c = circuitIn(deck, S.selZone.cid), p = c && c.z && c.z[S.selZone.zi];
-      if (p) p.forEach(function (q, vi) { h += '<button class="handle" data-drag="vtx" data-vi="' + vi + '" aria-label="Corner ' + (vi + 1) + '" style="left:' + q[0] + '%;top:' + q[1] + '%"></button>'; });
+      if (p) p.forEach(function (q, vi) { h += '<button class="handle" data-drag="vtx" data-vi="' + vi + '" aria-label="' + esc(t('Corner {n}', { n: vi + 1 })) + '" style="left:' + q[0] + '%;top:' + q[1] + '%"></button>'; });
     }
     return h;
   }
@@ -195,102 +224,104 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     else if (st === 'unpaired') { cls = 'warn'; txt = 'Processor not paired'; }
     else if (st === 'idle') { cls = 'warn'; txt = 'No processor set up'; }
     else if (st === 'disabled') { cls = 'warn'; txt = 'Lutron link switched off'; }
-    return '<span class="pill ' + cls + '" title="' + esc(S.lutron.lastError || '') + '"><i></i>' + esc(txt) + '</span>';
+    return '<span class="pill ' + cls + '" title="' + esc(tm(S.lutron.lastError || '')) + '"><i></i>' + esc(t(txt)) + '</span>';
   }
   function header() {
     var inst = allCircuits().filter(function (c) { return !c.ni; }), onN = inst.filter(isOn).length;
-    var h = '<header><div class="brand"><b>M/Y ALBATROSS</b><span class="muted">Exterior lighting</span></div><div class="hright">' + lutronPill();
-    h += '<span class="muted" style="font-size:14px">' + onN + ' of ' + inst.length + ' circuits on</span>';
-    h += '<button class="btn" data-act="alloff"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v8"/><path d="M6.3 7.3a8 8 0 1 0 11.4 0"/></svg>All exterior off</button>';
-    if (!S.admin) h += '<button class="btn" data-act="login"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>Admin</button>';
+    var h = '<header><div class="brand"><b>M/Y ALBATROSS</b>' + (S.admin ? '' : '<span class="muted">' + t('Exterior lighting') + '</span>') + '</div><div class="hright">' + lutronPill();
+    if (!S.admin) h += '<span class="muted" style="font-size:14px">' + t('{n} of {m} circuits on', { n: onN, m: inst.length }) + '</span>';
+    h += '<div class="lang" role="group" aria-label="' + t('Language') + '"><button data-act="lang" data-id="en" aria-pressed="' + (LANG === 'en') + '" title="English">EN</button><button data-act="lang" data-id="ru" aria-pressed="' + (LANG === 'ru') + '" title="Русский">RU</button></div>';
+    h += '<button class="btn" data-act="alloff"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 3v8"/><path d="M6.3 7.3a8 8 0 1 0 11.4 0"/></svg>' + t('All exterior off') + '</button>';
+    if (!S.admin) h += '<button class="btn" data-act="login"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>' + t('Admin') + '</button>';
     else {
-      h += '<button class="btn primary" data-act="save"' + (S.dirty && !S.saving ? '' : ' disabled') + '>' + (S.saving ? 'Saving…' : 'Save &amp; deploy') + '</button>';
-      h += '<button class="btn" data-act="discard"' + (S.dirty ? '' : ' disabled') + '>Discard</button>';
-      h += '<button class="btn" data-act="logout" title="Logged in as ' + esc(S.user ? S.user.name : '') + '">Exit admin<span class="muted" style="font-weight:500">· ' + esc(S.user ? S.user.name : '') + '</span></button>';
+      h += '<button class="btn primary" data-act="save"' + (S.dirty && !S.saving ? '' : ' disabled') + '>' + (S.saving ? t('Saving…') : t('Save &amp; deploy')) + '</button>';
+      h += '<button class="btn" data-act="discard"' + (S.dirty ? '' : ' disabled') + '>' + t('Discard') + '</button>';
+      h += '<button class="btn" data-act="logout" title="' + esc(t('Logged in as {name}', { name: S.user ? S.user.name : '' })) + '">' + t('Exit admin') + '<span class="muted" style="font-weight:500">· ' + esc(S.user ? S.user.name : '') + '</span></button>';
     }
     return h + '</div></header>';
   }
   function rail() {
-    var h = '<nav aria-label="Decks"><button class="ritem' + (S.view === 'home' ? ' on' : '') + '" data-act="go" data-id="home"><span>Overview</span><small>All decks</small></button>';
+    var h = '<nav aria-label="' + t('Decks') + '"><button class="ritem' + (S.view === 'home' ? ' on' : '') + '" data-act="go" data-id="home"><span>' + t('Overview') + '</span><small>' + t('All decks') + '</small></button>';
     decks().forEach(function (d) {
       var inst = (d.circuits || []).filter(function (c) { return !c.ni; });
-      h += '<button class="ritem' + (S.view === d.id ? ' on' : '') + '" data-act="go" data-id="' + esc(d.id) + '"><span>' + esc(d.name) + '</span><small>' + inst.filter(isOn).length + ' of ' + inst.length + ' on</small></button>';
+      h += '<button class="ritem' + (S.view === d.id ? ' on' : '') + '" data-act="go" data-id="' + esc(d.id) + '"><span>' + esc(nm(d)) + '</span><small>' + t('{n} of {m} on', { n: inst.filter(isOn).length, m: inst.length }) + '</small></button>';
     });
     if (S.admin) {
-      h += '<button class="ritem admin' + (S.view === 'lutron' ? ' on' : '') + '" data-act="go" data-id="lutron"><span>Lutron setup</span><small>Processor &amp; addresses</small></button>';
-      h += '<button class="ritem admin' + (S.view === 'users' ? ' on' : '') + '" data-act="go" data-id="users"><span>Users &amp; passwords</span><small>Admin accounts</small></button>';
+      h += '<button class="ritem admin' + (S.view === 'lutron' ? ' on' : '') + '" data-act="go" data-id="lutron"><span>' + t('Lutron setup') + '</span><small>' + t('Processor &amp; addresses') + '</small></button>';
+      h += '<button class="ritem admin' + (S.view === 'users' ? ' on' : '') + '" data-act="go" data-id="users"><span>' + t('Users &amp; passwords') + '</span><small>' + t('Admin accounts') + '</small></button>';
     }
     return h + '</nav>';
   }
   function sceneChips(key) {
-    return scenes().map(function (sc) { return '<button class="chip' + (S.sceneBy[key] === sc.id ? ' on' : '') + '" data-act="scene" data-key="' + esc(key) + '" data-sid="' + esc(sc.id) + '">' + esc(sc.name) + '</button>'; }).join('');
+    return scenes().map(function (sc) { return '<button class="chip' + (S.sceneBy[key] === sc.id ? ' on' : '') + '" data-act="scene" data-key="' + esc(key) + '" data-sid="' + esc(sc.id) + '">' + esc(nm(sc)) + '</button>'; }).join('');
   }
 
   // ---------- views ----------
   function homeView() {
-    var h = '<div class="row between"><h1>Select a deck</h1><span class="muted" style="font-size:13px">Ship-wide scenes apply to every deck</span></div><div class="row">' + sceneChips('all') + '</div><div class="decks">';
+    var h = '<div class="row between"><h1>' + t('Select a deck') + '</h1><span class="muted" style="font-size:13px">' + t('Ship-wide scenes apply to every deck') + '</span></div><div class="row">' + sceneChips('all') + '</div><div class="decks">';
     decks().forEach(function (d) {
       var inst = (d.circuits || []).filter(function (c) { return !c.ni; }), onN = inst.filter(isOn).length;
-      h += '<button class="dcard" data-act="go" data-id="' + esc(d.id) + '"><div class="thumb"><div class="pbox" style="' + boxStyle(d, 100) + '">' + glowLayers(d, 0.35) + '<img src="' + esc(d.img) + '" alt="' + esc(d.name) + ' plan" style="opacity:.7"></div></div>';
-      h += '<div class="row between" style="width:100%"><span style="font:600 20px \'Space Grotesk\',sans-serif">' + esc(d.name) + '</span><span class="muted" style="font-size:12px">' + esc(d.fr) + '</span></div>';
-      h += '<div class="row between muted" style="width:100%;font-size:13px"><span>' + onN + ' of ' + inst.length + ' circuits on</span><span style="color:var(--amber)">Open</span></div>';
+      h += '<button class="dcard" data-act="go" data-id="' + esc(d.id) + '"><div class="thumb"><div class="pbox" style="' + boxStyle(d, 100) + '">' + glowLayers(d, 0.35) + '<img src="' + esc(d.img) + '" alt="' + esc(t('{deck} plan', { deck: nm(d) })) + '" style="opacity:.7"></div></div>';
+      h += '<div class="row between" style="width:100%"><span style="font:600 20px \'Space Grotesk\',Inter,sans-serif">' + esc(nm(d)) + '</span><span class="muted" style="font-size:12px">' + esc(d.fr) + '</span></div>';
+      h += '<div class="row between muted" style="width:100%;font-size:13px"><span>' + t('{n} of {m} circuits on', { n: onN, m: inst.length }) + '</span><span style="color:var(--amber)">' + t('Open') + '</span></div>';
       h += '<div class="bar"><div style="width:' + (inst.length ? Math.round(100 * onN / inst.length) : 0) + '%"></div></div></button>';
     });
     h += '</div>';
-    if (S.admin) h += '<section class="panel" aria-label="Scene editor"><h2>Scenes – all decks</h2>' + sceneEditor(decks(), 'All decks', 'all') + '</section>';
+    if (S.admin) h += '<section class="panel" aria-label="' + t('Scene editor') + '"><h2>' + t('Scenes – all decks') + '</h2>' + sceneEditor(decks(), t('All decks'), 'all') + '</section>';
     return h;
   }
   function circuitCard(c) {
     var on = isOn(c), st = lv(c);
     var h = '<div class="card' + (S.sel === c.id ? ' sel' : '') + '"><div class="row" style="flex-wrap:nowrap">';
-    h += '<button class="badge" data-act="pick" data-cid="' + esc(c.id) + '" aria-label="Show ' + esc(c.name) + ' on plan" style="' + (on ? 'background:rgba(242,180,90,' + (0.45 + 0.55 * st.level / 100).toFixed(2) + ');color:#0B1622;border-color:#F2B45A' : '') + '">' + esc(c.label) + '</button>';
-    h += '<div style="flex:1;min-width:0"><div class="name">' + esc(c.name) + '</div><div class="ref">' + esc(c.ref) + '</div></div>';
-    if (!c.ni) h += '<button class="sw" role="switch" aria-checked="' + on + '" aria-label="' + esc(c.name) + ' power" data-act="toggle" data-cid="' + esc(c.id) + '"></button>';
+    h += '<button class="badge" data-act="pick" data-cid="' + esc(c.id) + '" aria-label="' + esc(t('Show {name} on plan', { name: nm(c) })) + '" style="' + (on ? 'background:rgba(242,180,90,' + (0.45 + 0.55 * st.level / 100).toFixed(2) + ');color:#0B1622;border-color:#F2B45A' : '') + '">' + esc(c.label) + '</button>';
+    h += '<div style="flex:1;min-width:0"><div class="name">' + esc(nm(c)) + '</div><div class="ref">' + esc(c.ref) + '</div></div>';
+    if (!c.ni) h += '<button class="sw" role="switch" aria-checked="' + on + '" aria-label="' + esc(t('{name} power', { name: nm(c) })) + '" data-act="toggle" data-cid="' + esc(c.id) + '"></button>';
     h += '</div>';
-    if (!c.ni) h += '<div class="row" style="flex-wrap:nowrap"><input type="range" min="0" max="100" value="' + st.level + '" data-act="level" data-cid="' + esc(c.id) + '" aria-label="' + esc(c.name) + ' dim level"><span class="pct' + (on ? ' on' : '') + '">' + (on ? st.level + '%' : 'Off') + '</span></div>';
-    else h += '<div class="muted" style="font-size:12px;height:28px;display:flex;align-items:center">Not installed – cable spare only</div>';
+    if (!c.ni) h += '<div class="row" style="flex-wrap:nowrap"><input type="range" min="0" max="100" value="' + st.level + '" data-act="level" data-cid="' + esc(c.id) + '" aria-label="' + esc(t('{name} dim level', { name: nm(c) })) + '"><span class="pct' + (on ? ' on' : '') + '">' + (on ? st.level + '%' : t('Off')) + '</span></div>';
+    else h += '<div class="muted" style="font-size:12px;height:28px;display:flex;align-items:center">' + t('Not installed – cable spare only') + '</div>';
     return h + '</div>';
   }
   function deckView(d) {
     var inst = (d.circuits || []).filter(function (c) { return !c.ni; });
-    var h = '<div class="row between"><div class="row" style="align-items:baseline"><h1>' + esc(d.name) + '</h1><span class="muted" style="font-size:13px">' + esc(d.fr) + '</span></div>';
-    h += '<span class="muted" style="font-size:13px">' + inst.filter(isOn).length + ' of ' + inst.length + ' on · ' + (S.admin ? 'drag an area to move it, drag the white corners to reshape' : 'tap a lit area to find its circuit') + '</span></div>';
-    if (S.admin) h += '<div class="adminbar">Admin mode – changes stay on this screen until you press <b>Save &amp; deploy</b>. Then every control panel gets the new layout, scenes and Lutron addresses.</div>';
+    var h = '<div class="row between"><div class="row" style="align-items:baseline"><h1>' + esc(nm(d)) + '</h1><span class="muted" style="font-size:13px">' + esc(d.fr) + '</span></div>';
+    h += '<span class="muted" style="font-size:13px">' + t('{n} of {m} on', { n: inst.filter(isOn).length, m: inst.length }) + ' · ' + (S.admin ? t('drag an area to move it, drag the white corners to reshape') : t('tap a lit area to find its circuit')) + '</span></div>';
+    if (S.admin) h += '<div class="adminbar">' + t('Admin mode – changes stay on this screen until you press <b>Save &amp; deploy</b>. Then every control panel gets the new layout, scenes and Lutron addresses.') + '</div>';
     h += '<div class="plan"><div class="pbox" id="pbox" style="' + boxStyle(d, 230) + '">' + planInner(d) + '</div></div>';
-    h += '<div class="row"><span class="lbl">SCENES</span>' + sceneChips(d.id) + '</div>';
-    if (d.note) h += '<div class="note">' + esc(d.note) + '</div>';
+    h += '<div class="row"><span class="lbl">' + t('SCENES') + '</span>' + sceneChips(d.id) + '</div>';
+    if (noteOf(d)) h += '<div class="note">' + esc(noteOf(d)) + '</div>';
     if (S.admin) h += adminPanel(d);
     h += '<div class="grid4">' + (d.circuits || []).map(circuitCard).join('') + '</div>';
-    if (!(d.circuits || []).length) h += '<div class="empty">No circuits on this deck yet.' + (S.admin ? ' Use <b>Add circuit</b> above.' : '') + '</div>';
+    if (!(d.circuits || []).length) h += '<div class="empty">' + t('No circuits on this deck yet.') + (S.admin ? ' ' + t('Use <b>Add circuit</b> above.') : '') + '</div>';
     return h;
   }
   function adminPanel(d) {
-    return '<section class="panel" aria-label="Admin tools"><div class="row"><button class="tab' + (S.tab === 'lights' ? ' on' : '') + '" data-act="tab" data-id="lights">Lights</button><button class="tab' + (S.tab === 'scenes' ? ' on' : '') + '" data-act="tab" data-id="scenes">Scenes</button></div>' + (S.tab === 'lights' ? lightsTab(d) : scenesTab(d)) + '</section>';
+    return '<section class="panel" aria-label="' + t('Admin tools') + '"><div class="row"><button class="tab' + (S.tab === 'lights' ? ' on' : '') + '" data-act="tab" data-id="lights">' + t('Lights') + '</button><button class="tab' + (S.tab === 'scenes' ? ' on' : '') + '" data-act="tab" data-id="scenes">' + t('Scenes') + '</button></div>' + (S.tab === 'lights' ? lightsTab(d) : scenesTab(d)) + '</section>';
   }
   function lightsTab(d) {
     var c = circuitIn(d, S.sel);
-    var h = '<div class="split"><div style="display:flex;flex-direction:column;gap:10px"><div class="row between"><h2>Circuits</h2><button class="btn sm" data-act="addCircuit">+ Add circuit</button></div><div class="list">';
+    var h = '<div class="split"><div style="display:flex;flex-direction:column;gap:10px"><div class="row between"><h2>' + t('Circuits') + '</h2><button class="btn sm" data-act="addCircuit">' + t('+ Add circuit') + '</button></div><div class="list">';
     (d.circuits || []).forEach(function (x) {
-      h += '<button class="li' + (S.sel === x.id ? ' on' : '') + '" data-act="pick" data-cid="' + esc(x.id) + '"><span class="sq" style="background:' + (isOn(x) ? '#F2B45A' : '#3A5069') + '"></span><span style="font-weight:600;font-size:13px;width:48px">' + esc(x.label) + '</span><span style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(x.name) + '</span></button>';
+      h += '<button class="li' + (S.sel === x.id ? ' on' : '') + '" data-act="pick" data-cid="' + esc(x.id) + '"><span class="sq" style="background:' + (isOn(x) ? '#F2B45A' : '#3A5069') + '"></span><span style="font-weight:600;font-size:13px;width:48px">' + esc(x.label) + '</span><span style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(nm(x)) + '</span></button>';
     });
     h += '</div></div><div style="display:flex;flex-direction:column;gap:12px">';
-    if (!c) return h + '<div class="muted" style="padding:20px 0">Select a circuit in the list or tap an area on the plan to edit it.</div></div></div>';
+    if (!c) return h + '<div class="muted" style="padding:20px 0">' + t('Select a circuit in the list or tap an area on the plan to edit it.') + '</div></div></div>';
     h += '<div class="form">';
-    h += '<label class="f">Circuit no.<input data-edit="label" value="' + esc(c.label) + '" maxlength="12"></label>';
-    h += '<label class="f">Name<input data-edit="name" value="' + esc(c.name) + '" maxlength="40"></label>';
-    h += '<label class="f">Cable / fitting ref<input data-edit="ref" value="' + esc(c.ref) + '" maxlength="60"></label>';
-    h += '<label class="f">Type<select data-edit="tag">' + TYPES.map(function (t) { return '<option value="' + t[0] + '"' + (c.tag === t[0] ? ' selected' : '') + '>' + t[1] + '</option>'; }).join('') + '</select></label>';
-    h += '<label class="f">Lutron zone IDs<input data-edit="zones" value="' + esc(zonesStr(c)) + '" placeholder="e.g. 1234, 1235" inputmode="numeric"></label>';
-    h += '<label class="f">Start-up level %<input data-edit="def" type="number" min="0" max="100" value="' + (c.def || 0) + '"></label>';
-    h += '<label class="chk"><input type="checkbox" data-edit="on"' + (c.on ? ' checked' : '') + '>On at start-up</label>';
-    h += '<label class="chk"><input type="checkbox" data-edit="ni"' + (c.ni ? ' checked' : '') + '>Not installed</label>';
-    h += '</div><div class="lbl">LIT AREAS ON THE GA (' + (c.z || []).length + ')</div><div class="row">';
-    h += '<button class="btn sm" data-act="addArea">+ Area</button><button class="btn sm" data-act="addBeam">+ Floodlight beam</button>';
+    h += '<label class="f">' + t('Circuit no.') + '<input data-edit="label" value="' + esc(c.label) + '" maxlength="12"></label>';
+    h += '<label class="f">' + t('Name (English)') + '<input data-edit="name" value="' + esc(c.name) + '" maxlength="40"></label>';
+    h += '<label class="f">' + t('Name (Russian)') + '<input data-edit="name_ru" value="' + esc((c.ru && c.ru.name) || '') + '" maxlength="40" lang="ru" placeholder="' + esc(c.name) + '"></label>';
+    h += '<label class="f">' + t('Cable / fitting ref') + '<input data-edit="ref" value="' + esc(c.ref) + '" maxlength="60"></label>';
+    h += '<label class="f">' + t('Type') + '<select data-edit="tag">' + TYPES.map(function (ty) { return '<option value="' + ty[0] + '"' + (c.tag === ty[0] ? ' selected' : '') + '>' + t(ty[1]) + '</option>'; }).join('') + '</select></label>';
+    h += '<label class="f">' + t('Lutron zone IDs') + '<input data-edit="zones" value="' + esc(zonesStr(c)) + '" placeholder="' + t('e.g. 1234, 1235') + '" inputmode="numeric"></label>';
+    h += '<label class="f">' + t('Start-up level %') + '<input data-edit="def" type="number" min="0" max="100" value="' + (c.def || 0) + '"></label>';
+    h += '<label class="chk"><input type="checkbox" data-edit="on"' + (c.on ? ' checked' : '') + '>' + t('On at start-up') + '</label>';
+    h += '<label class="chk"><input type="checkbox" data-edit="ni"' + (c.ni ? ' checked' : '') + '>' + t('Not installed') + '</label>';
+    h += '</div><div class="lbl">' + t('LIT AREAS ON THE GA ({n})', { n: (c.z || []).length }) + '</div><div class="row">';
+    h += '<button class="btn sm" data-act="addArea">' + t('+ Area') + '</button><button class="btn sm" data-act="addBeam">' + t('+ Floodlight beam') + '</button>';
     var hasZ = S.selZone && S.selZone.cid === c.id && c.z && c.z[S.selZone.zi];
-    h += '<button class="btn sm" data-act="addCorner"' + (hasZ ? '' : ' disabled') + '>+ Corner</button><button class="btn sm" data-act="delCorner"' + (hasZ && c.z[S.selZone.zi].length > 3 ? '' : ' disabled') + '>− Corner</button>';
-    h += '<button class="btn sm danger" data-act="delArea"' + (hasZ ? '' : ' disabled') + '>Delete area</button></div>';
-    h += '<div class="muted" style="font-size:12px">' + (hasZ ? 'Area selected: drag it to move, drag the white squares to reshape.' : 'Tap one of this circuit\'s areas on the plan to select it.') + '</div>';
-    h += '<div class="row" style="justify-content:flex-end"><button class="btn sm danger" data-act="delCircuit">Delete circuit</button></div>';
+    h += '<button class="btn sm" data-act="addCorner"' + (hasZ ? '' : ' disabled') + '>' + t('+ Corner') + '</button><button class="btn sm" data-act="delCorner"' + (hasZ && c.z[S.selZone.zi].length > 3 ? '' : ' disabled') + '>' + t('− Corner') + '</button>';
+    h += '<button class="btn sm danger" data-act="delArea"' + (hasZ ? '' : ' disabled') + '>' + t('Delete area') + '</button></div>';
+    h += '<div class="muted" style="font-size:12px">' + (hasZ ? t('Area selected: drag it to move, drag the white squares to reshape.') : t('Tap one of this circuit\'s areas on the plan to select it.')) + '</div>';
+    h += '<div class="row" style="justify-content:flex-end"><button class="btn sm danger" data-act="delCircuit">' + t('Delete circuit') + '</button></div>';
     return h + '</div></div>';
   }
   function curScene() { return scenes().filter(function (s) { return s.id === S.sceneSel; })[0] || null; }
@@ -299,43 +330,44 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     var list = scope === 'all' ? allCircuits() : ((deckById(scope) || {}).circuits || []);
     return list.filter(function (c) { return !c.ni; });
   }
-  function scenesTab(d) { return sceneEditor([d], d.name, d.id); }
+  function scenesTab(d) { return sceneEditor([d], nm(d), d.id); }
   /** Full scene editor. groups = decks shown, scope = 'all' or a deck id. */
   function sceneEditor(groups, scopeName, scope) {
     var sc = curScene() || scenes()[0];
     if (sc) S.sceneSel = sc.id;
     var list = scenes(), idx = sc ? list.indexOf(sc) : -1;
-    var h = '<div class="row"><span class="lbl">EDIT SCENE</span>';
-    list.forEach(function (x) { h += '<button class="chip' + (sc && x.id === sc.id ? ' on' : '') + '" data-act="sceneSel" data-sid="' + esc(x.id) + '">' + esc(x.name) + '</button>'; });
-    h += '<button class="btn sm" data-act="addScene">+ New scene</button></div>';
-    if (!sc) return h + '<div class="muted">No scenes yet. Press <b>+ New scene</b>.</div>';
-    h += '<div class="row"><label class="f" style="flex:1;min-width:200px">Scene name<input data-scene="name" value="' + esc(sc.name) + '" maxlength="30"></label>';
-    h += '<button class="btn sm" data-act="sceneMove" data-dir="-1" style="align-self:end"' + (idx > 0 ? '' : ' disabled') + '>◀ Move earlier</button>';
-    h += '<button class="btn sm" data-act="sceneMove" data-dir="1" style="align-self:end"' + (idx < list.length - 1 ? '' : ' disabled') + '>Move later ▶</button>';
-    h += '<button class="btn sm" data-act="sceneDup" style="align-self:end">Duplicate</button>';
-    h += '<button class="btn sm danger" data-act="sceneDelete" style="align-self:end">Delete scene</button></div>';
+    var h = '<div class="row"><span class="lbl">' + t('EDIT SCENE') + '</span>';
+    list.forEach(function (x) { h += '<button class="chip' + (sc && x.id === sc.id ? ' on' : '') + '" data-act="sceneSel" data-sid="' + esc(x.id) + '">' + esc(nm(x)) + '</button>'; });
+    h += '<button class="btn sm" data-act="addScene">' + t('+ New scene') + '</button></div>';
+    if (!sc) return h + '<div class="muted">' + t('No scenes yet. Press <b>+ New scene</b>.') + '</div>';
+    h += '<div class="row"><label class="f" style="flex:1;min-width:180px">' + t('Scene name (English)') + '<input data-scene="name" value="' + esc(sc.name) + '" maxlength="30"></label>';
+    h += '<label class="f" style="flex:1;min-width:180px">' + t('Scene name (Russian)') + '<input data-scene="name_ru" value="' + esc((sc.ru && sc.ru.name) || '') + '" maxlength="30" lang="ru" placeholder="' + esc(sc.name) + '"></label></div><div class="row">';
+    h += '<button class="btn sm" data-act="sceneMove" data-dir="-1"' + (idx > 0 ? '' : ' disabled') + '>' + t('◀ Move earlier') + '</button>';
+    h += '<button class="btn sm" data-act="sceneMove" data-dir="1"' + (idx < list.length - 1 ? '' : ' disabled') + '>' + t('Move later ▶') + '</button>';
+    h += '<button class="btn sm" data-act="sceneDup">' + t('Duplicate') + '</button>';
+    h += '<button class="btn sm danger" data-act="sceneDelete">' + t('Delete scene') + '</button></div>';
     var sa = ' data-scope="' + esc(scope) + '"';
     h += '<div class="row"><span class="lbl">' + esc(scopeName.toUpperCase()) + '</span>';
-    h += '<button class="btn sm" data-act="sceneCapture"' + sa + '>Copy current lighting</button>';
-    h += '<button class="btn sm" data-act="scenePreview"' + sa + '>Preview</button>';
-    h += '<span class="muted" style="font-size:13px;margin-left:6px">Set all:</span>';
-    [[0, 'Off'], [25, '25%'], [50, '50%'], [100, '100%'], [-1, 'Don\'t change']].forEach(function (o) { h += '<button class="btn sm" data-act="sceneAll" data-v="' + o[0] + '"' + sa + '>' + o[1] + '</button>'; });
+    h += '<button class="btn sm" data-act="sceneCapture"' + sa + '>' + t('Copy current lighting') + '</button>';
+    h += '<button class="btn sm" data-act="scenePreview"' + sa + '>' + t('Preview') + '</button>';
+    h += '<span class="muted" style="font-size:13px;margin-left:6px">' + t('Set all:') + '</span>';
+    [[0, 'Off'], [25, '25%'], [50, '50%'], [100, '100%'], [-1, 'Don\'t change']].forEach(function (o) { h += '<button class="btn sm" data-act="sceneAll" data-v="' + o[0] + '"' + sa + '>' + t(o[1]) + '</button>'; });
     h += '</div>';
     h += '<div class="muted" style="font-size:12px">' + (scope === 'all'
-      ? 'Every light on every deck. <b>Off</b> switches a light off, <b>On</b> sets it to the level on the slider, <b>Don\'t change</b> leaves it as it is when the scene runs.'
-      : 'Lights on ' + esc(scopeName) + '. The same scene also sets the other decks: edit them on their own deck, or edit every deck at once on the Overview.') + '</div>';
-    if (sc.lutronButton) h += '<div class="note">This scene is linked to Lutron scene #' + esc(sc.lutronButton) + '. When the processor is connected, the ship-wide button presses the Lutron scene and the processor sets the levels. The levels below are used for deck buttons and when the processor is offline.</div>';
+      ? t('Every light on every deck. <b>Off</b> switches a light off, <b>On</b> sets it to the level on the slider, <b>Don\'t change</b> leaves it as it is when the scene runs.')
+      : t('Lights on {deck}. The same scene also sets the other decks: edit them on their own deck, or edit every deck at once on the Overview.', { deck: esc(scopeName) })) + '</div>';
+    if (sc.lutronButton) h += '<div class="note">' + t('This scene is linked to Lutron scene #{id}. When the processor is connected, the ship-wide button presses the Lutron scene and the processor sets the levels. The levels below are used for deck buttons and when the processor is offline.', { id: esc(sc.lutronButton) }) + '</div>';
     var seen = {};
     groups.forEach(function (g) {
       var rows = (g.circuits || []).filter(function (c) { if (c.ni || seen[c.id]) return false; seen[c.id] = 1; return true; });
       if (!rows.length) return;
-      if (groups.length > 1) h += '<div class="sgroup">' + esc(g.name.toUpperCase()) + '</div>';
+      if (groups.length > 1) h += '<div class="sgroup">' + esc(nm(g).toUpperCase()) + '</div>';
       rows.forEach(function (c) {
         var v = sceneVal(sc, c.id), mode = v < 0 ? 'keep' : v > 0 ? 'on' : 'off';
-        h += '<div class="srow"><div style="min-width:0"><div class="name">' + esc(c.label + ' · ' + c.name) + '</div></div>';
-        h += '<select data-act="sceneMode" data-cid="' + esc(c.id) + '" aria-label="' + esc(c.name) + ' in this scene"><option value="off"' + (mode === 'off' ? ' selected' : '') + '>Off</option><option value="on"' + (mode === 'on' ? ' selected' : '') + '>On</option><option value="keep"' + (mode === 'keep' ? ' selected' : '') + '>Don\'t change</option></select>';
-        h += '<input type="range" min="1" max="100" value="' + (v > 0 ? v : 60) + '" data-act="sceneLevel" data-cid="' + esc(c.id) + '" aria-label="' + esc(c.name) + ' scene level"' + (mode === 'on' ? '' : ' disabled') + '>';
-        h += '<span class="pct' + (mode === 'on' ? ' on' : mode === 'keep' ? ' keep' : '') + '">' + (mode === 'on' ? v + '%' : mode === 'keep' ? 'Keep' : 'Off') + '</span></div>';
+        h += '<div class="srow"><div style="min-width:0"><div class="name">' + esc(c.label + ' · ' + nm(c)) + '</div></div>';
+        h += '<select data-act="sceneMode" data-cid="' + esc(c.id) + '" aria-label="' + esc(t('{name} in this scene', { name: nm(c) })) + '"><option value="off"' + (mode === 'off' ? ' selected' : '') + '>' + t('Off') + '</option><option value="on"' + (mode === 'on' ? ' selected' : '') + '>' + t('On') + '</option><option value="keep"' + (mode === 'keep' ? ' selected' : '') + '>' + t('Don\'t change') + '</option></select>';
+        h += '<input type="range" min="1" max="100" value="' + (v > 0 ? v : 60) + '" data-act="sceneLevel" data-cid="' + esc(c.id) + '" aria-label="' + esc(t('{name} scene level', { name: nm(c) })) + '"' + (mode === 'on' ? '' : ' disabled') + '>';
+        h += '<span class="pct' + (mode === 'on' ? ' on' : mode === 'keep' ? ' keep' : '') + '">' + (mode === 'on' ? v + '%' : mode === 'keep' ? t('Keep') : t('Off')) + '</span></div>';
       });
     });
     return h;
@@ -343,71 +375,71 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
 
   // ---------- Lutron setup ----------
   var STAGES = { connecting: 'Connecting to the processor…', 'generating-key': 'Preparing a secure key…', 'waiting-button': 'Press the Access button on the HomeWorks QSX processor now (within 3 minutes).', signing: 'Button pressed – getting the certificate…', verifying: 'Checking the new pairing…', done: 'Paired successfully.', failed: 'Pairing failed.' };
-  function fmtTime(iso) { if (!iso) return '–'; var d = new Date(iso); return d.toLocaleDateString() + ' ' + d.toLocaleTimeString(); }
+  function fmtTime(iso) { if (!iso) return '–'; var d = new Date(iso), loc = LANG === 'ru' ? 'ru-RU' : undefined; return d.toLocaleDateString(loc) + ' ' + d.toLocaleTimeString(loc); }
   function lutronView() {
     var L = S.lx;
-    if (!L) return '<h1>Lutron setup</h1><div class="empty">Loading processor status…</div>';
+    if (!L) return '<h1>' + t('Lutron setup') + '</h1><div class="empty">' + t('Loading processor status…') + '</div>';
     var st = L.status, disc = L.discovery || { zones: [], buttons: [] };
-    var h = '<div class="row between"><h1>Lutron setup</h1>' + lutronPill() + '</div>';
-    h += '<div class="adminbar">HomeWorks QSX is controlled over Lutron LEAP (secure TLS on port 8081). Pairing uses port 8083 and needs someone at the processor to press its Access button. Address changes below are saved with <b>Save &amp; deploy</b>.</div>';
+    var h = '<div class="row between"><h1>' + t('Lutron setup') + '</h1>' + lutronPill() + '</div>';
+    h += '<div class="adminbar">' + t('HomeWorks QSX is controlled over Lutron LEAP (secure TLS on port 8081). Pairing uses port 8083 and needs someone at the processor to press its Access button. Address changes below are saved with <b>Save &amp; deploy</b>.') + '</div>';
 
     // connection card
-    h += '<section class="panel"><h2>Processor</h2><div class="form">';
-    h += '<label class="f">Processor IP address<input id="lxHost" value="' + esc(st.host) + '" placeholder="e.g. 192.168.10.20" inputmode="decimal"></label>';
-    h += '<label class="f">LEAP port<input id="lxPort" type="number" min="1" max="65535" value="' + esc(st.port || 8081) + '"></label>';
-    h += '<label class="f">Default fade time (s)<input id="lxFade" type="number" min="0" max="3600" step="1" value="' + esc(st.fadeSeconds) + '"></label>';
-    h += '<label class="chk"><input type="checkbox" id="lxEnabled"' + (st.enabled ? ' checked' : '') + '>Lutron link on</label></div>';
-    h += '<div class="row"><button class="btn sm primary" data-act="lxSave"' + (S.lxBusy ? ' disabled' : '') + '>Save connection settings</button>';
-    h += '<button class="btn sm" data-act="lxTest"' + (S.lxBusy ? ' disabled' : '') + '>' + (S.lxBusy === 'test' ? 'Testing…' : 'Test connection') + '</button>';
-    h += '<button class="btn sm" data-act="lxPair"' + (S.lxBusy || pairingActive(st) ? ' disabled' : '') + '>' + (st.paired ? 'Pair again' : 'Pair with processor') + '</button>';
-    h += '<button class="btn sm" data-act="lxReconnect">Reconnect</button>';
-    if (st.paired) h += '<button class="btn sm danger" data-act="lxUnpair">Forget pairing</button>';
+    h += '<section class="panel"><h2>' + t('Processor') + '</h2><div class="form">';
+    h += '<label class="f">' + t('Processor IP address') + '<input id="lxHost" value="' + esc(st.host) + '" placeholder="' + t('e.g. 192.168.10.20') + '" inputmode="decimal"></label>';
+    h += '<label class="f">' + t('LEAP port') + '<input id="lxPort" type="number" min="1" max="65535" value="' + esc(st.port || 8081) + '"></label>';
+    h += '<label class="f">' + t('Default fade time (s)') + '<input id="lxFade" type="number" min="0" max="3600" step="1" value="' + esc(st.fadeSeconds) + '"></label>';
+    h += '<label class="chk"><input type="checkbox" id="lxEnabled"' + (st.enabled ? ' checked' : '') + '>' + t('Lutron link on') + '</label></div>';
+    h += '<div class="row"><button class="btn sm primary" data-act="lxSave"' + (S.lxBusy ? ' disabled' : '') + '>' + t('Save connection settings') + '</button>';
+    h += '<button class="btn sm" data-act="lxTest"' + (S.lxBusy ? ' disabled' : '') + '>' + (S.lxBusy === 'test' ? t('Testing…') : t('Test connection')) + '</button>';
+    h += '<button class="btn sm" data-act="lxPair"' + (S.lxBusy || pairingActive(st) ? ' disabled' : '') + '>' + (st.paired ? t('Pair again') : t('Pair with processor')) + '</button>';
+    h += '<button class="btn sm" data-act="lxReconnect">' + t('Reconnect') + '</button>';
+    if (st.paired) h += '<button class="btn sm danger" data-act="lxUnpair">' + t('Forget pairing') + '</button>';
     h += '</div>';
-    if (!st.lapReady) h += '<div class="result bad">The LAP pairing certificates are missing on this server. Run <code>npm run fetch-certs</code> once on the mini PC while it has internet, then pair.</div>';
+    if (!st.lapReady) h += '<div class="result bad">' + t('The LAP pairing certificates are missing on this server. Run <code>npm run fetch-certs</code> once on the mini PC while it has internet, then pair.') + '</div>';
     if (pairingActive(st) || st.pairing.stage === 'failed' || st.pairing.stage === 'done') {
       var bad = st.pairing.stage === 'failed', ok = st.pairing.stage === 'done';
-      h += '<div class="result' + (bad ? ' bad' : ok ? ' ok' : '') + '" role="status"><b>' + esc(STAGES[st.pairing.stage] || st.pairing.stage) + '</b>' + (bad ? '<br>' + esc(st.pairing.error) : '') + '</div>';
+      h += '<div class="result' + (bad ? ' bad' : ok ? ' ok' : '') + '" role="status"><b>' + esc(t(STAGES[st.pairing.stage] || st.pairing.stage)) + '</b>' + (bad ? '<br>' + esc(tm(st.pairing.error)) : '') + '</div>';
     }
     if (S.lxTest) {
-      var t = S.lxTest;
-      h += t.ok
-        ? '<div class="result ok" role="status"><b>Connection OK.</b> Connected in ' + t.connectMs + ' ms, ping ' + t.latencyMs + ' ms, LEAP version ' + esc(t.leapVersion) + (t.processor ? '. Processor: ' + esc(t.processor.name) + ' (' + esc(t.processor.model) + ', serial ' + esc(t.processor.serial) + ')' : '') + (t.project ? '. Project: ' + esc(t.project.name) : '') + '.</div>'
-        : '<div class="result bad" role="status"><b>Connection failed.</b> ' + esc(t.error) + '</div>';
+      var tr = S.lxTest;
+      h += tr.ok
+        ? '<div class="result ok" role="status"><b>' + t('Connection OK.') + '</b> ' + t('Connected in {a} ms, ping {b} ms, LEAP version {v}', { a: tr.connectMs, b: tr.latencyMs, v: esc(tr.leapVersion) }) + (tr.processor ? '. ' + t('Processor: {name} ({model}, serial {serial})', { name: esc(tr.processor.name), model: esc(tr.processor.model), serial: esc(tr.processor.serial) }) : '') + (tr.project ? '. ' + t('Project: {name}', { name: esc(tr.project.name) }) : '') + '.</div>'
+        : '<div class="result bad" role="status"><b>' + t('Connection failed.') + '</b> ' + esc(tm(tr.error)) + '</div>';
     }
     h += '<div class="kv">';
-    h += '<div><span>Status</span>' + esc(st.state) + '</div><div><span>Paired</span>' + (st.paired ? 'Yes' + (st.pairedHost ? ' (' + esc(st.pairedHost) + ')' : '') : 'No') + '</div>';
-    h += '<div><span>LEAP version</span>' + esc(st.leapVersion || '–') + '</div><div><span>Project</span>' + esc(st.project ? st.project.name + (st.project.productType ? ' · ' + st.project.productType : '') : '–') + '</div>';
-    h += '<div><span>Last ping</span>' + (st.latencyMs != null ? st.latencyMs + ' ms · ' : '') + esc(fmtTime(st.lastPingAt)) + '</div><div><span>Last error</span>' + esc(st.lastError || '–') + '</div>';
+    h += '<div><span>' + t('Status') + '</span>' + esc(t('state:' + st.state)) + '</div><div><span>' + t('Paired') + '</span>' + (st.paired ? t('Yes') + (st.pairedHost ? ' (' + esc(st.pairedHost) + ')' : '') : t('No')) + '</div>';
+    h += '<div><span>' + t('LEAP version') + '</span>' + esc(st.leapVersion || '–') + '</div><div><span>' + t('Project') + '</span>' + esc(st.project ? st.project.name + (st.project.productType ? ' · ' + st.project.productType : '') : '–') + '</div>';
+    h += '<div><span>' + t('Last ping') + '</span>' + (st.latencyMs != null ? st.latencyMs + ' ' + t('ms') + ' · ' : '') + esc(fmtTime(st.lastPingAt)) + '</div><div><span>' + t('Last error') + '</span>' + esc(tm(st.lastError) || '–') + '</div>';
     h += '</div></section>';
 
     // discovery
-    h += '<section class="panel"><div class="row between"><h2>Zones and scenes on the processor</h2><button class="btn sm" data-act="lxDiscover"' + (S.lutron.connected && !S.lxBusy ? '' : ' disabled') + '>' + (S.lxBusy === 'discover' ? 'Reading…' : 'Read from processor') + '</button></div>';
-    h += '<div class="muted" style="font-size:13px">' + disc.zones.length + ' zones and ' + disc.buttons.length + ' scene buttons read ' + esc(fmtTime(disc.readAt)) + '. Pick them below to fill in the integration addresses, or type a zone ID directly (the number the processor uses for the zone, as in /zone/1234).</div></section>';
+    h += '<section class="panel"><div class="row between"><h2>' + t('Zones and scenes on the processor') + '</h2><button class="btn sm" data-act="lxDiscover"' + (S.lutron.connected && !S.lxBusy ? '' : ' disabled') + '>' + (S.lxBusy === 'discover' ? t('Reading…') : t('Read from processor')) + '</button></div>';
+    h += '<div class="muted" style="font-size:13px">' + t('{z} zones and {b} scene buttons read {when}.', { z: disc.zones.length, b: disc.buttons.length, when: esc(fmtTime(disc.readAt)) }) + ' ' + t('Pick them below to fill in the integration addresses, or type a zone ID directly (the number the processor uses for the zone, as in /zone/1234).') + '</div></section>';
 
     // addresses
-    var opts = '<option value="">Add zone…</option>' + disc.zones.map(function (z) { return '<option value="' + esc(z.id) + '">' + esc((z.area ? z.area + ' – ' : '') + z.name + ' (#' + z.id + ', ' + (z.controlType || '?') + ')') + '</option>'; }).join('');
-    h += '<section class="panel"><h2>Integration addresses – circuits</h2><div class="tblwrap"><table class="tbl"><thead><tr><th style="width:80px">Circuit</th><th>Name</th><th style="width:200px">Lutron zone IDs</th><th style="width:230px">From processor</th><th style="width:130px">Processor reports</th><th style="width:150px">Test</th></tr></thead><tbody>';
+    var opts = '<option value="">' + t('Add zone…') + '</option>' + disc.zones.map(function (z) { return '<option value="' + esc(z.id) + '">' + esc((z.area ? z.area + ' – ' : '') + z.name + ' (#' + z.id + ', ' + t(z.controlType || '?') + ')') + '</option>'; }).join('');
+    h += '<section class="panel"><h2>' + t('Integration addresses – circuits') + '</h2><div class="tblwrap"><table class="tbl"><thead><tr><th style="width:80px">' + t('Circuit') + '</th><th>' + t('Name') + '</th><th style="width:200px">' + t('Lutron zone IDs') + '</th><th style="width:230px">' + t('From processor') + '</th><th style="width:130px">' + t('Processor reports') + '</th><th style="width:150px">' + t('Test') + '</th></tr></thead><tbody>';
     decks().forEach(function (d) {
-      h += '<tr class="deckrow"><td colspan="6">' + esc(d.name.toUpperCase()) + '</td></tr>';
+      h += '<tr class="deckrow"><td colspan="6">' + esc(nm(d).toUpperCase()) + '</td></tr>';
       (d.circuits || []).forEach(function (c) {
         var zs = (c.lutron && c.lutron.zones) || [];
-        var rep = zs.map(function (z) { var v = L.zoneLevels[z]; var zn = disc.zones.filter(function (x) { return x.id === z; })[0]; return '#' + esc(z) + ': ' + (v === undefined ? (zn ? '–' : '<span style="color:#F3A6A6">unknown</span>') : v + '%'); }).join('<br>');
-        h += '<tr><td><b>' + esc(c.label) + '</b></td><td>' + esc(c.name) + (c.ni ? ' <span class="muted">(not installed)</span>' : '') + '</td>';
-        h += '<td><input data-lz="' + esc(d.id) + '|' + esc(c.id) + '" value="' + esc(zs.join(', ')) + '" placeholder="Zone ID(s)" inputmode="numeric" aria-label="' + esc(c.label) + ' Lutron zone IDs"></td>';
-        h += '<td><select data-lzadd="' + esc(d.id) + '|' + esc(c.id) + '" aria-label="Add a discovered zone to ' + esc(c.label) + '"' + (disc.zones.length ? '' : ' disabled') + '>' + opts + '</select></td>';
+        var rep = zs.map(function (z) { var v = L.zoneLevels[z]; var zn = disc.zones.filter(function (x) { return x.id === z; })[0]; return '#' + esc(z) + ': ' + (v === undefined ? (zn ? '–' : '<span style="color:#F3A6A6">' + t('unknown') + '</span>') : v + '%'); }).join('<br>');
+        h += '<tr><td><b>' + esc(c.label) + '</b></td><td>' + esc(nm(c)) + (c.ni ? ' <span class="muted">(' + t('not installed') + ')</span>' : '') + '</td>';
+        h += '<td><input data-lz="' + esc(d.id) + '|' + esc(c.id) + '" value="' + esc(zs.join(', ')) + '" placeholder="' + t('Zone ID(s)') + '" inputmode="numeric" aria-label="' + esc(t('{label} Lutron zone IDs', { label: c.label })) + '"></td>';
+        h += '<td><select data-lzadd="' + esc(d.id) + '|' + esc(c.id) + '" aria-label="' + esc(t('Add a discovered zone to {label}', { label: c.label })) + '"' + (disc.zones.length ? '' : ' disabled') + '>' + opts + '</select></td>';
         h += '<td style="font-size:12px">' + (rep || '<span class="muted">–</span>') + '</td>';
-        h += '<td><div class="row" style="flex-wrap:nowrap;gap:6px"><button class="btn sm" data-act="lxZoneTest" data-key="' + esc(d.id) + '|' + esc(c.id) + '" data-level="100"' + (zs.length && S.lutron.connected ? '' : ' disabled') + '>On</button><button class="btn sm" data-act="lxZoneTest" data-key="' + esc(d.id) + '|' + esc(c.id) + '" data-level="0"' + (zs.length && S.lutron.connected ? '' : ' disabled') + '>Off</button></div></td></tr>';
+        h += '<td><div class="row" style="flex-wrap:nowrap;gap:6px"><button class="btn sm" data-act="lxZoneTest" data-key="' + esc(d.id) + '|' + esc(c.id) + '" data-level="100"' + (zs.length && S.lutron.connected ? '' : ' disabled') + '>' + t('On') + '</button><button class="btn sm" data-act="lxZoneTest" data-key="' + esc(d.id) + '|' + esc(c.id) + '" data-level="0"' + (zs.length && S.lutron.connected ? '' : ' disabled') + '>' + t('Off') + '</button></div></td></tr>';
       });
     });
-    h += '</tbody></table></div><div class="muted" style="font-size:12px">A circuit can drive several Lutron zones (for example port and starboard floods). Test sends straight to the zones you typed, even before saving.</div></section>';
+    h += '</tbody></table></div><div class="muted" style="font-size:12px">' + t('A circuit can drive several Lutron zones (for example port and starboard floods). Test sends straight to the zones you typed, even before saving.') + '</div></section>';
 
     // scenes
     var bopts = disc.buttons.map(function (b) { return '<option value="' + esc(b.id) + '">' + esc(b.name + ' (#' + b.id + ')') + '</option>'; }).join('');
-    h += '<section class="panel"><h2>Integration addresses – scenes</h2><div class="muted" style="font-size:13px">Optional. Link a ship-wide scene to a scene programmed in Lutron (a virtual button). When linked and connected, pressing the scene on the overview presses the Lutron scene instead of sending each level.</div><div class="tblwrap"><table class="tbl"><thead><tr><th>Scene</th><th style="width:220px">Lutron scene button ID</th><th style="width:260px">From processor</th><th style="width:110px">Test</th></tr></thead><tbody>';
+    h += '<section class="panel"><h2>' + t('Integration addresses – scenes') + '</h2><div class="muted" style="font-size:13px">' + t('Optional. Link a ship-wide scene to a scene programmed in Lutron (a virtual button). When linked and connected, pressing the scene on the overview presses the Lutron scene instead of sending each level.') + '</div><div class="tblwrap"><table class="tbl"><thead><tr><th>' + t('Scene') + '</th><th style="width:220px">' + t('Lutron scene button ID') + '</th><th style="width:260px">' + t('From processor') + '</th><th style="width:110px">' + t('Test') + '</th></tr></thead><tbody>';
     scenes().forEach(function (sc) {
-      h += '<tr><td><b>' + esc(sc.name) + '</b></td><td><input data-sbtn="' + esc(sc.id) + '" value="' + esc(sc.lutronButton || '') + '" placeholder="None – use levels" inputmode="numeric" aria-label="' + esc(sc.name) + ' Lutron button ID"></td>';
-      h += '<td><select data-sbtnpick="' + esc(sc.id) + '"' + (disc.buttons.length ? '' : ' disabled') + '><option value="">Pick a Lutron scene…</option>' + bopts + '</select></td>';
-      h += '<td><button class="btn sm" data-act="lxBtnTest" data-sid="' + esc(sc.id) + '"' + (sc.lutronButton && S.lutron.connected ? '' : ' disabled') + '>Press</button></td></tr>';
+      h += '<tr><td><b>' + esc(nm(sc)) + '</b></td><td><input data-sbtn="' + esc(sc.id) + '" value="' + esc(sc.lutronButton || '') + '" placeholder="' + t('None – use levels') + '" inputmode="numeric" aria-label="' + esc(t('{name} Lutron button ID', { name: nm(sc) })) + '"></td>';
+      h += '<td><select data-sbtnpick="' + esc(sc.id) + '"' + (disc.buttons.length ? '' : ' disabled') + '><option value="">' + t('Pick a Lutron scene…') + '</option>' + bopts + '</select></td>';
+      h += '<td><button class="btn sm" data-act="lxBtnTest" data-sid="' + esc(sc.id) + '"' + (sc.lutronButton && S.lutron.connected ? '' : ' disabled') + '>' + t('Press') + '</button></td></tr>';
     });
     h += '</tbody></table></div></section>';
     return h;
@@ -431,39 +463,39 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
   // ---------- users & passwords ----------
   function fmtWhen(iso) { return iso ? fmtTime(iso) : '–'; }
   function usersView() {
-    var h = '<h1>Users &amp; passwords</h1>';
-    h += '<div class="adminbar">Every user here has full admin access: layout, scenes, Lutron setup and users. The <b>Wave AVI</b> master account cannot be deleted, and only it can change the master password. You log in with your password only, so every user needs a different password.</div>';
+    var h = '<h1>' + t('Users &amp; passwords') + '</h1>';
+    h += '<div class="adminbar">' + t('Every user here has full admin access: layout, scenes, Lutron setup and users. The <b>Wave AVI</b> master account cannot be deleted, and only it can change the master password. You log in with your password only, so every user needs a different password.') + '</div>';
     var me = S.user || {};
-    h += '<section class="panel"><h2>Your password</h2><div class="muted" style="font-size:13px">Logged in as <b style="color:var(--text)">' + esc(me.name) + '</b>' + (me.master ? ' (master account)' : '') + '.</div><div class="form">';
-    h += '<label class="f">Current password<input type="password" id="upCur" autocomplete="current-password"></label>';
-    h += '<label class="f">New password<input type="password" id="upNew" autocomplete="new-password" minlength="8"></label>';
-    h += '<label class="f">Repeat new password<input type="password" id="upNew2" autocomplete="new-password" minlength="8"></label></div>';
-    h += '<div class="row"><button class="btn sm primary" data-act="pwSelf">Change my password</button><span class="muted" style="font-size:12px">At least 8 characters.</span></div></section>';
+    h += '<section class="panel"><h2>' + t('Your password') + '</h2><div class="muted" style="font-size:13px">' + t('Logged in as {name}', { name: '<b style="color:var(--text)">' + esc(me.name) + '</b>' }) + (me.master ? ' ' + t('(master account)') : '') + '.</div><div class="form">';
+    h += '<label class="f">' + t('Current password') + '<input type="password" id="upCur" autocomplete="current-password"></label>';
+    h += '<label class="f">' + t('New password') + '<input type="password" id="upNew" autocomplete="new-password" minlength="8"></label>';
+    h += '<label class="f">' + t('Repeat new password') + '<input type="password" id="upNew2" autocomplete="new-password" minlength="8"></label></div>';
+    h += '<div class="row"><button class="btn sm primary" data-act="pwSelf">' + t('Change my password') + '</button><span class="muted" style="font-size:12px">' + t('At least 8 characters.') + '</span></div></section>';
 
-    h += '<section class="panel"><h2>Users</h2>';
-    if (!S.users) h += '<div class="muted">Loading users…</div>';
+    h += '<section class="panel"><h2>' + t('Users') + '</h2>';
+    if (!S.users) h += '<div class="muted">' + t('Loading users…') + '</div>';
     else {
-      h += '<div class="tblwrap"><table class="tbl" style="min-width:760px"><thead><tr><th>Name</th><th style="width:150px">Role</th><th style="width:180px">Last login</th><th style="width:180px">Password changed</th><th style="width:330px">Actions</th></tr></thead><tbody>';
+      h += '<div class="tblwrap"><table class="tbl" style="min-width:760px"><thead><tr><th>' + t('Name') + '</th><th style="width:150px">' + t('Role') + '</th><th style="width:180px">' + t('Last login') + '</th><th style="width:180px">' + t('Password changed') + '</th><th style="width:330px">' + t('Actions') + '</th></tr></thead><tbody>';
       S.users.forEach(function (u) {
         var isMe = u.id === me.id;
-        h += '<tr><td>' + (u.master ? '<b>' + esc(u.name) + '</b>' : '<input id="un-' + esc(u.id) + '" value="' + esc(u.name) + '" maxlength="40" aria-label="Name of ' + esc(u.name) + '">') + (isMe ? ' <span class="muted">(you)</span>' : '') + '</td>';
-        h += '<td>' + (u.master ? 'Master · full admin' : 'Admin · full access') + '</td><td>' + esc(fmtWhen(u.lastLoginAt)) + '</td><td>' + esc(fmtWhen(u.passwordChangedAt)) + '</td><td><div class="row" style="gap:6px">';
-        if (!u.master) h += '<button class="btn sm" data-act="renameUser" data-uid="' + esc(u.id) + '">Save name</button>';
-        if (isMe) h += '<span class="muted" style="font-size:12px">Change yours above</span>';
-        else if (u.master) h += '<span class="muted" style="font-size:12px">Only Wave AVI can change this</span>';
-        else h += '<button class="btn sm" data-act="pwUser" data-uid="' + esc(u.id) + '">Set new password</button>';
-        if (!u.master && !isMe) h += '<button class="btn sm danger" data-act="delUser" data-uid="' + esc(u.id) + '">Delete</button>';
+        h += '<tr><td>' + (u.master ? '<b>' + esc(u.name) + '</b>' : '<input id="un-' + esc(u.id) + '" value="' + esc(u.name) + '" maxlength="40" aria-label="' + esc(t('Name of {name}', { name: u.name })) + '">') + (isMe ? ' <span class="muted">(' + t('you') + ')</span>' : '') + '</td>';
+        h += '<td>' + (u.master ? t('Master · full admin') : t('Admin · full access')) + '</td><td>' + esc(fmtWhen(u.lastLoginAt)) + '</td><td>' + esc(fmtWhen(u.passwordChangedAt)) + '</td><td><div class="row" style="gap:6px">';
+        if (!u.master) h += '<button class="btn sm" data-act="renameUser" data-uid="' + esc(u.id) + '">' + t('Save name') + '</button>';
+        if (isMe) h += '<span class="muted" style="font-size:12px">' + t('Change yours above') + '</span>';
+        else if (u.master) h += '<span class="muted" style="font-size:12px">' + t('Only Wave AVI can change this') + '</span>';
+        else h += '<button class="btn sm" data-act="pwUser" data-uid="' + esc(u.id) + '">' + t('Set new password') + '</button>';
+        if (!u.master && !isMe) h += '<button class="btn sm danger" data-act="delUser" data-uid="' + esc(u.id) + '">' + t('Delete') + '</button>';
         h += '</div></td></tr>';
       });
       h += '</tbody></table></div>';
     }
     h += '</section>';
 
-    h += '<section class="panel"><h2>Add a user</h2><div class="muted" style="font-size:13px">For example the ETO or a service engineer. They get the same admin access as Wave AVI, apart from changing the master password.</div><div class="form">';
-    h += '<label class="f">Name<input id="auName" maxlength="40" placeholder="e.g. ETO"></label>';
-    h += '<label class="f">Password<input type="password" id="auPw" autocomplete="new-password" minlength="8"></label>';
-    h += '<label class="f">Repeat password<input type="password" id="auPw2" autocomplete="new-password" minlength="8"></label></div>';
-    h += '<div class="row"><button class="btn sm primary" data-act="addUser">Add user</button></div></section>';
+    h += '<section class="panel"><h2>' + t('Add a user') + '</h2><div class="muted" style="font-size:13px">' + t('For example the ETO or a service engineer. They get the same admin access as Wave AVI, apart from changing the master password.') + '</div><div class="form">';
+    h += '<label class="f">' + t('Name') + '<input id="auName" maxlength="40" placeholder="' + t('e.g. ETO') + '"></label>';
+    h += '<label class="f">' + t('Password') + '<input type="password" id="auPw" autocomplete="new-password" minlength="8"></label>';
+    h += '<label class="f">' + t('Repeat password') + '<input type="password" id="auPw2" autocomplete="new-password" minlength="8"></label></div>';
+    h += '<div class="row"><button class="btn sm primary" data-act="addUser">' + t('Add user') + '</button></div></section>';
     return h;
   }
   function refreshUsers() {
@@ -472,23 +504,23 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
   }
   function pwDialog(u) {
     var m = document.getElementById('modal');
-    m.innerHTML = '<div class="modal"><form class="dialog" id="pwForm" role="dialog" aria-modal="true" aria-labelledby="pt"><h2 id="pt">New password for ' + esc(u.name) + '</h2><label class="f">New password<input type="password" id="pd1" autocomplete="new-password" required minlength="8"></label><label class="f">Repeat new password<input type="password" id="pd2" autocomplete="new-password" required minlength="8"></label><div class="err" id="pdErr" role="alert"></div><div class="row" style="justify-content:flex-end"><button type="button" class="btn" id="pdCancel">Cancel</button><button type="submit" class="btn primary">Save password</button></div></form></div>';
+    m.innerHTML = '<div class="modal"><form class="dialog" id="pwForm" role="dialog" aria-modal="true" aria-labelledby="pt"><h2 id="pt">' + esc(t('New password for {name}', { name: u.name })) + '</h2><label class="f">' + t('New password') + '<input type="password" id="pd1" autocomplete="new-password" required minlength="8"></label><label class="f">' + t('Repeat new password') + '<input type="password" id="pd2" autocomplete="new-password" required minlength="8"></label><div class="err" id="pdErr" role="alert"></div><div class="row" style="justify-content:flex-end"><button type="button" class="btn" id="pdCancel">' + t('Cancel') + '</button><button type="submit" class="btn primary">' + t('Save password') + '</button></div></form></div>';
     document.getElementById('pd1').focus();
     document.getElementById('pdCancel').onclick = closeModal;
     document.getElementById('pwForm').onsubmit = function (ev) {
       ev.preventDefault();
       var a = document.getElementById('pd1').value, b = document.getElementById('pd2').value;
-      if (a !== b) { document.getElementById('pdErr').textContent = 'The passwords do not match.'; return; }
+      if (a !== b) { document.getElementById('pdErr').textContent = t('The passwords do not match.'); return; }
       api('POST', '/api/users/' + encodeURIComponent(u.id) + '/password', { password: a })
-        .then(function () { closeModal(); toast('New password saved for ' + u.name + '. They are logged out on other screens.'); refreshUsers(); })
-        .catch(function (e) { document.getElementById('pdErr').textContent = e.message; });
+        .then(function () { closeModal(); toast(t('New password saved for {name}. They are logged out on other screens.', { name: u.name })); refreshUsers(); })
+        .catch(function (e) { document.getElementById('pdErr').textContent = tm(e.message); });
     };
   }
 
   // ---------- render ----------
   function render() {
     var app = document.getElementById('app');
-    if (!S.config) { app.innerHTML = '<div class="empty">' + esc(S.loadError || 'Loading lighting layout…') + '</div>'; return; }
+    if (!S.config) { app.innerHTML = '<div class="empty">' + esc(S.loadError || t('Loading lighting layout…')) + '</div>'; return; }
     var active = document.activeElement;
     var keepSel = null;
     ['data-edit', 'data-scene', 'data-lz', 'data-sbtn', 'id'].some(function (a) { var v = active && active.getAttribute && active.getAttribute(a); if (v && active.tagName === 'INPUT') { keepSel = '[' + a + '="' + v.replace(/"/g, '\\"') + '"]'; return true; } return false; });
@@ -519,11 +551,12 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
 
   // ---------- events ----------
   document.addEventListener('click', function (e) {
-    var t = e.target.closest('[data-act]');
-    if (!t || t.tagName === 'INPUT') return;
-    var act = t.getAttribute('data-act'), id = t.getAttribute('data-id'), cid = t.getAttribute('data-cid');
+    var el = e.target.closest('[data-act]');
+    if (!el || el.tagName === 'INPUT') return;
+    var act = el.getAttribute('data-act'), id = el.getAttribute('data-id'), cid = el.getAttribute('data-cid');
     var d = deckById(S.view);
     switch (act) {
+      case 'lang': setLang(id); break;
       case 'go': S.view = id; S.sel = ''; S.selZone = null; S.lxTest = null; render(); lutronPolling(); if (id === 'users') refreshUsers(); return;
       case 'pick': S.sel = cid; if (S.admin && d) { var c0 = circuitIn(d, cid); S.selZone = c0 && c0.z && c0.z.length ? { cid: cid, zi: 0 } : null; } break;
       case 'toggle':
@@ -535,14 +568,14 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
         allCircuits().forEach(function (x) { var p = lv(x); S.levels[x.id] = { on: false, level: p.level }; }); S.sceneBy = {};
         api('POST', '/api/alloff').then(warn).catch(fail); break;
       case 'scene':
-        if (S.admin) { S.sceneSel = t.getAttribute('data-sid'); if (S.view !== 'home') S.tab = 'scenes'; setTimeout(render, 0); }
-        api('POST', '/api/scene', { id: t.getAttribute('data-sid'), scope: t.getAttribute('data-key') }).then(warn).catch(fail); return;
+        if (S.admin) { S.sceneSel = el.getAttribute('data-sid'); if (S.view !== 'home') S.tab = 'scenes'; setTimeout(render, 0); }
+        api('POST', '/api/scene', { id: el.getAttribute('data-sid'), scope: el.getAttribute('data-key') }).then(warn).catch(fail); return;
       case 'login': openLogin(); return;
       case 'logout':
-        if (S.dirty) { askConfirm('Leave admin mode and throw away unsaved changes?', function () { discard(); logout(); }); return; }
+        if (S.dirty) { askConfirm(t('Leave admin mode and throw away unsaved changes?'), function () { discard(); logout(); }); return; }
         logout(); return;
       case 'save': save(); return;
-      case 'discard': askConfirm('Throw away all unsaved changes?', function () { discard(); render(); }); return;
+      case 'discard': askConfirm(t('Throw away all unsaved changes?'), function () { discard(); render(); }); return;
       case 'tab': S.tab = id; break;
       case 'addCircuit':
         if (!d) return;
@@ -550,7 +583,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
         d.circuits.push(nc); S.levels[nc.id] = { on: false, level: 60 }; S.sel = nc.id; S.selZone = { cid: nc.id, zi: 0 }; markDirty(); break;
       case 'delCircuit':
         var dc = d && circuitIn(d, S.sel); if (!dc) return;
-        askConfirm('Delete ' + dc.label + ' ' + dc.name + ' from ' + d.name + '?', function () { d.circuits = d.circuits.filter(function (x) { return x.id !== dc.id; }); S.sel = ''; S.selZone = null; markDirty(); render(); });
+        askConfirm(t('Delete {label} {name} from {deck}?', { label: dc.label, name: nm(dc), deck: nm(d) }), function () { d.circuits = d.circuits.filter(function (x) { return x.id !== dc.id; }); S.sel = ''; S.selZone = null; markDirty(); render(); });
         return;
       case 'addArea': case 'addBeam':
         var ca = d && circuitIn(d, S.sel); if (!ca) return;
@@ -569,30 +602,31 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
       case 'delCorner':
         var cr = d && S.selZone && circuitIn(d, S.selZone.cid); if (!cr) return;
         if (cr.z[S.selZone.zi].length > 3) { cr.z[S.selZone.zi].pop(); markDirty(); } break;
-      case 'sceneSel': S.sceneSel = t.getAttribute('data-sid'); break;
+      case 'sceneSel': S.sceneSel = el.getAttribute('data-sid'); break;
       case 'addScene':
         var ns = { id: uid('S'), name: 'New scene', levels: {} };
         allCircuits().forEach(function (x) { if (!x.ni) ns.levels[x.id] = isOn(x) ? lv(x).level : 0; });
         var at = scenes().indexOf(curScene());
         S.config.scenes.splice(at < 0 ? S.config.scenes.length : at + 1, 0, ns); S.sceneSel = ns.id; markDirty();
-        toast('New scene made from the current lighting – rename it and adjust the levels'); break;
+        toast(t('New scene made from the current lighting – rename it and adjust the levels')); break;
       case 'sceneDup':
         var src = curScene(); if (!src) return;
         var dup = { id: uid('S'), name: (src.name + ' copy').slice(0, 30), levels: clone(src.levels || {}) };
+        if (src.ru && src.ru.name) dup.ru = { name: (src.ru.name + ' (копия)').slice(0, 30) };
         S.config.scenes.splice(scenes().indexOf(src) + 1, 0, dup); S.sceneSel = dup.id; markDirty(); break;
       case 'sceneMove':
         var ms = curScene(); if (!ms) return;
-        var i0 = S.config.scenes.indexOf(ms), i1 = i0 + Number(t.getAttribute('data-dir'));
+        var i0 = S.config.scenes.indexOf(ms), i1 = i0 + Number(el.getAttribute('data-dir'));
         if (i1 < 0 || i1 >= S.config.scenes.length) return;
         S.config.scenes.splice(i0, 1); S.config.scenes.splice(i1, 0, ms); markDirty(); break;
       case 'sceneCapture':
         var cs = curScene(); if (!cs) return;
         cs.levels = cs.levels || {};
-        scopeCircuits(t.getAttribute('data-scope')).forEach(function (x) { cs.levels[x.id] = isOn(x) ? lv(x).level : 0; });
-        markDirty(); toast('Copied the current lighting into ' + cs.name); break;
+        scopeCircuits(el.getAttribute('data-scope')).forEach(function (x) { cs.levels[x.id] = isOn(x) ? lv(x).level : 0; });
+        markDirty(); toast(t('Copied the current lighting into {name}', { name: nm(cs) })); break;
       case 'scenePreview':
         var ps = curScene(); if (!ps) return;
-        scopeCircuits(t.getAttribute('data-scope')).forEach(function (x) {
+        scopeCircuits(el.getAttribute('data-scope')).forEach(function (x) {
           var v = sceneVal(ps, x.id); if (v < 0) return;
           var nx = v > 0 ? { on: true, level: v } : { on: false, level: lv(x).level };
           S.levels[x.id] = nx; sendCircuit(x.id, nx);
@@ -601,42 +635,42 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
       case 'sceneAll':
         var as = curScene(); if (!as) return;
         as.levels = as.levels || {};
-        var av = Number(t.getAttribute('data-v'));
-        scopeCircuits(t.getAttribute('data-scope')).forEach(function (x) { as.levels[x.id] = av; });
+        var av = Number(el.getAttribute('data-v'));
+        scopeCircuits(el.getAttribute('data-scope')).forEach(function (x) { as.levels[x.id] = av; });
         markDirty(); break;
       case 'sceneDelete':
         var ds = curScene(); if (!ds) return;
-        askConfirm('Delete the scene "' + ds.name + '" on every deck?', function () { S.config.scenes = S.config.scenes.filter(function (x) { return x.id !== ds.id; }); S.sceneSel = ''; markDirty(); render(); });
+        askConfirm(t('Delete the scene "{name}" on every deck?', { name: nm(ds) }), function () { S.config.scenes = S.config.scenes.filter(function (x) { return x.id !== ds.id; }); S.sceneSel = ''; markDirty(); render(); });
         return;
       // users
       case 'pwSelf':
         var cur = val('upCur'), n1 = val('upNew'), n2 = val('upNew2');
-        if (!cur || !n1) { toast('Enter your current password and a new one'); return; }
-        if (n1 !== n2) { toast('The new passwords do not match'); return; }
+        if (!cur || !n1) { toast(t('Enter your current password and a new one')); return; }
+        if (n1 !== n2) { toast(t('The new passwords do not match')); return; }
         api('POST', '/api/users/' + encodeURIComponent(S.user.id) + '/password', { currentPassword: cur, password: n1 })
-          .then(function () { ['upCur', 'upNew', 'upNew2'].forEach(function (x) { document.getElementById(x).value = ''; }); toast('Your password has been changed'); refreshUsers(); })
+          .then(function () { ['upCur', 'upNew', 'upNew2'].forEach(function (x) { document.getElementById(x).value = ''; }); toast(t('Your password has been changed')); refreshUsers(); })
           .catch(fail);
         return;
       case 'pwUser':
-        var pu = (S.users || []).filter(function (x) { return x.id === t.getAttribute('data-uid'); })[0];
+        var pu = (S.users || []).filter(function (x) { return x.id === el.getAttribute('data-uid'); })[0];
         if (pu) pwDialog(pu);
         return;
       case 'renameUser':
-        var ru = t.getAttribute('data-uid');
-        api('PUT', '/api/users/' + encodeURIComponent(ru), { name: val('un-' + ru) }).then(function () { toast('Name saved'); refreshUsers(); }).catch(fail);
+        var ru = el.getAttribute('data-uid');
+        api('PUT', '/api/users/' + encodeURIComponent(ru), { name: val('un-' + ru) }).then(function () { toast(t('Name saved')); refreshUsers(); }).catch(fail);
         return;
       case 'delUser':
-        var du = (S.users || []).filter(function (x) { return x.id === t.getAttribute('data-uid'); })[0];
-        if (du) askConfirm('Delete the user ' + du.name + '? They can no longer log in.', function () {
-          api('DELETE', '/api/users/' + encodeURIComponent(du.id)).then(function () { toast(du.name + ' deleted'); refreshUsers(); }).catch(fail);
+        var du = (S.users || []).filter(function (x) { return x.id === el.getAttribute('data-uid'); })[0];
+        if (du) askConfirm(t('Delete the user {name}? They can no longer log in.', { name: du.name }), function () {
+          api('DELETE', '/api/users/' + encodeURIComponent(du.id)).then(function () { toast(t('{name} deleted', { name: du.name })); refreshUsers(); }).catch(fail);
         });
         return;
       case 'addUser':
         var an = val('auName').trim(), ap = val('auPw'), ap2 = val('auPw2');
-        if (!an || !ap) { toast('Enter a name and a password'); return; }
-        if (ap !== ap2) { toast('The passwords do not match'); return; }
+        if (!an || !ap) { toast(t('Enter a name and a password')); return; }
+        if (ap !== ap2) { toast(t('The passwords do not match')); return; }
         api('POST', '/api/users', { name: an, password: ap })
-          .then(function (r) { ['auName', 'auPw', 'auPw2'].forEach(function (x) { document.getElementById(x).value = ''; }); toast(r.user.name + ' added – they can log in with their own password now'); refreshUsers(); })
+          .then(function (r) { ['auName', 'auPw', 'auPw2'].forEach(function (x) { document.getElementById(x).value = ''; }); toast(t('{name} added – they can log in with their own password now', { name: r.user.name })); refreshUsers(); })
           .catch(fail);
         return;
       // Lutron setup
@@ -644,7 +678,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
         var lxBody = { host: val('lxHost').trim(), port: Number(val('lxPort')), fadeSeconds: Number(val('lxFade')), enabled: document.getElementById('lxEnabled').checked };
         S.lxBusy = 'save'; render();
         api('PUT', '/api/lutron/settings', lxBody)
-          .then(function () { toast('Connection settings saved'); }).catch(fail).then(function () { S.lxBusy = ''; refreshLutron(); });
+          .then(function () { toast(t('Connection settings saved')); }).catch(fail).then(function () { S.lxBusy = ''; refreshLutron(); });
         return;
       case 'lxTest':
         S.lxBusy = 'test'; S.lxTest = null; render();
@@ -654,25 +688,25 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
         var go = function () {
           api('POST', '/api/lutron/pair').then(function () { S.lxTest = null; refreshLutron().then(lutronPolling); }).catch(fail);
         };
-        if (S.lx && S.lx.status.paired) askConfirm('Pair again? The current pairing is replaced once the new one succeeds.', go); else go();
+        if (S.lx && S.lx.status.paired) askConfirm(t('Pair again? The current pairing is replaced once the new one succeeds.'), go); else go();
         return;
-      case 'lxReconnect': api('POST', '/api/lutron/reconnect').then(function () { toast('Reconnecting…'); refreshLutron(); }).catch(fail); return;
+      case 'lxReconnect': api('POST', '/api/lutron/reconnect').then(function () { toast(t('Reconnecting…')); refreshLutron(); }).catch(fail); return;
       case 'lxUnpair':
-        askConfirm('Forget the pairing with the processor? Lights stop responding until you pair again.', function () { api('POST', '/api/lutron/unpair').then(refreshLutron).catch(fail); });
+        askConfirm(t('Forget the pairing with the processor? Lights stop responding until you pair again.'), function () { api('POST', '/api/lutron/unpair').then(refreshLutron).catch(fail); });
         return;
       case 'lxDiscover':
         S.lxBusy = 'discover'; render();
-        api('POST', '/api/lutron/discover').then(function (r) { toast('Read ' + r.discovery.zones.length + ' zones and ' + r.discovery.buttons.length + ' scene buttons'); }).catch(fail).then(function () { S.lxBusy = ''; refreshLutron(); });
+        api('POST', '/api/lutron/discover').then(function (r) { toast(t('Read {z} zones and {b} scene buttons', { z: r.discovery.zones.length, b: r.discovery.buttons.length })); }).catch(fail).then(function () { S.lxBusy = ''; refreshLutron(); });
         return;
       case 'lxZoneTest':
-        var k = t.getAttribute('data-key').split('|'), cd = deckById(k[0]), cx = cd && circuitIn(cd, k[1]);
+        var k = el.getAttribute('data-key').split('|'), cd = deckById(k[0]), cx = cd && circuitIn(cd, k[1]);
         if (!cx) return;
-        api('POST', '/api/lutron/zone-test', { zones: (cx.lutron && cx.lutron.zones) || [], level: Number(t.getAttribute('data-level')) })
-          .then(function (r) { var bad = r.results.filter(function (x) { return !x.ok; }); toast(bad.length ? 'Zone ' + bad[0].zone + ': ' + bad[0].error : cx.label + ' test sent to ' + r.results.length + ' zone(s)'); setTimeout(refreshLutron, 800); }).catch(fail);
+        api('POST', '/api/lutron/zone-test', { zones: (cx.lutron && cx.lutron.zones) || [], level: Number(el.getAttribute('data-level')) })
+          .then(function (r) { var bad = r.results.filter(function (x) { return !x.ok; }); toast(bad.length ? t('Zone {z}: {err}', { z: bad[0].zone, err: tm(bad[0].error) }) : t('{label} test sent to {n} zone(s)', { label: cx.label, n: r.results.length })); setTimeout(refreshLutron, 800); }).catch(fail);
         return;
       case 'lxBtnTest':
-        var bs = scenes().filter(function (s) { return s.id === t.getAttribute('data-sid'); })[0];
-        if (bs && bs.lutronButton) api('POST', '/api/lutron/button-test', { id: bs.lutronButton }).then(function () { toast('Pressed Lutron scene #' + bs.lutronButton); }).catch(fail);
+        var bs = scenes().filter(function (s) { return s.id === el.getAttribute('data-sid'); })[0];
+        if (bs && bs.lutronButton) api('POST', '/api/lutron/button-test', { id: bs.lutronButton }).then(function () { toast(t('Pressed Lutron scene #{id}', { id: bs.lutronButton })); }).catch(fail);
         return;
       default: return;
     }
@@ -680,12 +714,13 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
   });
   function val(id) { var el = document.getElementById(id); return el ? el.value : ''; }
 
+  var tr = t;
   document.addEventListener('input', function (e) {
     var t = e.target, act = t.getAttribute('data-act'), cid = t.getAttribute('data-cid');
     if (act === 'level') {
       var v = Number(t.value), cur = S.levels[cid] || {};
       S.levels[cid] = { on: v > 0, level: v > 0 ? v : (cur.level || 0) }; S.sel = cid; S.sceneBy = {};
-      var pct = t.parentNode.querySelector('.pct'); if (pct) { pct.textContent = v > 0 ? v + '%' : 'Off'; pct.className = 'pct' + (v > 0 ? ' on' : ''); }
+      var pct = t.parentNode.querySelector('.pct'); if (pct) { pct.textContent = v > 0 ? v + '%' : tr('Off'); pct.className = 'pct' + (v > 0 ? ' on' : ''); }
       sendLevelThrottled(cid, v); renderPlan(); scheduleRender(); return;
     }
     if (act === 'sceneLevel') {
@@ -700,12 +735,14 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
       if (f === 'on' || f === 'ni') c[f] = t.checked;
       else if (f === 'def') c.def = Math.max(0, Math.min(100, Number(t.value) || 0));
       else if (f === 'zones') c.lutron = { zones: parseZones(t.value) };
+      else if (f === 'name_ru') { c.ru = Object.assign({}, c.ru || {}, { name: t.value }); if (!t.value) delete c.ru.name; }
       else c[f] = t.value;
       markDirty();
       if (f === 'on' || f === 'ni' || f === 'tag') render(); else scheduleRender();
       return;
     }
     if (t.getAttribute('data-scene') === 'name') { var s2 = curScene(); if (s2) { s2.name = t.value; markDirty(); scheduleRender(); } return; }
+    if (t.getAttribute('data-scene') === 'name_ru') { var s3 = curScene(); if (s3) { s3.ru = Object.assign({}, s3.ru || {}, { name: t.value }); if (!t.value) delete s3.ru.name; markDirty(); scheduleRender(); } return; }
     var lz = t.getAttribute('data-lz');
     if (lz) { var k = lz.split('|'), cd = deckById(k[0]), cx = cd && circuitIn(cd, k[1]); if (cx) { cx.lutron = { zones: parseZones(t.value) }; markDirty(); updateHeaderOnly(); } return; }
     var sb = t.getAttribute('data-sbtn');
@@ -773,20 +810,20 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
   function closeModal() { document.getElementById('modal').innerHTML = ''; }
   function openLogin() {
     var m = document.getElementById('modal');
-    m.innerHTML = '<div class="modal"><form class="dialog" id="loginForm" role="dialog" aria-modal="true" aria-labelledby="lt"><h2 id="lt">Admin login</h2><div class="muted" style="font-size:13px">Enter your own password (Wave AVI, ETO or engineer).</div><label class="f">Password<input type="password" id="pw" autocomplete="current-password" required></label><div class="err" id="pwErr" role="alert"></div><div class="row" style="justify-content:flex-end"><button type="button" class="btn" id="pwCancel">Cancel</button><button type="submit" class="btn primary">Log in</button></div></form></div>';
+    m.innerHTML = '<div class="modal"><form class="dialog" id="loginForm" role="dialog" aria-modal="true" aria-labelledby="lt"><h2 id="lt">' + t('Admin login') + '</h2><div class="muted" style="font-size:13px">' + t('Enter your own password (Wave AVI, ETO or engineer).') + '</div><label class="f">' + t('Password') + '<input type="password" id="pw" autocomplete="current-password" required></label><div class="err" id="pwErr" role="alert"></div><div class="row" style="justify-content:flex-end"><button type="button" class="btn" id="pwCancel">' + t('Cancel') + '</button><button type="submit" class="btn primary">' + t('Log in') + '</button></div></form></div>';
     document.getElementById('pw').focus();
     document.getElementById('pwCancel').onclick = closeModal;
     document.getElementById('loginForm').onsubmit = function (ev) {
       ev.preventDefault();
       api('POST', '/api/login', { password: document.getElementById('pw').value })
-        .then(function (r) { closeModal(); S.admin = true; S.user = r.user || null; S.tab = 'lights'; S.selZone = null; toast('Logged in as ' + (S.user ? S.user.name : 'admin')); render(); })
-        .catch(function (e) { document.getElementById('pwErr').textContent = e.message; });
+        .then(function (r) { closeModal(); S.admin = true; S.user = r.user || null; S.tab = 'lights'; S.selZone = null; toast(t('Logged in as {name}', { name: S.user ? S.user.name : 'admin' })); render(); })
+        .catch(function (e) { document.getElementById('pwErr').textContent = tm(e.message); });
     };
   }
   function logout() { api('POST', '/api/logout').catch(function () {}).then(function () { S.admin = false; S.user = null; S.users = null; S.selZone = null; if (S.view === 'lutron' || S.view === 'users') S.view = 'home'; clearInterval(lxPoll); render(); }); }
   function askConfirm(msg, ok) {
     var m = document.getElementById('modal');
-    m.innerHTML = '<div class="modal"><div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="ct"><h2 id="ct">Are you sure?</h2><div style="font-size:14px">' + esc(msg) + '</div><div class="row" style="justify-content:flex-end"><button class="btn" id="cNo">Cancel</button><button class="btn primary" id="cYes">Yes</button></div></div></div>';
+    m.innerHTML = '<div class="modal"><div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="ct"><h2 id="ct">' + t('Are you sure?') + '</h2><div style="font-size:14px">' + esc(msg) + '</div><div class="row" style="justify-content:flex-end"><button class="btn" id="cNo">' + t('Cancel') + '</button><button class="btn primary" id="cYes">' + t('Yes') + '</button></div></div></div>';
     document.getElementById('cNo').onclick = closeModal;
     document.getElementById('cYes').onclick = function () { closeModal(); ok(); };
     document.getElementById('cYes').focus();
@@ -798,8 +835,8 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
   function save() {
     S.saving = true; render();
     api('PUT', '/api/config', { decks: S.config.decks, scenes: S.config.scenes })
-      .then(function () { S.saved = clone(S.config); S.dirty = false; toast('Saved – the new layout is live on all control panels'); })
-      .catch(function (e) { if (/Admin/.test(e.message)) { toast('Your admin session expired. Log in again, then press Save.'); openLogin(); } else fail(e); })
+      .then(function () { S.saved = clone(S.config); S.dirty = false; toast(t('Saved – the new layout is live on all control panels')); })
+      .catch(function (e) { if (/Admin/.test(e.message)) { toast(t('Your admin session expired. Log in again, then press Save.')); openLogin(); } else fail(e); })
       .then(function () { S.saving = false; render(); });
   }
 
@@ -823,7 +860,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     S.config = b.config; S.saved = clone(b.config); S.levels = b.levels || {}; S.sceneBy = b.sceneBy || {};
     S.admin = !!b.admin; S.user = b.user || null; S.lutron = b.lutron || S.lutron; S.adminConfigured = b.adminConfigured;
     render(); connectEvents();
-  }).catch(function (e) { S.loadError = 'Cannot reach the lighting server: ' + e.message; render(); setTimeout(function () { location.reload(); }, 10000); });
+  }).catch(function (e) { S.loadError = t('Cannot reach the lighting server: {err}', { err: tm(e.message) }); render(); setTimeout(function () { location.reload(); }, 10000); });
 })();
 </script>
 </body>

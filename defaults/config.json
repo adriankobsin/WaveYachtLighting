@@ -12,7 +12,7 @@
      "id": "GR7",
      "label": "GR7",
      "name": "Aft perimeter & funnel",
-     "ref": "SP006A \u00b7 17DL16",
+     "ref": "SP006A · 17DL16",
      "tag": "walk",
      "def": 40,
      "on": true,
@@ -42,13 +42,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Кормовой периметр и труба"
      }
     },
     {
      "id": "GR30",
      "label": "GR30",
      "name": "Lounge & bar spots",
-     "ref": "SP006 \u00b7 7DL16 / 3ELD10",
+     "ref": "SP006 · 7DL16 / 3ELD10",
      "tag": "lounge",
      "def": 70,
      "on": true,
@@ -86,13 +89,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Споты лаунжа и бара"
      }
     },
     {
      "id": "DL31",
      "label": "31/32DL16",
      "name": "Deck downlights",
-     "ref": "SP007 \u00b7 pantry 661",
+     "ref": "SP007 · pantry 661",
      "tag": "walk",
      "def": 60,
      "on": true,
@@ -136,13 +142,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Палубные светильники"
      }
     },
     {
      "id": "OL1",
      "label": "OL1",
      "name": "Owner lights",
-     "ref": "28A / 28B-DL16 \u00b7 DLC61",
+     "ref": "28A / 28B-DL16 · DLC61",
      "tag": "lounge",
      "def": 40,
      "on": false,
@@ -222,13 +231,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Светильники владельца"
      }
     },
     {
      "id": "LED33",
      "label": "33DL16",
      "name": "Jacuzzi lounge LED strip",
-     "ref": "DLC61 \u00b7 pantry 661",
+     "ref": "DLC61 · pantry 661",
      "tag": "feature",
      "def": 50,
      "on": true,
@@ -262,13 +274,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "LED-лента лаунжа с джакузи"
      }
     },
     {
      "id": "P01",
      "label": "P01",
      "name": "Forward floods P/S",
-     "ref": "1DL16 / 2DL16 \u00b7 34\u201335DL16",
+     "ref": "1DL16 / 2DL16 · 34–35DL16",
      "tag": "flood",
      "def": 100,
      "on": false,
@@ -304,9 +319,15 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Носовые прожекторы ЛБ/ПБ"
      }
     }
-   ]
+   ],
+   "ru": {
+    "name": "Солнечная палуба"
+   }
   },
   {
    "id": "bridge",
@@ -320,7 +341,7 @@
      "id": "GR9",
      "label": "GR9",
      "name": "Aft floodlights P/S",
-     "ref": "PF1 \u00b7 6A / 6B-DL16",
+     "ref": "PF1 · 6A / 6B-DL16",
      "tag": "flood",
      "def": 100,
      "on": false,
@@ -356,13 +377,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Кормовые прожекторы ЛБ/ПБ"
      }
     },
     {
      "id": "GR18",
      "label": "GR18",
      "name": "Aft deck / observatory",
-     "ref": "SP006 \u00b7 4ELD10 / 8DL16",
+     "ref": "SP006 · 4ELD10 / 8DL16",
      "tag": "lounge",
      "def": 70,
      "on": true,
@@ -388,6 +412,9 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Кормовая палуба / обзорная площадка"
      }
     },
     {
@@ -438,13 +465,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Освещение спасательных шлюпок"
      }
     },
     {
      "id": "GR16",
      "label": "GR16",
      "name": "Port side deck",
-     "ref": "SP006 \u00b7 9DL16 / 5ELD10",
+     "ref": "SP006 · 9DL16 / 5ELD10",
      "tag": "walk",
      "def": 60,
      "on": true,
@@ -470,13 +500,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Боковая палуба ЛБ"
      }
     },
     {
      "id": "GR17",
      "label": "GR17",
      "name": "Starboard side deck",
-     "ref": "SP006 \u00b7 10DL16 / 6ELD10",
+     "ref": "SP006 · 10DL16 / 6ELD10",
      "tag": "walk",
      "def": 60,
      "on": true,
@@ -502,6 +535,9 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Боковая палуба ПБ"
      }
     },
     {
@@ -552,13 +588,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Подсветка названия судна"
      }
     },
     {
      "id": "GR4",
      "label": "GR4",
      "name": "Port wing flood",
-     "ref": "PF2 \u00b7 2ELD10",
+     "ref": "PF2 · 2ELD10",
      "tag": "flood",
      "def": 100,
      "on": false,
@@ -580,13 +619,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Прожектор крыла мостика ЛБ"
      }
     },
     {
      "id": "GR3",
      "label": "GR3",
      "name": "Starboard wing flood",
-     "ref": "PF2 \u00b7 1ELD10",
+     "ref": "PF2 · 1ELD10",
      "tag": "flood",
      "def": 100,
      "on": false,
@@ -608,13 +650,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Прожектор крыла мостика ПБ"
      }
     },
     {
      "id": "GR15",
      "label": "GR15",
      "name": "Forward bridge deck",
-     "ref": "SP006 \u00b7 11DL16 / 7ELD10",
+     "ref": "SP006 · 11DL16 / 7ELD10",
      "tag": "walk",
      "def": 50,
      "on": true,
@@ -668,13 +713,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Носовая часть мостиковой палубы"
      }
     },
     {
      "id": "GR6",
      "label": "GR6",
      "name": "Port forward flood",
-     "ref": "PF4 \u00b7 5DL16",
+     "ref": "PF4 · 5DL16",
      "tag": "flood",
      "def": 100,
      "on": false,
@@ -696,13 +744,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Носовой прожектор ЛБ"
      }
     },
     {
      "id": "GR5",
      "label": "GR5",
      "name": "Starboard forward flood",
-     "ref": "PF4 \u00b7 4DL16",
+     "ref": "PF4 · 4DL16",
      "tag": "flood",
      "def": 100,
      "on": false,
@@ -724,9 +775,15 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Носовой прожектор ПБ"
      }
     }
-   ]
+   ],
+   "ru": {
+    "name": "Мостиковая палуба"
+   }
   },
   {
    "id": "owners",
@@ -740,7 +797,7 @@
      "id": "GR10",
      "label": "GR10",
      "name": "Aft floodlights P/S",
-     "ref": "PF3 \u00b7 14DUL1",
+     "ref": "PF3 · 14DUL1",
      "tag": "flood",
      "def": 100,
      "on": false,
@@ -776,13 +833,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Кормовые прожекторы ЛБ/ПБ"
      }
     },
     {
      "id": "GR22",
      "label": "GR22",
      "name": "Aft lounge",
-     "ref": "SP006 \u00b7 12DL16 / 8ELD10 \u00b7 DLC401",
+     "ref": "SP006 · 12DL16 / 8ELD10 · DLC401",
      "tag": "lounge",
      "def": 70,
      "on": true,
@@ -808,13 +868,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Кормовой лаунж"
      }
     },
     {
      "id": "GR21",
      "label": "GR21",
      "name": "Side decks P/S",
-     "ref": "SP006 \u00b7 13A / 13B-DL16 \u00b7 9ELD10",
+     "ref": "SP006 · 13A / 13B-DL16 · 9ELD10",
      "tag": "walk",
      "def": 60,
      "on": true,
@@ -858,13 +921,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Боковые палубы ЛБ/ПБ"
      }
     },
     {
      "id": "GR20",
      "label": "GR20",
      "name": "Owner's foredeck",
-     "ref": "14DL16 / 10ELD10 \u00b7 local 420",
+     "ref": "14DL16 / 10ELD10 · local 420",
      "tag": "lounge",
      "def": 50,
      "on": true,
@@ -914,13 +980,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Носовая палуба владельца"
      }
     },
     {
      "id": "GR2",
      "label": "GR2",
      "name": "Anchor floods P/S",
-     "ref": "PF6 \u00b7 13ELD10",
+     "ref": "PF6 · 13ELD10",
      "tag": "flood",
      "def": 100,
      "on": false,
@@ -956,13 +1025,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Якорные прожекторы ЛБ/ПБ"
      }
     },
     {
      "id": "GR1",
      "label": "GR1",
      "name": "Bow floodlight",
-     "ref": "PF6 \u00b7 12ELD10",
+     "ref": "PF6 · 12ELD10",
      "tag": "flood",
      "def": 100,
      "on": false,
@@ -984,9 +1056,15 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Носовой прожектор"
      }
     }
-   ]
+   ],
+   "ru": {
+    "name": "Палуба владельца"
+   }
   },
   {
    "id": "main",
@@ -1000,7 +1078,7 @@
      "id": "GR28",
      "label": "GR28",
      "name": "Swim platform & garage",
-     "ref": "SP006 \u00b7 21DL12 / 46ELD7",
+     "ref": "SP006 · 21DL12 / 46ELD7",
      "tag": "walk",
      "def": 60,
      "on": true,
@@ -1030,13 +1108,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Купальная платформа и гараж"
      }
     },
     {
      "id": "GR27",
      "label": "GR27",
      "name": "Aft quarters P/S",
-     "ref": "SP006 \u00b7 20DL12 / 45ELD7",
+     "ref": "SP006 · 20DL12 / 45ELD7",
      "tag": "walk",
      "def": 50,
      "on": true,
@@ -1080,6 +1161,9 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Кормовые зоны ЛБ/ПБ"
      }
     },
     {
@@ -1112,6 +1196,9 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Тендерная ниша ЛБ"
      }
     },
     {
@@ -1144,13 +1231,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Тендерная ниша ПБ"
      }
     },
     {
      "id": "GR24",
      "label": "GR24",
      "name": "Port side deck & gangway",
-     "ref": "SP006 \u00b7 21DL11 / 7A-ELD6",
+     "ref": "SP006 · 21DL11 / 7A-ELD6",
      "tag": "walk",
      "def": 60,
      "on": true,
@@ -1176,13 +1266,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Боковая палуба и трап ЛБ"
      }
     },
     {
      "id": "GR23",
      "label": "GR23",
      "name": "Stbd side deck & gangway",
-     "ref": "SP006 \u00b7 22DL11 / 7B-ELD6",
+     "ref": "SP006 · 22DL11 / 7B-ELD6",
      "tag": "walk",
      "def": 60,
      "on": true,
@@ -1208,13 +1301,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Боковая палуба и трап ПБ"
      }
     },
     {
      "id": "GR13",
      "label": "GR13",
      "name": "Starboard floodlight",
-     "ref": "PF3 \u00b7 17DUL1",
+     "ref": "PF3 · 17DUL1",
      "tag": "flood",
      "def": 100,
      "on": false,
@@ -1236,13 +1332,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Прожектор ПБ"
      }
     },
     {
      "id": "GR14",
      "label": "GR14",
      "name": "Aft starboard floodlight",
-     "ref": "PF3 \u00b7 18DUL1",
+     "ref": "PF3 · 18DUL1",
      "tag": "flood",
      "def": 100,
      "on": false,
@@ -1264,13 +1363,16 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Кормовой прожектор ПБ"
      }
     },
     {
      "id": "GR11",
      "label": "GR11",
      "name": "Port floodlight",
-     "ref": "PF3 \u00b7 15DUL1",
+     "ref": "PF3 · 15DUL1",
      "tag": "flood",
      "def": 0,
      "on": false,
@@ -1278,13 +1380,16 @@
      "ni": true,
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Прожектор ЛБ"
      }
     },
     {
      "id": "GR12",
      "label": "GR12",
      "name": "Aft port floodlight",
-     "ref": "PF3 \u00b7 16DUL1",
+     "ref": "PF3 · 16DUL1",
      "tag": "flood",
      "def": 0,
      "on": false,
@@ -1292,14 +1397,20 @@
      "ni": true,
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Кормовой прожектор ЛБ"
      }
     }
-   ]
+   ],
+   "ru": {
+    "name": "Главная палуба"
+   }
   },
   {
    "id": "mast",
    "name": "Mast deck",
-   "fr": "Pont m\u00e2t",
+   "fr": "Pont mât",
    "img": "img/mast.png",
    "r": 5.801,
    "note": "Drawing 2139145-451 only shows the funnel lighting (GR7) at this level. GR7 is shared with the Sundeck aft perimeter spots, so it changes on both screens. Add the mast and navigation circuits here once they are scheduled.",
@@ -1308,7 +1419,7 @@
      "id": "GR7",
      "label": "GR7",
      "name": "Funnel lighting P/S",
-     "ref": "PF4 2\u00d710W \u00b7 17DL16",
+     "ref": "PF4 2×10W · 17DL16",
      "tag": "walk",
      "def": 40,
      "on": true,
@@ -1338,16 +1449,26 @@
      ],
      "lutron": {
       "zones": []
+     },
+     "ru": {
+      "name": "Подсветка трубы ЛБ/ПБ"
      }
     }
-   ]
+   ],
+   "ru": {
+    "name": "Мачтовая палуба",
+    "note": "На чертеже 2139145-451 на этом уровне показано только освещение дымовой трубы (GR7). Цепь GR7 общая с кормовыми периметральными светильниками солнечной палубы, поэтому меняется на обоих экранах. Добавьте сюда цепи мачты и навигационных огней, когда они будут определены."
+   }
   }
  ],
  "scenes": [
   {
    "id": "off",
    "name": "All off",
-   "levels": {}
+   "levels": {},
+   "ru": {
+    "name": "Всё выключено"
+   }
   },
   {
    "id": "evening",
@@ -1384,6 +1505,9 @@
     "GR23": 60,
     "GR13": 0,
     "GR14": 0
+   },
+   "ru": {
+    "name": "Вечер"
    }
   },
   {
@@ -1421,6 +1545,9 @@
     "GR23": 25,
     "GR13": 0,
     "GR14": 0
+   },
+   "ru": {
+    "name": "Ночной переход"
    }
   },
   {
@@ -1458,6 +1585,9 @@
     "GR23": 30,
     "GR13": 0,
     "GR14": 0
+   },
+   "ru": {
+    "name": "На якоре"
    }
   },
   {
@@ -1495,6 +1625,9 @@
     "GR23": 100,
     "GR13": 0,
     "GR14": 0
+   },
+   "ru": {
+    "name": "Прибытие гостей"
    }
   },
   {
@@ -1532,6 +1665,9 @@
     "GR23": 80,
     "GR13": 100,
     "GR14": 100
+   },
+   "ru": {
+    "name": "Палубные работы"
    }
   },
   {
@@ -1569,6 +1705,9 @@
     "GR23": 100,
     "GR13": 100,
     "GR14": 100
+   },
+   "ru": {
+    "name": "Полный свет"
    }
   }
  ]
