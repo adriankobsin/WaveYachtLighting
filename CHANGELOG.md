@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.4.1 – 2026-11-17
+
+- Browser demo: new decks were not added when the page first showed a cached copy of the saved layout. The check now runs when the live layout arrives.
+
 ## 1.4.0 – 2026-11-17
 
 - New decks **Lower deck** (Pont principal -1, «Нижняя палуба») and **Tank deck** (Pont principal -2, «Палуба цистерн»), placed after Main deck. They start with no circuits; add circuits in admin (deck → Lights → + Add circuit).

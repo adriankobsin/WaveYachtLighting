@@ -154,6 +154,7 @@
 
   // Decks added to the standard layout in an update are added to the saved layout once,
   // in their standard position (same rule as the server). Nothing else is changed.
+  var deckCheckDone = false;
   function addNewDefaultDecks() {
     realFetch('config.json').then(function (r) { return r.json(); }).then(function (def) {
       if (!def || !def.decks || !config || !docRef) return;
@@ -193,7 +194,7 @@
           var first = !config;
           config = JSON.parse(JSON.stringify(data)); _pz = null; initLevels(!first);
           if (!first) emit('config', config);
-          if (first && !snap.metadata.fromCache) addNewDefaultDecks();
+          if (!deckCheckDone && !snap.metadata.fromCache) { deckCheckDone = true; addNewDefaultDecks(); }
         }
         if (!snap.metadata.fromCache) finish();
       }, function () { docRef = null; finish(); });
