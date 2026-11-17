@@ -1408,6 +1408,30 @@
    }
   },
   {
+   "id": "lower",
+   "name": "Lower deck",
+   "fr": "Pont principal -1",
+   "img": "img/lower.png",
+   "r": 5.615,
+   "note": "",
+   "ru": {
+    "name": "Нижняя палуба"
+   },
+   "circuits": []
+  },
+  {
+   "id": "tank",
+   "name": "Tank deck",
+   "fr": "Pont principal -2",
+   "img": "img/tank.png",
+   "r": 5.592,
+   "note": "",
+   "ru": {
+    "name": "Палуба цистерн"
+   },
+   "circuits": []
+  },
+  {
    "id": "mast",
    "name": "Mast deck",
    "fr": "Pont mât",

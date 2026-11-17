@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.4.0 – 2026-11-17
+
+- New decks **Lower deck** (Pont principal -1, «Нижняя палуба») and **Tank deck** (Pont principal -2, «Палуба цистерн»), placed after Main deck. They start with no circuits; add circuits in admin (deck → Lights → + Add circuit).
+- Updating an existing server adds decks that are new in the standard layout to the saved layout once, in their standard place. Saved circuits, scenes and edits are not touched (`knownDefaultDecks` records which decks have been offered). The browser demo does the same.
+
 ## 1.3.0 – 2026-11-16
 
 - **English / Russian** switch (EN / RU) in the top bar. Each panel remembers its choice.

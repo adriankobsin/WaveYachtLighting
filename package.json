@@ -1,6 +1,6 @@
 {
   "name": "wave-exterior-lighting",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Wave AVI exterior lighting control for Lutron HomeWorks QSX (LEAP)",
   "main": "server.js",
   "scripts": {

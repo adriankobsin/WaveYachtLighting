@@ -72,7 +72,9 @@ sudo /opt/wave-lighting/deploy/update.sh some-branch   # or test a branch
 ```
 
 `data/` is not in Git, so the saved layout, Lutron addresses, pairing and
-password stay as they are. Back up `data/` before big updates.
+password stay as they are. If an update adds a new deck to the standard
+layout (as 1.4.0 did with Lower and Tank deck), it is added to the saved
+layout once without changing anything else. Back up `data/` before big updates.
 
 Open `http://<mini-pc-ip>:8080` on the touch panels. In kiosk mode, point the
 panel browser at that address.

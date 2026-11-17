@@ -36,6 +36,24 @@ for (const name of ['config', 'admin']) {
 if (!fs.existsSync(F.admin) && !fs.existsSync(F.users) && process.env.ADMIN_PASSWORD) writeJson(F.admin, hashPassword(process.env.ADMIN_PASSWORD));
 
 let config = readJson(F.config, { decks: [], scenes: [] });
+// Decks added to the standard layout in an update (e.g. Lower and Tank deck) are
+// added to an existing saved layout once, in their standard position.
+(function addNewDefaultDecks() {
+  const defaults = readJson(path.join(ROOT, 'defaults', 'config.json'), null);
+  if (!defaults || !Array.isArray(defaults.decks) || !Array.isArray(config.decks)) return;
+  const have = new Set(config.decks.map((d) => d.id));
+  const seen = new Set(config.knownDefaultDecks || []);
+  let changed = false;
+  defaults.decks.forEach((d, i) => {
+    if (have.has(d.id) || seen.has(d.id)) return;
+    const prev = defaults.decks.slice(0, i).reverse().find((x) => have.has(x.id));
+    const at = prev ? config.decks.findIndex((x) => x.id === prev.id) + 1 : config.decks.length;
+    config.decks.splice(at, 0, d); have.add(d.id); changed = true;
+    console.log('Added new deck from the standard layout: ' + d.name);
+  });
+  config.knownDefaultDecks = defaults.decks.map((d) => d.id);
+  if (changed || !seen.size) writeJson(F.config, config);
+})();
 let settings = readJson(F.settings, { lutron: {} });
 const auth = new Auth(F.users, F.admin);
 const lutron = new Lutron({ dataDir: DATA, settings: settings.lutron });
@@ -193,7 +211,7 @@ function cleanConfig(body) {
     if (ru) o.ru = ru;
     return o;
   });
-  return { decks, scenes, updatedAt: new Date().toISOString() };
+  return { decks, scenes, knownDefaultDecks: config.knownDefaultDecks || [], updatedAt: new Date().toISOString() };
 }
 
 // ---------- routes ----------

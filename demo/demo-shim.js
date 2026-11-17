@@ -152,6 +152,28 @@
     });
   }
 
+  // Decks added to the standard layout in an update are added to the saved layout once,
+  // in their standard position (same rule as the server). Nothing else is changed.
+  function addNewDefaultDecks() {
+    realFetch('config.json').then(function (r) { return r.json(); }).then(function (def) {
+      if (!def || !def.decks || !config || !docRef) return;
+      var have = {}; config.decks.forEach(function (d) { have[d.id] = 1; });
+      var seen = {}; (config.knownDefaultDecks || []).forEach(function (id) { seen[id] = 1; });
+      var added = false;
+      def.decks.forEach(function (d, i) {
+        if (have[d.id] || seen[d.id]) return;
+        var prev = def.decks.slice(0, i).reverse().filter(function (x) { return have[x.id]; })[0];
+        var at = prev ? config.decks.map(function (x) { return x.id; }).indexOf(prev.id) + 1 : config.decks.length;
+        config.decks.splice(at, 0, JSON.parse(JSON.stringify(d))); have[d.id] = 1; added = true;
+      });
+      var known = def.decks.map(function (d) { return d.id; });
+      if (!added && (config.knownDefaultDecks || []).join() === known.join()) return;
+      config.knownDefaultDecks = known; _pz = null; initLevels(true);
+      docRef.update({ decks: JSON.parse(JSON.stringify(config.decks)), knownDefaultDecks: known }).catch(function () {});
+      emit('config', config); stateEv();
+    }).catch(function () {});
+  }
+
   // Layout: the shared store on claude.ai; elsewhere config.json next to the page.
   function loadFallback() {
     return realFetch('config.json').then(function (r) { return r.json(); })
@@ -171,6 +193,7 @@
           var first = !config;
           config = JSON.parse(JSON.stringify(data)); _pz = null; initLevels(!first);
           if (!first) emit('config', config);
+          if (first && !snap.metadata.fromCache) addNewDefaultDecks();
         }
         if (!snap.metadata.fromCache) finish();
       }, function () { docRef = null; finish(); });
@@ -220,7 +243,7 @@
         }
         case '/api/config': {
           need();
-          var next = { decks: body.decks, scenes: body.scenes, updatedAt: new Date().toISOString() };
+          var next = { decks: body.decks, scenes: body.scenes, knownDefaultDecks: (config && config.knownDefaultDecks) || [], updatedAt: new Date().toISOString() };
           if (!docRef) { config = next; _pz = null; initLevels(true); return json(200, { ok: true }); }
           return docRef.set(JSON.parse(JSON.stringify(next))).then(function () { config = next; _pz = null; initLevels(true); stateEv(); return json(200, { ok: true }); })
             .catch(function (e) { return err(500, e && e.code === 'invalid_argument' ? 'This account cannot save changes. Ask the owner for edit access' : 'Save failed: ' + ((e && e.message) || e)); });
