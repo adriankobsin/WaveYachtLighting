@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.5.2 – 2026-11-18
+
+- Admin → deck → Lights: every light of the selected circuit is listed under **Lights on the GA** with **Edit** and **Delete**, plus **Delete all lights**. Edit selects the light on the plan and opens its settings; the settings panel has **Delete this light** and **Done**.
+
 ## 1.5.1 – 2026-11-18
 
 - All decks are drawn with light fixtures like the Main deck. The standard Bridge, Owner's and Mast deck layouts now use floodlights, downlights and LED strips instead of lit areas.

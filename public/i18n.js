@@ -334,7 +334,7 @@ window.WL_I18N = {
     'Select a circuit in the list or tap a light on the plan to edit it.': 'Выберите цепь в списке или нажмите на светильник на плане, чтобы изменить её.',
     'LIGHTS ON THE GA ({n})': 'СВЕТИЛЬНИКИ НА ПЛАНЕ ({n})',
     'No lights yet – pick a fixture type in the toolbar above the plan, then click on the plan.': 'Светильников пока нет – выберите тип на панели над планом и щёлкните на плане.',
-    'Tap one of this circuit\'s lights on the plan to edit it.': 'Нажмите на светильник этой цепи на плане, чтобы изменить его.',
+    'Press Edit in the list, or tap one of this circuit\'s lights on the plan, to change it.': 'Нажмите «Изменить» в списке или выберите светильник этой цепи на плане, чтобы изменить его.',
     'Circuit added – now pick a fixture type above the plan and click on the plan to place its lights': 'Цепь добавлена – выберите тип светильника над планом и щёлкните на плане, чтобы расставить светильники',
     'Not enough points – the light was not added': 'Недостаточно точек – светильник не добавлен',
     'At least one deck must stay on the dashboard': 'На главном экране должна остаться хотя бы одна палуба',
@@ -365,7 +365,14 @@ window.WL_I18N = {
     'Convert this deck\'s areas to lights': 'Преобразовать зоны этой палубы в светильники',
     'Convert every lit area on all decks into lights?': 'Преобразовать все зоны освещения на всех палубах в светильники?',
     'Convert every lit area on {deck} into lights?': 'Преобразовать все зоны освещения на палубе «{deck}» в светильники?',
-    '{a} areas became {l} lights – check them, then press Save & deploy (Discard undoes it)': '{a} зон превратились в {l} светильников – проверьте и нажмите «Применить» («Отменить» вернёт как было)'
+    '{a} areas became {l} lights – check them, then press Save & deploy (Discard undoes it)': '{a} зон превратились в {l} светильников – проверьте и нажмите «Применить» («Отменить» вернёт как было)',
+    'Delete all lights': 'Удалить все светильники',
+    'Edit': 'Изменить',
+    'Delete {name}': 'Удалить: {name}',
+    'Light deleted – press Save & deploy to keep it, or Discard to undo': 'Светильник удалён – нажмите «Применить», чтобы сохранить, или «Отменить», чтобы вернуть',
+    'Delete all {n} lights of {label}? The circuit itself stays.': 'Удалить все светильники цепи {label} ({n})? Сама цепь останется.',
+    'Delete this light': 'Удалить этот светильник',
+    'Done': 'Готово'
   },
   ruPatterns: [
     [/^There is already a user called (.+)$/, 'Пользователь с именем $1 уже существует'],

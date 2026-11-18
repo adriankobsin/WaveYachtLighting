@@ -73,6 +73,12 @@ svg.edit polygon{cursor:move}
 .fxpop{position:absolute;z-index:4;width:270px;background:#132638;border:1px solid var(--line2);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:left}
 .fxpop .ref{white-space:normal}
 .fxpop .x{border:0;background:none;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;padding:0 2px;height:28px}
+.fxlist{display:flex;flex-direction:column;gap:4px;max-height:300px;overflow:auto;border:1px solid var(--line);border-radius:10px;padding:6px}
+.fxrow{display:flex;align-items:center;gap:8px;padding:2px 4px;border-radius:8px;border:1px solid transparent}
+.fxrow.on{border-color:var(--amber);background:#1C3047}
+.fxname{flex:1;min-width:0;display:flex;align-items:center;gap:10px;border:0;background:none;cursor:pointer;text-align:left;font-size:13px;font-weight:600;padding:2px 0}
+.fxname svg{flex:none;width:28px;height:28px}
+.fxname .dot{width:12px;height:12px;border-radius:6px;flex:none;border:1px solid rgba(255,255,255,.3)}
 .fxed{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:12px}
 .fsl{display:grid;grid-template-columns:110px minmax(0,1fr) 56px;gap:10px;align-items:center;font-size:12px;color:var(--muted)}
 .swc{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0}
@@ -386,7 +392,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     if (T.kind === 'half') h += sl('Direction', 'a', -180, 180, 1) + sl('Size', 'r', 1, 60, 0.5);
     if (T.kind === 'pool') h += sl('Size', 'r', 1, 60, 0.5);
     if (T.kind === 'line') h += sl('Thickness', 'w', 0.2, 5, 0.1);
-    h += '<div class="row"><button class="btn sm" data-act="fxDup">' + t('Duplicate') + '</button><button class="btn sm danger" data-act="fxDel">' + t('Delete light') + '</button></div>';
+    h += '<div class="row"><button class="btn sm" data-act="fxDup">' + t('Duplicate') + '</button><button class="btn sm danger" data-act="fxDel">' + t('Delete this light') + '</button><button class="btn sm" data-act="fxDone">' + t('Done') + '</button></div>';
     h += '<div class="muted" style="font-size:12px;line-height:1.5">' + (T.fam === 'pt' ? t('Drag the light to move it. White handle: aim it and set its reach or size. Amber handle: make a beam wider or narrower.') : t('Drag it to move it. Drag the white points to reshape; drag a faint middle point to add a bend; double-click a point to remove it.')) + ' ' + t('Keys: arrows nudge, Ctrl+D duplicates, Delete removes.') + '</div>';
     return h + '</div>';
   }
@@ -550,9 +556,19 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     h += '<label class="chk"><input type="checkbox" data-edit="on"' + (c.on ? ' checked' : '') + '>' + t('On at start-up') + '</label>';
     h += '<label class="chk"><input type="checkbox" data-edit="ni"' + (c.ni ? ' checked' : '') + '>' + t('Not installed') + '</label>';
     h += '</div><div class="lbl">' + t('LIGHTS ON THE GA ({n})', { n: (c.fx || []).length }) + '</div>';
-    h += '<div class="muted" style="font-size:13px">' + ((c.fx || []).length ? esc(fxCounts(c)) : t('No lights yet – pick a fixture type in the toolbar above the plan, then click on the plan.')) + '</div>';
+    if ((c.fx || []).length) {
+      var seenT = {};
+      h += '<div class="row between"><div class="muted" style="font-size:13px">' + esc(fxCounts(c)) + '</div><button class="btn sm danger" data-act="fxDelAll">' + t('Delete all lights') + '</button></div><div class="fxlist" role="list">';
+      c.fx.forEach(function (f, i) {
+        var T = FXT[f.type] || FXT.area, on = S.selFx && S.selFx.cid === c.id && S.selFx.i === i;
+        seenT[f.type] = (seenT[f.type] || 0) + 1;
+        h += '<div class="fxrow' + (on ? ' on' : '') + '" role="listitem"><button class="fxname" data-act="fxPick" data-i="' + i + '" aria-pressed="' + !!on + '">' + fxIcon(f.type) + '<span>' + esc(t(T.n)) + ' ' + seenT[f.type] + '</span><i class="dot" style="background:' + safeCol(f.col) + '"></i></button>';
+        h += '<button class="btn sm" data-act="fxPick" data-i="' + i + '">' + t('Edit') + '</button><button class="btn sm danger" data-act="fxDelI" data-i="' + i + '" aria-label="' + esc(t('Delete {name}', { name: t(T.n) + ' ' + seenT[f.type] })) + '">' + t('Delete') + '</button></div>';
+      });
+      h += '</div>';
+    } else h += '<div class="muted" style="font-size:13px">' + t('No lights yet – pick a fixture type in the toolbar above the plan, then click on the plan.') + '</div>';
     var sf = S.selFx && S.selFx.cid === c.id && c.fx && c.fx[S.selFx.i];
-    h += sf ? fxEditor(d, c, sf) : '<div class="muted" style="font-size:12px">' + t('Tap one of this circuit\'s lights on the plan to edit it.') + '</div>';
+    h += sf ? fxEditor(d, c, sf) : '<div class="muted" style="font-size:12px">' + t('Press Edit in the list, or tap one of this circuit\'s lights on the plan, to change it.') + '</div>';
     h += '<div class="row" style="justify-content:flex-end"><button class="btn sm danger" data-act="delCircuit">' + t('Delete circuit') + '</button></div>';
     return h + '</div></div>';
   }
@@ -811,6 +827,20 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
         S.zoom[d.id] = zz < 1.05 ? 1 : Math.min(4, Math.round(zz * 100) / 100); break;
       case 'fxCol': var fc = selFx(); if (!fc) return; fc.col = el.getAttribute('data-col'); markDirty(); break;
       case 'fxDup': dupFx(); return;
+      case 'fxPick':
+        var cp = d && circuitIn(d, S.sel), pi = Number(el.getAttribute('data-i'));
+        if (!cp || !cp.fx || !cp.fx[pi]) return;
+        S.selFx = { cid: cp.id, i: pi }; S.tool = ''; S.draw = null; break;
+      case 'fxDelI':
+        var cd = d && circuitIn(d, S.sel), di = Number(el.getAttribute('data-i'));
+        if (!cd || !cd.fx || !cd.fx[di]) return;
+        cd.fx.splice(di, 1);
+        if (S.selFx && S.selFx.cid === cd.id) { if (S.selFx.i === di) S.selFx = null; else if (S.selFx.i > di) S.selFx.i--; }
+        markDirty(); toast(t('Light deleted – press Save & deploy to keep it, or Discard to undo')); break;
+      case 'fxDelAll':
+        var ca2 = d && circuitIn(d, S.sel); if (!ca2) return;
+        askConfirm(t('Delete all {n} lights of {label}? The circuit itself stays.', { n: (ca2.fx || []).length, label: ca2.label }), function () { ca2.fx = []; S.selFx = null; markDirty(); render(); });
+        return;
       case 'convertAll': case 'convertDeck':
         var scope = act === 'convertAll' ? decks() : (d ? [d] : []);
         askConfirm(act === 'convertAll' ? t('Convert every lit area on all decks into lights?') : t('Convert every lit area on {deck} into lights?', { deck: d ? nm(d) : '' }), function () {
@@ -818,7 +848,8 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
           toast(t('{a} areas became {l} lights – check them, then press Save & deploy (Discard undoes it)', { a: res[0], l: res[1] }));
         });
         return;
-      case 'fxDel': delFx(); return;
+      case 'fxDel': delFx(); toast(t('Light deleted – press Save & deploy to keep it, or Discard to undo')); return;
+      case 'fxDone': S.selFx = null; break;
       case 'toggle':
         var c = allCircuits().filter(function (x) { return x.id === cid; })[0], st = lv(c);
         var next = st.on ? { on: false, level: st.level } : { on: true, level: st.level > 0 ? st.level : 50 };
