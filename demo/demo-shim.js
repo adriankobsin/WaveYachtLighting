@@ -156,21 +156,34 @@
   // in their standard position (same rule as the server). Nothing else is changed.
   var deckCheckDone = false;
   function addNewDefaultDecks() {
-    realFetch('config.json').then(function (r) { return r.json(); }).then(function (def) {
+    Promise.all([realFetch('config.json').then(function (r) { return r.json(); }), realFetch('legacy-areas.json').then(function (r) { return r.json(); }).catch(function () { return {}; })]).then(function (res) {
+      var def = res[0], legacy = res[1];
       if (!def || !def.decks || !config || !docRef) return;
       var have = {}; config.decks.forEach(function (d) { have[d.id] = 1; });
       var seen = {}; (config.knownDefaultDecks || []).forEach(function (id) { seen[id] = 1; });
-      var added = false;
+      var added = false, upgraded = false;
       def.decks.forEach(function (d, i) {
         if (have[d.id] || seen[d.id]) return;
         var prev = def.decks.slice(0, i).reverse().filter(function (x) { return have[x.id]; })[0];
         var at = prev ? config.decks.map(function (x) { return x.id; }).indexOf(prev.id) + 1 : config.decks.length;
         config.decks.splice(at, 0, JSON.parse(JSON.stringify(d))); have[d.id] = 1; added = true;
       });
+      // 1.5.0: standard circuits still on their standard areas (or none) get the standard light fixtures
+      if (!config.fxUpgraded) {
+        def.decks.forEach(function (dd) { (dd.circuits || []).forEach(function (dc) {
+          var key = dd.id + '|' + dc.id; if (!(key in legacy)) return;
+          var deck = config.decks.filter(function (x) { return x.id === dd.id; })[0];
+          var c = deck && (deck.circuits || []).filter(function (x) { return x.id === dc.id; })[0]; if (!c) return;
+          var areas = Array.isArray(c.fx) ? (c.fx.every(function (f) { return f.type === 'area'; }) ? c.fx.map(function (f) { return f.pts; }) : null) : (c.z || []);
+          if (!areas) return;
+          if (!areas.length || JSON.stringify(areas) === JSON.stringify(legacy[key])) { c.fx = JSON.parse(JSON.stringify(dc.fx)); delete c.z; }
+        }); });
+        config.fxUpgraded = true; upgraded = true;
+      }
       var known = def.decks.map(function (d) { return d.id; });
-      if (!added && (config.knownDefaultDecks || []).join() === known.join()) return;
+      if (!added && !upgraded && (config.knownDefaultDecks || []).join() === known.join()) return;
       config.knownDefaultDecks = known; _pz = null; initLevels(true);
-      docRef.update({ decks: JSON.parse(JSON.stringify(config.decks)), knownDefaultDecks: known }).catch(function () {});
+      docRef.update({ decks: JSON.parse(JSON.stringify(config.decks)), knownDefaultDecks: known, fxUpgraded: true }).catch(function () {});
       emit('config', config); stateEv();
     }).catch(function () {});
   }
@@ -244,7 +257,7 @@
         }
         case '/api/config': {
           need();
-          var next = { decks: body.decks, scenes: body.scenes, knownDefaultDecks: (config && config.knownDefaultDecks) || [], updatedAt: new Date().toISOString() };
+          var next = { decks: body.decks, scenes: body.scenes, knownDefaultDecks: (config && config.knownDefaultDecks) || [], fxUpgraded: !!(config && config.fxUpgraded), updatedAt: new Date().toISOString() };
           if (!docRef) { config = next; _pz = null; initLevels(true); return json(200, { ok: true }); }
           return docRef.set(JSON.parse(JSON.stringify(next))).then(function () { config = next; _pz = null; initLevels(true); stateEv(); return json(200, { ok: true }); })
             .catch(function (e) { return err(500, e && e.code === 'invalid_argument' ? 'This account cannot save changes. Ask the owner for edit access' : 'Save failed: ' + ((e && e.message) || e)); });

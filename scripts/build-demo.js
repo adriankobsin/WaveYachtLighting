@@ -21,4 +21,5 @@ fs.writeFileSync(path.join(out, 'index.html'), demo);
 fs.readdirSync(path.join(root, 'public', 'img')).forEach((f) => fs.copyFileSync(path.join(root, 'public', 'img', f), path.join(out, 'img', f)));
 fs.copyFileSync(path.join(root, 'defaults', 'config.json'), path.join(out, 'config.json'));
 fs.copyFileSync(path.join(root, 'public', 'i18n.js'), path.join(out, 'i18n.js'));
+fs.copyFileSync(path.join(root, 'defaults', 'legacy-areas.json'), path.join(out, 'legacy-areas.json'));
 console.log('Demo built in ' + out);

@@ -211,10 +211,12 @@ keypad.
 
 Admin routes (`/api/config`, `/api/lutron/*`) need the admin session cookie.
 
-## Fixture view concept demo
+## Light fixtures on the GA
 
-`prototypes/fixtures/index.html` is a stand-alone concept for showing real fixture
-types on the deck plans (floodlights, spotlights, downlights, pendants, wall and step
-lights, underwater lights, LED strips, neon and areas), with an admin editor to place,
-move, resize and aim them. Build a self-contained copy with `npm run build-fixture-demo`
-(writes `prototypes/fixtures/dist/index.html`). It is not wired to the server yet.
+Each circuit carries a list of fixtures (`fx`) drawn on its deck plan: `flood`, `spot`,
+`down`, `pendant`, `wall`, `step`, `under`, `strip`, `neon` and `area`. Positions are % of
+the plan width/height, sizes are % of the plan height. Admins place and edit them in
+deck → Lights. Older layouts with lit areas (`z`) are converted to `area` fixtures.
+`prototypes/fixtures/` holds the original stand-alone concept demo.
+
+Decks with `hidden: true` are not shown to the crew (Admin → Overview → Decks on the dashboard).

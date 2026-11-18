@@ -54,6 +54,28 @@ let config = readJson(F.config, { decks: [], scenes: [] });
   config.knownDefaultDecks = defaults.decks.map((d) => d.id);
   if (changed || !seen.size) writeJson(F.config, config);
 })();
+// One-time upgrade (1.5.0): Sundeck and Main deck circuits that still have their standard lit
+// areas (or none) get the standard light fixtures. Circuits you have edited are left alone.
+(function upgradeFixtures() {
+  if (config.fxUpgraded) return;
+  const defaults = readJson(path.join(ROOT, 'defaults', 'config.json'), null);
+  const legacy = readJson(path.join(ROOT, 'defaults', 'legacy-areas.json'), {});
+  if (!defaults || !Array.isArray(config.decks)) return;
+  let n = 0;
+  defaults.decks.forEach((dd) => (dd.circuits || []).forEach((dc) => {
+    const key = dd.id + '|' + dc.id;
+    if (!(key in legacy)) return;
+    const deck = config.decks.find((x) => x.id === dd.id);
+    const c = deck && (deck.circuits || []).find((x) => x.id === dc.id);
+    if (!c) return;
+    const areas = Array.isArray(c.fx) ? (c.fx.every((f) => f.type === 'area') ? c.fx.map((f) => f.pts) : null) : (c.z || []);
+    if (!areas) return;
+    if (!areas.length || JSON.stringify(areas) === JSON.stringify(legacy[key])) { c.fx = JSON.parse(JSON.stringify(dc.fx)); delete c.z; n++; }
+  }));
+  config.fxUpgraded = true;
+  writeJson(F.config, config);
+  if (n) console.log('Gave ' + n + ' standard circuits their light fixtures');
+})();
 let settings = readJson(F.settings, { lutron: {} });
 const auth = new Auth(F.users, F.admin);
 const lutron = new Lutron({ dataDir: DATA, settings: settings.lutron });
@@ -234,7 +256,7 @@ function cleanConfig(body) {
     if (ru) o.ru = ru;
     return o;
   });
-  return { decks, scenes, knownDefaultDecks: config.knownDefaultDecks || [], updatedAt: new Date().toISOString() };
+  return { decks, scenes, knownDefaultDecks: config.knownDefaultDecks || [], fxUpgraded: !!config.fxUpgraded, updatedAt: new Date().toISOString() };
 }
 
 // ---------- routes ----------

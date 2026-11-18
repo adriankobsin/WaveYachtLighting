@@ -5,7 +5,7 @@
 - **Light fixtures on the GA.** Each circuit is now drawn as its real fittings: floodlight and spotlight beams, downlights, pendants, wall lights, step lights, underwater lights, LED strips, neon and general areas. Fixtures that are off stay visible as grey outlines; lights fade on screen when they change.
 - Crew: tap any light on the plan to switch or dim its circuit in a small pop-up. Zoom buttons under each plan.
 - Admin (deck → Lights): fixture toolbar above the plan. Pick a type, click to place (points stay armed for rows; strips, neon and areas are drawn point by point). Drag to move; white handle aims and sizes, amber handle sets beam width; colour, type, circuit, duplicate and delete in the editor. Keys: arrows, Ctrl+D, Delete, Esc.
-- Lit areas in existing layouts become "Area" fixtures automatically – nothing is lost. The standard Sundeck and Main deck layouts now use real fixtures.
+- Lit areas in existing layouts become "Area" fixtures automatically – nothing is lost. The standard Sundeck and Main deck layouts now use real fixtures; on update, Sundeck and Main deck circuits that still have their standard areas (or none) get them once (`fxUpgraded`). Circuits you have edited keep their areas.
 - Admin → Overview → **Decks on the dashboard**: untick a deck to hide it from the crew dashboard and menu (admins still see it).
 
 ## 1.4.1 – 2026-11-17
