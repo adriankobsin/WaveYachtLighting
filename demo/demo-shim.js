@@ -180,13 +180,23 @@
         }); });
         config.fxUpgraded = true; upgraded = true;
       }
+      // All decks drawn as lights (like the Main deck): convert any remaining lit areas once.
+      if (!config.areasConverted && typeof convertAreas === 'function') {
+        config.decks.forEach(function (d) { (d.circuits || []).forEach(function (c) {
+          if (!Array.isArray(c.fx)) c.fx = (c.z || []).filter(function (q) { return q && q.length >= 3; }).map(function (q) { return { type: 'area', pts: q, col: '#FFB347' }; });
+          delete c.z;
+        }); });
+        convertAreas(config.decks); config.areasConverted = true; upgraded = true;
+      }
       var known = def.decks.map(function (d) { return d.id; });
       if (!added && !upgraded && (config.knownDefaultDecks || []).join() === known.join()) return;
       config.knownDefaultDecks = known; _pz = null; initLevels(true);
-      docRef.update({ decks: JSON.parse(JSON.stringify(config.decks)), knownDefaultDecks: known, fxUpgraded: true }).catch(function () {});
+      docRef.update({ decks: JSON.parse(JSON.stringify(config.decks)), knownDefaultDecks: known, fxUpgraded: true, areasConverted: !!config.areasConverted }).catch(function () {});
       emit('config', config); stateEv();
     }).catch(function () {});
   }
+
+  /*FXCONVERT*/
 
   // Layout: the shared store on claude.ai; elsewhere config.json next to the page.
   function loadFallback() {
@@ -257,7 +267,7 @@
         }
         case '/api/config': {
           need();
-          var next = { decks: body.decks, scenes: body.scenes, knownDefaultDecks: (config && config.knownDefaultDecks) || [], fxUpgraded: !!(config && config.fxUpgraded), updatedAt: new Date().toISOString() };
+          var next = { decks: body.decks, scenes: body.scenes, knownDefaultDecks: (config && config.knownDefaultDecks) || [], fxUpgraded: !!(config && config.fxUpgraded), areasConverted: !!(config && config.areasConverted), updatedAt: new Date().toISOString() };
           if (!docRef) { config = next; _pz = null; initLevels(true); return json(200, { ok: true }); }
           return docRef.set(JSON.parse(JSON.stringify(next))).then(function () { config = next; _pz = null; initLevels(true); stateEv(); return json(200, { ok: true }); })
             .catch(function (e) { return err(500, e && e.code === 'invalid_argument' ? 'This account cannot save changes. Ask the owner for edit access' : 'Save failed: ' + ((e && e.message) || e)); });

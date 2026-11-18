@@ -390,6 +390,55 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     h += '<div class="muted" style="font-size:12px;line-height:1.5">' + (T.fam === 'pt' ? t('Drag the light to move it. White handle: aim it and set its reach or size. Amber handle: make a beam wider or narrower.') : t('Drag it to move it. Drag the white points to reshape; drag a faint middle point to add a bend; double-click a point to remove it.')) + ' ' + t('Keys: arrows nudge, Ctrl+D duplicates, Delete removes.') + '</div>';
     return h + '</div>';
   }
+  // <fxconvert> Turn a lit area into fixtures: triangles become beams, signage a strip,
+  // feature areas an LED strip around the edge, everything else a grid of downlights.
+  function areaToFx(tag, pts, r) {
+    var P = pts.map(function (q) { return [q[0] * r, q[1]]; });
+    var back = function (x, y) { return [Math.round(x / r * 10) / 10, Math.round(y * 10) / 10]; };
+    var xs = P.map(function (q) { return q[0]; }), ys = P.map(function (q) { return q[1]; });
+    var x0 = Math.min.apply(null, xs), x1 = Math.max.apply(null, xs), y0 = Math.min.apply(null, ys), y1 = Math.max.apply(null, ys), w = x1 - x0, h = y1 - y0;
+    var rnd = function (n) { return Math.round(n * 10) / 10; };
+    if (P.length === 3) {
+      var A = P[0], M = [(P[1][0] + P[2][0]) / 2, (P[1][1] + P[2][1]) / 2];
+      var a1 = Math.atan2(P[1][1] - A[1], P[1][0] - A[0]), a2 = Math.atan2(P[2][1] - A[1], P[2][0] - A[0]);
+      var sp = Math.abs(((a1 - a2) * 180 / Math.PI + 540) % 360 - 180);
+      var flood = tag === 'flood' || sp >= 35, p = back(A[0], A[1]);
+      return [{ type: flood ? 'flood' : 'spot', x: p[0], y: p[1], a: Math.round(Math.atan2(M[1] - A[1], M[0] - A[0]) * 180 / Math.PI), len: rnd(Math.max(3, Math.hypot(M[0] - A[0], M[1] - A[1]) * 1.05)), spread: Math.round(Math.max(6, Math.min(170, sp))), col: flood ? '#FFE9C9' : '#FFC98A' }];
+    }
+    if (tag === 'feature') return [{ type: 'strip', pts: pts.concat([pts[0]]).map(function (q) { return [q[0], q[1]]; }), w: 0.8, col: '#FFD9A0' }];
+    if (tag === 'sign') {
+      var cy = (y0 + y1) / 2, cx = (x0 + x1) / 2, L = w >= h ? [back(x0 + w * 0.1, cy), back(x1 - w * 0.1, cy)] : [back(cx, y0 + h * 0.1), back(cx, y1 - h * 0.1)];
+      return [{ type: 'strip', pts: L, w: 0.8, col: '#FFE9C9' }];
+    }
+    var inside = function (x, y) { var c = false; for (var i = 0, j = P.length - 1; i < P.length; j = i++) { if (((P[i][1] > y) !== (P[j][1] > y)) && (x < (P[j][0] - P[i][0]) * (y - P[i][1]) / (P[j][1] - P[i][1]) + P[i][0])) c = !c; } return c; };
+    var S = 14;
+    while (Math.max(1, Math.round(w / S)) * Math.max(1, Math.round(h / S)) > 40) S *= 1.25;
+    var nx = Math.max(1, Math.round(w / S)), ny = Math.max(1, Math.round(h / S)), out = [];
+    var rad = rnd(Math.max(3, Math.min(S * 0.55, Math.min(w / nx, h / ny) * 0.6)));
+    var col = tag === 'lounge' ? '#FFB869' : tag === 'deck' ? '#FFE9C9' : '#FFC98A';
+    for (var ix = 0; ix < nx; ix++) for (var iy = 0; iy < ny; iy++) {
+      var X = x0 + w * (ix + 0.5) / nx, Y = y0 + h * (iy + 0.5) / ny;
+      if (inside(X, Y)) { var q = back(X, Y); out.push({ type: 'down', x: q[0], y: q[1], r: rad, col: col }); }
+    }
+    if (!out.length) { var c0 = back(xs.reduce(function (s, v) { return s + v; }, 0) / xs.length, ys.reduce(function (s, v) { return s + v; }, 0) / ys.length); out.push({ type: 'down', x: c0[0], y: c0[1], r: rad, col: col }); }
+    return out;
+  }
+  /** Convert every Area fixture on the given decks. Returns [areas converted, lights made]. */
+  function convertAreas(list) {
+    var na = 0, nl = 0;
+    list.forEach(function (d) {
+      (d.circuits || []).forEach(function (c) {
+        var fx = [];
+        (c.fx || []).forEach(function (f) {
+          if (f.type !== 'area' || !f.pts || f.pts.length < 3) { fx.push(f); return; }
+          var made = areaToFx(c.tag, f.pts, d.r); na++; nl += made.length; fx = fx.concat(made);
+        });
+        c.fx = fx;
+      });
+    });
+    return [na, nl];
+  }
+  // </fxconvert>
   function fmtFx(k, v) { return (k === 'a' || k === 'spread') ? Math.round(v) + '°' : String(r1(v)); }
 
   // ---------- chrome ----------
@@ -447,6 +496,8 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
       h += '<section class="panel" aria-label="' + t('Decks on the dashboard') + '"><div><h2>' + t('Decks on the dashboard') + '</h2><div class="muted" style="font-size:13px;margin-top:4px">' + t('Untick a deck to hide it from the crew dashboard and menu. Admins still see every deck. Press Save &amp; deploy to apply.') + '</div></div><div class="dshow">';
       decks().forEach(function (d) { h += '<label class="chk" style="align-self:auto"><input type="checkbox" data-deckshow="' + esc(d.id) + '"' + (d.hidden ? '' : ' checked') + '>' + esc(nm(d)) + '</label>'; });
       h += '</div></section>';
+      var nAreas = 0; decks().forEach(function (d) { (d.circuits || []).forEach(function (c) { (c.fx || []).forEach(function (f) { if (f.type === 'area') nAreas++; }); }); });
+      h += '<section class="panel" aria-label="' + t('Lights on the plans') + '"><div><h2>' + t('Lights on the plans') + '</h2><div class="muted" style="font-size:13px;margin-top:4px">' + (nAreas ? t('{n} lit areas are still drawn as shapes. Convert them into lights like the Main deck: triangles become floodlights or spotlights, signage and feature areas become LED strips, other areas become downlights. Check the result, then press Save &amp; deploy – or Discard to undo.', { n: nAreas }) : t('Every deck uses light fixtures.')) + '</div></div>' + (nAreas ? '<div class="row"><button class="btn sm" data-act="convertAll">' + t('Convert all areas to lights') + '</button></div>' : '') + '</section>';
     }
     if (S.admin) h += '<section class="panel" aria-label="' + t('Scene editor') + '"><h2>' + t('Scenes – all decks') + '</h2>' + sceneEditor(decks(), t('All decks'), 'all') + '</section>';
     return h;
@@ -482,7 +533,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
   }
   function lightsTab(d) {
     var c = circuitIn(d, S.sel);
-    var h = '<div class="split"><div style="display:flex;flex-direction:column;gap:10px"><div class="row between"><h2>' + t('Circuits') + '</h2><button class="btn sm" data-act="addCircuit">' + t('+ Add circuit') + '</button></div><div class="list">';
+    var h = '<div class="split"><div style="display:flex;flex-direction:column;gap:10px"><div class="row between"><h2>' + t('Circuits') + '</h2><button class="btn sm" data-act="addCircuit">' + t('+ Add circuit') + '</button></div>' + ((d.circuits || []).some(function (x) { return (x.fx || []).some(function (f) { return f.type === 'area'; }); }) ? '<button class="btn sm" data-act="convertDeck" style="align-self:flex-start">' + t('Convert this deck\'s areas to lights') + '</button>' : '') + '<div class="list">';
     (d.circuits || []).forEach(function (x) {
       h += '<button class="li' + (S.sel === x.id ? ' on' : '') + '" data-act="pick" data-cid="' + esc(x.id) + '"><span class="sq" style="background:' + (isOn(x) ? '#F2B45A' : '#3A5069') + '"></span><span style="font-weight:600;font-size:13px;width:48px">' + esc(x.label) + '</span><span style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(nm(x)) + '</span></button>';
     });
@@ -760,6 +811,13 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
         S.zoom[d.id] = zz < 1.05 ? 1 : Math.min(4, Math.round(zz * 100) / 100); break;
       case 'fxCol': var fc = selFx(); if (!fc) return; fc.col = el.getAttribute('data-col'); markDirty(); break;
       case 'fxDup': dupFx(); return;
+      case 'convertAll': case 'convertDeck':
+        var scope = act === 'convertAll' ? decks() : (d ? [d] : []);
+        askConfirm(act === 'convertAll' ? t('Convert every lit area on all decks into lights?') : t('Convert every lit area on {deck} into lights?', { deck: d ? nm(d) : '' }), function () {
+          var res = convertAreas(scope); S.selFx = null; markDirty(); render();
+          toast(t('{a} areas became {l} lights – check them, then press Save & deploy (Discard undoes it)', { a: res[0], l: res[1] }));
+        });
+        return;
       case 'fxDel': delFx(); return;
       case 'toggle':
         var c = allCircuits().filter(function (x) { return x.id === cid; })[0], st = lv(c);

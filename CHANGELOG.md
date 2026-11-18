@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.5.1 – 2026-11-18
+
+- All decks are drawn with light fixtures like the Main deck. The standard Bridge, Owner's and Mast deck layouts now use floodlights, downlights and LED strips instead of lit areas.
+- Admin → Overview → **Lights on the plans** → **Convert all areas to lights**, and deck → Lights → **Convert this deck's areas to lights**: triangles become floodlights/spotlights, signage and feature areas LED strips, other areas a grid of downlights. Review, then Save & deploy (Discard undoes it).
+- Browser demo: the saved layout is converted once (`areasConverted`).
+
 ## 1.5.0 – 2026-11-18
 
 - **Light fixtures on the GA.** Each circuit is now drawn as its real fittings: floodlight and spotlight beams, downlights, pendants, wall lights, step lights, underwater lights, LED strips, neon and general areas. Fixtures that are off stay visible as grey outlines; lights fade on screen when they change.

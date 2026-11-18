@@ -12,9 +12,12 @@ const root = path.join(__dirname, '..');
 const out = path.join(root, 'demo', 'dist');
 const html = fs.readFileSync(path.join(root, 'public', 'index.html'), 'utf8');
 const shim = fs.readFileSync(path.join(root, 'demo', 'demo-shim.js'), 'utf8');
+const fxc = html.slice(html.indexOf('// <fxconvert>'), html.indexOf('// </fxconvert>'));
+if (!fxc || shim.indexOf('/*FXCONVERT*/') < 0) throw new Error('Area converter not found');
+const shimFull = shim.replace('/*FXCONVERT*/', fxc);
 const i = html.indexOf('<script>');
 if (i < 0) throw new Error('No <script> found in public/index.html');
-const demo = (html.slice(0, i) + '<script>\n' + shim + '</script>\n' + html.slice(i))
+const demo = (html.slice(0, i) + '<script>\n' + shimFull + '</script>\n' + html.slice(i))
   .replace(/<title>[^<]*<\/title>/, '<title>Albatross Exterior Lighting Control</title>');
 fs.mkdirSync(path.join(out, 'img'), { recursive: true });
 fs.writeFileSync(path.join(out, 'index.html'), demo);

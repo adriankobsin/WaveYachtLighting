@@ -357,7 +357,15 @@ window.WL_I18N = {
     'Reach': 'Дальность',
     'Beam width': 'Ширина луча',
     'Size': 'Размер',
-    'Thickness': 'Толщина'
+    'Thickness': 'Толщина',
+    'Lights on the plans': 'Светильники на планах',
+    '{n} lit areas are still drawn as shapes. Convert them into lights like the Main deck: triangles become floodlights or spotlights, signage and feature areas become LED strips, other areas become downlights. Check the result, then press Save &amp; deploy – or Discard to undo.': '{n} зон освещения пока нарисованы фигурами. Преобразуйте их в светильники, как на главной палубе: треугольники станут прожекторами, вывески и декоративные зоны – LED-лентами, остальные зоны – потолочными светильниками. Проверьте результат и нажмите «Применить» – или «Отменить», чтобы вернуть как было.',
+    'Every deck uses light fixtures.': 'На всех палубах используются светильники.',
+    'Convert all areas to lights': 'Преобразовать все зоны в светильники',
+    'Convert this deck\'s areas to lights': 'Преобразовать зоны этой палубы в светильники',
+    'Convert every lit area on all decks into lights?': 'Преобразовать все зоны освещения на всех палубах в светильники?',
+    'Convert every lit area on {deck} into lights?': 'Преобразовать все зоны освещения на палубе «{deck}» в светильники?',
+    '{a} areas became {l} lights – check them, then press Save & deploy (Discard undoes it)': '{a} зон превратились в {l} светильников – проверьте и нажмите «Применить» («Отменить» вернёт как было)'
   },
   ruPatterns: [
     [/^There is already a user called (.+)$/, 'Пользователь с именем $1 уже существует'],
