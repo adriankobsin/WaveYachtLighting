@@ -38,15 +38,48 @@ h2{margin:0;font:600 18px 'Space Grotesk',Inter,sans-serif}
 .chip{min-height:44px;padding:0 18px;border-radius:22px;border:1px solid var(--line2);background:#16283A;font-weight:600;font-size:14px;cursor:pointer}
 .chip.on{background:var(--amber);color:#0B1622;border-color:var(--amber)}
 .lbl{font-weight:600;font-size:12px;color:var(--muted);letter-spacing:.08em}
-.plan{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;justify-content:center}
+.plan{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:30px;overflow:auto}
 .pbox{position:relative;max-width:100%;touch-action:none}
-.pbox img{position:absolute;inset:0;width:100%;height:100%;opacity:.6;pointer-events:none;user-select:none;-webkit-user-drag:none}
+.pbox img{position:absolute;inset:0;width:100%;height:100%;opacity:.55;pointer-events:none;user-select:none;-webkit-user-drag:none}
 .glow{position:absolute;inset:0;mix-blend-mode:screen;pointer-events:none}
 .glow>div{position:absolute;inset:0;background:var(--glow)}
 .core{position:absolute;inset:0;border:0;margin:0;padding:0;cursor:pointer}
 svg.edit{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
 svg.edit polygon{cursor:move}
-.handle{position:absolute;width:18px;height:18px;margin:-9px 0 0 -9px;border-radius:4px;background:#fff;border:2px solid var(--amber);cursor:grab;touch-action:none;padding:0}
+.pwrap{position:relative;margin:0 auto}
+.pwrap>.pbox{width:100%;height:100%}
+.fxsvg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.thumb .fxsvg{pointer-events:none}
+.fxsvg .glow{transition:opacity 1.2s ease;pointer-events:none}
+.fx .sym *{fill:#0B1622;stroke:#7D90A6;stroke-width:1.3px;vector-effect:non-scaling-stroke;transition:fill .6s,stroke .6s}
+.fx.on .sym *{fill:var(--c);stroke:var(--c)}
+.fx.line .sym *{fill:none;vector-effect:none}
+.fx.line.on .sym *{stroke-dasharray:none!important;fill:none}
+.fx.neon .sym *{stroke:#34465A;stroke-dasharray:none!important}
+.fx.neon.on .sym *{stroke:var(--c)}
+.fx.poly .sym *{fill:none;stroke-width:1.2px;stroke-dasharray:4 3}
+.fx.poly.on .sym *{fill:none;stroke:var(--c);stroke-opacity:.5}
+.fx.csel .sym *{stroke:#F2B45A}
+.fx.csel.poly .sym *{stroke-opacity:1;stroke-dasharray:none}
+.fx.sel .sym *{stroke:#fff;stroke-opacity:1}
+.fx.ni .sym *{opacity:.45}
+.fx .hit{fill:transparent;stroke:transparent;cursor:pointer;pointer-events:all}
+.fx.poly .hit{pointer-events:fill}
+.fxsvg .hd{cursor:grab}
+.plan.tool .pbox{cursor:crosshair}
+.fxpal{display:flex;gap:6px;flex-wrap:wrap}
+.fxbtn{width:84px;height:68px;border-radius:10px;border:1px solid var(--line2);background:#0D1A27;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;color:#C9D6E3;padding:2px;line-height:1.1;text-align:center}
+.fxbtn.on{border-color:var(--amber);background:#1C3047;color:#fff}
+.fxpop{position:absolute;z-index:4;width:270px;background:#132638;border:1px solid var(--line2);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;box-shadow:0 10px 30px rgba(0,0,0,.5);text-align:left}
+.fxpop .ref{white-space:normal}
+.fxpop .x{border:0;background:none;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;padding:0 2px;height:28px}
+.fxed{display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:12px}
+.fsl{display:grid;grid-template-columns:110px minmax(0,1fr) 56px;gap:10px;align-items:center;font-size:12px;color:var(--muted)}
+.swc{width:28px;height:28px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0}
+.swc.on{border-color:#fff}
+input[type=color]{width:34px;height:30px;border:1px solid var(--line2);border-radius:8px;background:var(--bg);padding:2px;cursor:pointer}
+.hidtag{font-size:11px;color:#F6D8A8;border:1px solid #6B4E1E;border-radius:6px;padding:1px 6px;margin-left:6px;font-weight:600}
+.dshow{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:4px 16px}
 .grid4{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
 .card.sel{border-color:var(--amber)}
@@ -115,7 +148,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
 <div class="app" id="app"><div class="empty">Loading lighting layout…</div></div>
 <div id="modal"></div>
 <div id="toast"></div>
-<script src="i18n.js?v=1.3.0"></script>
+<script src="i18n.js?v=1.5.0"></script>
 <script>
 (function () {
   'use strict';
@@ -123,7 +156,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
   var S = {
     config: null, saved: null, levels: {}, sceneBy: {}, admin: false, user: null, users: null, adminConfigured: true,
     lutron: { state: 'idle', connected: false }, lx: null, lxTest: null, lxBusy: '',
-    view: 'home', sel: '', tab: 'lights', selZone: null, sceneSel: '', dirty: false, saving: false, loadError: ''
+    view: 'home', sel: '', tab: 'lights', selFx: null, tool: '', draw: null, drawMouse: null, pop: null, zoom: {}, pxu: {}, sceneSel: '', dirty: false, saving: false, loadError: ''
   };
 
   // ---------- language ----------
@@ -172,49 +205,192 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
   function zonesStr(c) { return ((c.lutron && c.lutron.zones) || []).join(', '); }
   function parseZones(v) { return String(v || '').split(/[^0-9]+/).filter(Boolean).slice(0, 32); }
   function markDirty() { S.dirty = true; }
+  /** Decks the crew sees on the dashboard (admins see all of them). */
+  function shownDecks() { return S.admin ? decks() : decks().filter(function (d) { return !d.hidden; }); }
+  function shownCircuits() { var seen = {}, out = []; shownDecks().forEach(function (d) { (d.circuits || []).forEach(function (c) { if (!seen[c.id]) { seen[c.id] = 1; out.push(c); } }); }); return out; }
 
-  // ---------- plan rendering ----------
-  function clipOf(p) { return 'polygon(' + p.map(function (q) { return q[0] + '% ' + q[1] + '%'; }).join(', ') + ')'; }
-  function glowLayers(deck, scale) {
-    var h = '';
-    (deck.circuits || []).forEach(function (c) {
-      if (!isOn(c)) return;
-      var l = lv(c).level / 100, blur = Math.max(3, Math.round((c.tag === 'flood' ? 14 : 9) * scale));
-      (c.z || []).forEach(function (p) { if (p && p.length >= 3) h += '<div class="glow" style="filter:blur(' + blur + 'px);opacity:' + (0.35 + 0.65 * l).toFixed(2) + '"><div style="clip-path:' + clipOf(p) + '"></div></div>'; });
+  // ---------- fixtures (lights drawn on the GA) ----------
+  // Positions are % of the plan width/height; sizes are % of the plan height.
+  var FXT = {
+    flood: { n: 'Floodlight', fam: 'pt', kind: 'beam', d: { a: 0, len: 30, spread: 50, col: '#FFE9C9' } },
+    spot: { n: 'Spotlight', fam: 'pt', kind: 'beam', d: { a: 0, len: 18, spread: 18, col: '#FFC98A' } },
+    down: { n: 'Downlight', fam: 'pt', kind: 'pool', d: { r: 6, col: '#FFC98A' } },
+    pendant: { n: 'Pendant', fam: 'pt', kind: 'pool', d: { r: 6.5, col: '#FFB869' } },
+    wall: { n: 'Wall light', fam: 'pt', kind: 'half', d: { a: 0, r: 8, col: '#FFC98A' } },
+    step: { n: 'Step light', fam: 'pt', kind: 'half', d: { a: 90, r: 3, col: '#FFE9C9' } },
+    under: { n: 'Underwater', fam: 'pt', kind: 'pool', d: { r: 9, col: '#3FB4FF' } },
+    strip: { n: 'LED strip', fam: 'line', kind: 'line', d: { w: 0.8, col: '#FFD9A0' } },
+    neon: { n: 'Neon', fam: 'line', kind: 'line', d: { w: 1.3, col: '#FF5FA2' } },
+    area: { n: 'Area', fam: 'area', kind: 'poly', d: { col: '#FFB347' } }
+  };
+  var FXORDER = ['flood', 'spot', 'down', 'pendant', 'wall', 'step', 'under', 'strip', 'neon', 'area'];
+  var COLS = [['#FFB869', '2700K'], ['#FFC98A', '3000K'], ['#FFE9C9', '4000K'], ['#E3F0FF', '6000K'], ['#FFB347', 'Amber'], ['#3FB4FF', 'Blue'], ['#4FE6D8', 'Aqua'], ['#FF5FA2', 'Pink'], ['#9B7BFF', 'Violet']];
+  function r1(n) { return Math.round(n * 10) / 10; }
+  function r2(n) { return Math.round(n * 100) / 100; }
+  function safeCol(c) { return /^#[0-9a-fA-F]{6}$/.test(c || '') ? c : '#FFC98A'; }
+  /** Older layouts stored lit areas as c.z polygons – turn them into "Area" fixtures. */
+  function normalize(cfg) {
+    ((cfg && cfg.decks) || []).forEach(function (d) {
+      (d.circuits || []).forEach(function (c) {
+        if (!Array.isArray(c.fx)) c.fx = (c.z || []).filter(function (p) { return p && p.length >= 3; }).map(function (p) { return { type: 'area', pts: p, col: '#FFB347' }; });
+        delete c.z;
+      });
     });
+    return cfg;
+  }
+  function fxCounts(c) {
+    var m = {}, o = [];
+    (c.fx || []).forEach(function (f) { var n = (FXT[f.type] || FXT.area).n; if (!m[n]) { m[n] = 0; o.push(n); } m[n]++; });
+    return o.map(function (n) { return m[n] + ' × ' + t(n).toLowerCase(); }).join(' · ');
+  }
+  function glowOp(c) { if (!isOn(c)) return 0; return +(0.15 + 0.85 * Math.pow(lv(c).level / 100, 0.8)).toFixed(3); }
+  function gradDef(id, col, r, cx, cy, mid) {
+    return '<radialGradient id="' + id + '" gradientUnits="userSpaceOnUse" cx="' + r2(cx || 0) + '" cy="' + r2(cy || 0) + '" r="' + r2(Math.max(r, 0.1)) + '"><stop offset="0" stop-color="' + col + '" stop-opacity=".95"/><stop offset="' + (mid || 0.45) + '" stop-color="' + col + '" stop-opacity=".6"/><stop offset="1" stop-color="' + col + '" stop-opacity="0"/></radialGradient>';
+  }
+  /** One fixture as SVG. o: r (plan aspect), px (plan units per screen pixel), op, ctx, key, hit, cid, i, label, sel, csel, ni, glowOnly */
+  function fxSvg(f, o) {
+    var T = FXT[f.type] || FXT.area, px = o.px, r = o.r, col = safeCol(f.col), gid = 'g' + o.ctx + '_' + String(o.key).replace(/[^A-Za-z0-9]/g, '_');
+    var glow = '', sym = '', hit = '', open = '', close = '', P = '', hitAttr = '';
+    if (o.hit === 'pick') hitAttr = ' data-act="pick" data-cid="' + esc(o.cid) + '" role="button" aria-label="' + esc(o.label || '') + '"';
+    else if (o.hit === 'drag') hitAttr = ' data-drag="fx" data-cid="' + esc(o.cid) + '" data-fi="' + o.i + '"';
+    if (T.fam === 'pt') { open = '<g transform="translate(' + r2(f.x * r) + ' ' + r2(f.y) + ') rotate(' + (f.a || 0) + ')">'; close = '</g>'; }
+    else P = (f.pts || []).map(function (q) { return r2(q[0] * r) + ',' + r2(q[1]); }).join(' ');
+    if (T.kind === 'beam') {
+      var s = f.spread / 2 * Math.PI / 180, bx = r2(f.len * Math.cos(s)), by = r2(f.len * Math.sin(s));
+      glow = gradDef(gid, col, f.len, 0, 0, 0.4) + '<path d="M0 0L' + bx + ' ' + (-by) + 'A' + f.len + ' ' + f.len + ' 0 0 1 ' + bx + ' ' + by + 'Z" fill="url(#' + gid + ')"/>';
+      if (f.type === 'spot') glow += gradDef(gid + 'p', col, Math.max(by, 0.5), f.len * 0.82, 0, 0.5) + '<ellipse cx="' + r2(f.len * 0.82) + '" cy="0" rx="' + r2(f.len * 0.16) + '" ry="' + r2(Math.max(by, 0.5)) + '" fill="url(#' + gid + 'p)"/>';
+      sym = f.type === 'flood' ? '<rect x="' + r2(-3 * px) + '" y="' + r2(-4 * px) + '" width="' + r2(6 * px) + '" height="' + r2(8 * px) + '" rx="' + r2(px) + '"/>' : '<circle r="' + r2(2.6 * px) + '"/><rect x="' + r2(1.4 * px) + '" y="' + r2(-1.6 * px) + '" width="' + r2(3.8 * px) + '" height="' + r2(3.2 * px) + '"/>';
+    } else if (T.kind === 'pool') {
+      glow = gradDef(gid, col, f.r) + '<circle r="' + f.r + '" fill="url(#' + gid + ')"/>';
+      if (f.type === 'under') glow += '<circle r="' + r2(f.r * 0.6) + '" fill="none" stroke="' + col + '" stroke-opacity=".5" stroke-width="' + r2(Math.max(f.r * 0.04, 0.1)) + '"/>';
+      sym = f.type === 'pendant' ? '<circle r="' + r2(3.4 * px) + '"/><circle r="' + r2(1.3 * px) + '"/>' : f.type === 'under' ? '<circle r="' + r2(2.8 * px) + '"/><path d="M' + r2(-1.7 * px) + ' 0q' + r2(0.85 * px) + ' ' + r2(-1.1 * px) + ' ' + r2(1.7 * px) + ' 0t' + r2(1.7 * px) + ' 0"/>' : '<circle r="' + r2(2.4 * px) + '"/>';
+    } else if (T.kind === 'half') {
+      glow = gradDef(gid, col, f.r) + '<path d="M0 ' + (-f.r) + 'A' + f.r + ' ' + f.r + ' 0 0 1 0 ' + f.r + 'Z" fill="url(#' + gid + ')"/>';
+      sym = f.type === 'wall' ? '<rect x="' + r2(-2.2 * px) + '" y="' + r2(-4 * px) + '" width="' + r2(2.8 * px) + '" height="' + r2(8 * px) + '" rx="' + r2(0.6 * px) + '"/>' : '<rect x="' + r2(-1 * px) + '" y="' + r2(-2.8 * px) + '" width="' + r2(2 * px) + '" height="' + r2(5.6 * px) + '"/>';
+    } else if (T.kind === 'line') {
+      glow = '<polyline points="' + P + '" fill="none" stroke="' + col + '" stroke-width="' + r2(f.w * (f.type === 'neon' ? 3 : 4)) + '" stroke-opacity=".6" stroke-linecap="round" stroke-linejoin="round" filter="url(#fb1' + o.ctx + ')"/>';
+      if (f.type === 'neon') glow = '<polyline points="' + P + '" fill="none" stroke="' + col + '" stroke-width="' + r2(f.w * 7) + '" stroke-opacity=".4" stroke-linecap="round" stroke-linejoin="round" filter="url(#fb2' + o.ctx + ')"/>' + glow + '<polyline points="' + P + '" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="' + r2(f.w * 0.35) + '" stroke-linecap="round" stroke-linejoin="round"/>';
+      sym = '<polyline points="' + P + '" style="stroke-width:' + f.w + 'px;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:' + r2(f.w * 3) + ' ' + r2(f.w * 2.5) + '"/>';
+      if (o.hit) hit = '<polyline class="hit" points="' + P + '" style="stroke-width:' + r2(24 * px) + 'px;fill:none;stroke-linecap:round"' + hitAttr + '/>';
+    } else {
+      glow = '<polygon points="' + P + '" fill="' + col + '" fill-opacity=".5" filter="url(#fb3' + o.ctx + ')"/>';
+      sym = '<polygon points="' + P + '"/>';
+      if (o.hit) hit = '<polygon class="hit" points="' + P + '"' + hitAttr + '/>';
+    }
+    if (T.fam === 'pt' && o.hit) hit = '<circle class="hit" r="' + r2(14 * px) + '"' + hitAttr + '/>';
+    var g = '<g class="glow" data-k="' + o.ctx + ':' + esc(o.key) + '" style="opacity:' + o.op + '">' + glow + '</g>';
+    if (o.glowOnly) return open + g + close;
+    return '<g class="fx ' + T.kind + ' ' + f.type + (o.op > 0 ? ' on' : '') + (o.sel ? ' sel' : '') + (o.csel ? ' csel' : '') + (o.ni ? ' ni' : '') + '" style="--c:' + col + '">' + open + g + '<g class="sym">' + sym + '</g>' + hit + close + '</g>';
+  }
+  function fxFilters(ctx, W) {
+    var f = function (id, sd) { return '<filter id="' + id + ctx + '" filterUnits="userSpaceOnUse" x="-60" y="-60" width="' + (W + 120) + '" height="220"><feGaussianBlur stdDeviation="' + sd + '"/></filter>'; };
+    return '<defs>' + f('fb1', 0.9) + f('fb2', 1.8) + f('fb3', 3) + '</defs>';
+  }
+  /** The fixtures layer of a deck plan. o: ctx ('p' plan, 't' thumbnail), px, thumb */
+  function planSvg(d, o) {
+    var W = r1(100 * d.r), items = [], h = '<svg class="fxsvg" viewBox="0 0 ' + W + ' 100" preserveAspectRatio="none" aria-hidden="' + (o.thumb ? 'true' : 'false') + '">' + fxFilters(o.ctx, W);
+    (d.circuits || []).forEach(function (c) { (c.fx || []).forEach(function (f, i) { items.push({ c: c, f: f, i: i, a: f.type === 'area' ? 0 : 1 }); }); });
+    items.sort(function (a, b) { return a.a - b.a; });
+    items.forEach(function (it) {
+      var c = it.c;
+      h += fxSvg(it.f, { r: d.r, px: o.px, op: glowOp(c), ctx: o.ctx, key: d.id + ':' + c.id + ':' + it.i, hit: o.thumb ? '' : (S.admin ? 'drag' : 'pick'), cid: c.id, i: it.i, label: c.label + ' ' + nm(c), sel: S.admin && S.selFx && S.selFx.cid === c.id && S.selFx.i === it.i, csel: S.sel === c.id, ni: c.ni, glowOnly: o.thumb });
+    });
+    if (!o.thumb && S.admin) h += handlesSvg(d, o.px) + drawSvg(d, o.px);
+    return h + '</svg>';
+  }
+  function selFx() { var d = deckById(S.view), c = d && S.selFx && circuitIn(d, S.selFx.cid); return (c && c.fx && c.fx[S.selFx.i]) || null; }
+  function handlesSvg(d, px) {
+    var f = selFx(); if (!f) return '';
+    var T = FXT[f.type] || FXT.area, R = 7 * px, r = d.r, h = '', rad = Math.PI / 180;
+    function hd(x, y, key, kind) { return '<circle class="hd" data-drag="h" data-h="' + key + '" cx="' + r2(x) + '" cy="' + r2(y) + '" r="' + r2(kind === 'mid' ? R * 0.75 : R) + '" fill="' + (kind === 'spread' ? '#F2B45A' : kind === 'mid' ? 'rgba(255,255,255,.4)' : '#fff') + '" stroke="#F2B45A" stroke-width="' + r2(R * 0.35) + '"/>'; }
+    if (T.fam === 'pt') {
+      var X = f.x * r, Y = f.y;
+      h += '<circle cx="' + r2(X) + '" cy="' + r2(Y) + '" r="' + r2(16 * px) + '" fill="none" stroke="#fff" stroke-width="' + r2(1.3 * px) + '" stroke-dasharray="' + r2(3 * px) + ' ' + r2(3 * px) + '" pointer-events="none"/>';
+      if (T.kind === 'beam') {
+        var a = f.a * rad, s = f.spread / 2 * rad;
+        h += '<line x1="' + r2(X) + '" y1="' + r2(Y) + '" x2="' + r2(X + f.len * Math.cos(a)) + '" y2="' + r2(Y + f.len * Math.sin(a)) + '" stroke="#fff" stroke-opacity=".6" stroke-width="' + r2(px) + '" stroke-dasharray="' + r2(4 * px) + ' ' + r2(3 * px) + '" pointer-events="none"/>';
+        h += hd(X + f.len * Math.cos(a), Y + f.len * Math.sin(a), 'tip') + hd(X + f.len * Math.cos(a + s), Y + f.len * Math.sin(a + s), 'spread', 'spread');
+      } else if (T.kind === 'half') h += hd(X + f.r * Math.cos(f.a * rad), Y + f.r * Math.sin(f.a * rad), 'tip');
+      else h += hd(X + f.r, Y, 'r');
+    } else {
+      var P = f.pts, closed = T.fam === 'area';
+      for (var i = 0; i < P.length - (closed ? 0 : 1); i++) { var A = P[i], B = P[(i + 1) % P.length]; h += hd((A[0] + B[0]) / 2 * r, (A[1] + B[1]) / 2, 'm:' + i, 'mid'); }
+      P.forEach(function (q, vi) { h += hd(q[0] * r, q[1], 'v:' + vi); });
+    }
     return h;
   }
-  function coreBg(c) {
-    var sel = S.sel === c.id;
-    if (isOn(c)) return 'rgba(255,196,107,' + (0.2 + 0.35 * lv(c).level / 100 + (sel ? 0.15 : 0)).toFixed(2) + ')';
-    return sel ? 'rgba(255,255,255,0.22)' : 'rgba(127,147,168,0.12)';
+  function drawSvg(d, px) {
+    if (!S.draw) return '';
+    var pts = S.draw.pts.concat(S.drawMouse ? [S.drawMouse] : []);
+    return '<polyline points="' + pts.map(function (q) { return r2(q[0] * d.r) + ',' + r2(q[1]); }).join(' ') + '" fill="none" stroke="#F2B45A" stroke-width="' + r2(2 * px) + '" stroke-dasharray="' + r2(5 * px) + ' ' + r2(4 * px) + '" pointer-events="none"/>' + S.draw.pts.map(function (q) { return '<circle cx="' + r2(q[0] * d.r) + '" cy="' + r2(q[1]) + '" r="' + r2(4 * px) + '" fill="#F2B45A" pointer-events="none"/>'; }).join('');
   }
+  function fxIcon(k) {
+    var T = FXT[k], f = Object.assign({ type: k }, clone(T.d));
+    var P = { flood: { x: 7, y: 17, a: 0, len: 24, spread: 56 }, spot: { x: 7, y: 17, a: 0, len: 24, spread: 24 }, down: { x: 17, y: 17, r: 12 }, pendant: { x: 17, y: 17, r: 13 }, wall: { x: 9, y: 17, a: 0, r: 17 }, step: { x: 17, y: 8, a: 90, r: 14 }, under: { x: 17, y: 17, r: 13 }, strip: { pts: [[5, 24], [17, 11], [29, 24]], w: 2 }, neon: { pts: [[5, 20], [10, 12], [15, 22], [20, 12], [25, 22], [29, 14]], w: 2 }, area: { pts: [[6, 8], [28, 8], [28, 26], [6, 26]] } };
+    Object.assign(f, P[k]);
+    return '<svg viewBox="0 0 34 34" width="34" height="34" aria-hidden="true">' + fxFilters('i' + k, 34) + fxSvg(f, { r: 1, px: 1.1, op: 1, ctx: 'i' + k, key: k }) + '</svg>';
+  }
+  function pxPer(d) { return 1 / (S.pxu[d.id] || 2.3); }
   function planInner(deck) {
-    var h = glowLayers(deck, 1);
-    if (!S.admin) {
-      (deck.circuits || []).forEach(function (c) {
-        (c.z || []).forEach(function (p) { if (p && p.length >= 3) h += '<button class="core" data-act="pick" data-cid="' + esc(c.id) + '" aria-label="' + esc(c.label + ' ' + nm(c)) + '" style="clip-path:' + clipOf(p) + ';background:' + coreBg(c) + '"></button>'; });
-      });
-      return h + '<img src="' + esc(deck.img) + '" alt="' + esc(t('{deck} general arrangement', { deck: nm(deck) })) + '">';
-    }
-    h += '<img src="' + esc(deck.img) + '" alt="' + esc(t('{deck} general arrangement', { deck: nm(deck) })) + '">';
-    var svg = '<svg class="edit" viewBox="0 0 100 100" preserveAspectRatio="none" aria-label="' + esc(t('Lighting areas – drag to move')) + '">';
-    (deck.circuits || []).forEach(function (c) {
-      var selC = S.sel === c.id;
-      (c.z || []).forEach(function (p, zi) {
-        if (!p || p.length < 3) return;
-        var selZ = S.selZone && S.selZone.cid === c.id && S.selZone.zi === zi;
-        svg += '<polygon data-drag="zone" data-cid="' + esc(c.id) + '" data-zi="' + zi + '" points="' + p.map(function (q) { return q[0] + ',' + q[1]; }).join(' ') + '" fill="' + coreBg(c) + '" stroke="' + (selZ ? '#FFFFFF' : selC ? '#F2B45A' : '#7F93A8') + '" stroke-width="' + (selZ ? 2.5 : 1.5) + '" stroke-dasharray="' + (selC ? '' : '4 3') + '" vector-effect="non-scaling-stroke"></polygon>';
-      });
-    });
-    h += svg + '</svg>';
-    if (S.selZone) {
-      var c = circuitIn(deck, S.selZone.cid), p = c && c.z && c.z[S.selZone.zi];
-      if (p) p.forEach(function (q, vi) { h += '<button class="handle" data-drag="vtx" data-vi="' + vi + '" aria-label="' + esc(t('Corner {n}', { n: vi + 1 })) + '" style="left:' + q[0] + '%;top:' + q[1] + '%"></button>'; });
-    }
-    return h;
+    return '<img src="' + esc(deck.img) + '" alt="' + esc(t('{deck} general arrangement', { deck: nm(deck) })) + '">' + planSvg(deck, { ctx: 'p', px: pxPer(deck) });
   }
-  function boxStyle(deck, maxH) { return 'aspect-ratio:' + deck.r + ';width:min(100%,' + Math.round(maxH * deck.r) + 'px)'; }
+  function boxStyle(deck, maxH, z) { return 'aspect-ratio:' + deck.r + ';width:calc(min(100%, ' + Math.round(maxH * deck.r) + 'px) * ' + (z || 1) + ')'; }
+  /** Keep the on-screen fade: new glow layers start from the opacity the old ones had. */
+  function snapOps() { var m = {}; document.querySelectorAll('.glow[data-k]').forEach(function (el) { m[el.getAttribute('data-k')] = parseFloat(getComputedStyle(el).opacity); }); return m; }
+  function fadeFrom(m, fast) {
+    var list = [];
+    document.querySelectorAll('.glow[data-k]').forEach(function (el) {
+      var from = m[el.getAttribute('data-k')], to = parseFloat(el.style.opacity) || 0;
+      if (from === undefined || Math.abs(from - to) < 0.01) return;
+      el.style.transition = 'none'; el.style.opacity = from; list.push([el, to]);
+    });
+    if (!list.length) return;
+    void document.body.offsetHeight;
+    list.forEach(function (p) { p[0].style.transition = fast ? 'opacity .25s linear' : ''; p[0].style.opacity = p[1]; });
+  }
+  function measurePlan() {
+    var b = document.getElementById('pbox'), d = deckById(S.view);
+    if (!b || !d || !b.clientHeight) return;
+    var p = b.clientHeight / 100;
+    if (Math.abs(p - (S.pxu[d.id] || 0)) / p > 0.08) { S.pxu[d.id] = p; renderPlan(); }
+  }
+  function fxPalette(d) {
+    var c = circuitIn(d, S.sel), T = S.tool && FXT[S.tool], hint;
+    if (T && !c) hint = t('Select a circuit first – in the list under the plan, or tap one of its lights.');
+    else if (T && T.fam !== 'pt') hint = t('Click along the path to add points on {c}. Double-click or press Enter to finish, Esc to cancel.', { c: c.label });
+    else if (T) hint = t('Click on the plan to place a {type} on {c}. Each click adds another one – press Esc to stop.', { type: t(T.n).toLowerCase(), c: c.label });
+    else hint = t('Pick a fixture type, then click on the plan. Click a light to select it: drag it to move, drag the white handle to aim or resize, the amber handle to widen a beam.');
+    var h = '<div class="fxpal" role="toolbar" aria-label="' + esc(t('Add lights')) + '">';
+    FXORDER.forEach(function (k) { h += '<button class="fxbtn' + (S.tool === k ? ' on' : '') + '" data-act="tool" data-id="' + k + '" aria-pressed="' + (S.tool === k) + '">' + fxIcon(k) + '<span>' + esc(t(FXT[k].n)) + '</span></button>'; });
+    return h + '</div><div class="muted" style="font-size:13px">' + esc(hint) + '</div>';
+  }
+  function fxPop(d) {
+    var p = S.pop, c = p && p.deck === d.id && circuitIn(d, p.cid);
+    if (!c || S.admin) return '';
+    var on = isOn(c), st = lv(c);
+    var h = '<div class="fxpop" role="dialog" aria-label="' + esc(c.label + ' ' + nm(c)) + '" style="left:' + p.x + '%;top:' + p.y + '%;transform:translate(' + (p.x > 55 ? 'calc(-100% - 14px)' : '14px') + ',' + (p.y > 50 ? 'calc(-100% - 14px)' : '14px') + ')">';
+    h += '<div class="row" style="flex-wrap:nowrap;align-items:flex-start"><div style="flex:1;min-width:0"><div class="name">' + esc(c.label) + ' · ' + esc(nm(c)) + '</div><div class="ref">' + esc(fxCounts(c)) + '</div></div><button class="x" data-act="popClose" aria-label="' + esc(t('Close')) + '">×</button></div>';
+    if (c.ni) return h + '<div class="muted" style="font-size:12px">' + t('Not installed – cable spare only') + '</div></div>';
+    h += '<div class="row" style="flex-wrap:nowrap"><button class="sw" role="switch" aria-checked="' + on + '" aria-label="' + esc(t('{name} power', { name: nm(c) })) + '" data-act="toggle" data-cid="' + esc(c.id) + '"></button>';
+    h += '<input type="range" min="0" max="100" value="' + st.level + '" data-act="level" data-cid="' + esc(c.id) + '" aria-label="' + esc(t('{name} dim level', { name: nm(c) })) + '"><span class="pct' + (on ? ' on' : '') + '">' + (on ? st.level + '%' : t('Off')) + '</span></div>';
+    return h + '</div>';
+  }
+  function fxEditor(d, c, f) {
+    var T = FXT[f.type] || FXT.area, fam = FXORDER.filter(function (k) { return FXT[k].fam === T.fam; });
+    var h = '<div class="fxed"><div class="lbl">' + esc(t('SELECTED LIGHT')) + '</div><div class="form">';
+    h += '<label class="f">' + t('Fixture type') + '<select data-fxe="type">' + fam.map(function (k) { return '<option value="' + k + '"' + (k === f.type ? ' selected' : '') + '>' + esc(t(FXT[k].n)) + '</option>'; }).join('') + '</select></label>';
+    h += '<label class="f">' + t('Circuit') + '<select data-fxe="move">' + (d.circuits || []).map(function (x) { return '<option value="' + esc(x.id) + '"' + (x.id === c.id ? ' selected' : '') + '>' + esc(x.label + ' · ' + nm(x)) + '</option>'; }).join('') + '</select></label></div>';
+    h += '<div class="row" style="gap:6px"><span class="muted" style="font-size:12px;width:110px">' + t('Colour') + '</span>' + COLS.map(function (cc) { return '<button class="swc' + (cc[0].toLowerCase() === safeCol(f.col).toLowerCase() ? ' on' : '') + '" data-act="fxCol" data-col="' + cc[0] + '" title="' + esc(t(cc[1])) + '" aria-label="' + esc(t(cc[1])) + '" style="background:' + cc[0] + '"></button>'; }).join('') + '<input type="color" data-fxe="col" value="' + safeCol(f.col) + '" title="' + esc(t('Custom colour')) + '" aria-label="' + esc(t('Custom colour')) + '"></div>';
+    var sl = function (lab, k, min, max, step) { return '<div class="fsl"><span>' + t(lab) + '</span><input type="range" data-fxe="' + k + '" min="' + min + '" max="' + max + '" step="' + step + '" value="' + f[k] + '" aria-label="' + esc(t(lab)) + '"><span class="pct" data-fxv="' + k + '">' + fmtFx(k, f[k]) + '</span></div>'; };
+    if (T.kind === 'beam') h += sl('Direction', 'a', -180, 180, 1) + sl('Reach', 'len', 2, 150, 0.5) + sl('Beam width', 'spread', 4, 170, 1);
+    if (T.kind === 'half') h += sl('Direction', 'a', -180, 180, 1) + sl('Size', 'r', 1, 60, 0.5);
+    if (T.kind === 'pool') h += sl('Size', 'r', 1, 60, 0.5);
+    if (T.kind === 'line') h += sl('Thickness', 'w', 0.2, 5, 0.1);
+    h += '<div class="row"><button class="btn sm" data-act="fxDup">' + t('Duplicate') + '</button><button class="btn sm danger" data-act="fxDel">' + t('Delete light') + '</button></div>';
+    h += '<div class="muted" style="font-size:12px;line-height:1.5">' + (T.fam === 'pt' ? t('Drag the light to move it. White handle: aim it and set its reach or size. Amber handle: make a beam wider or narrower.') : t('Drag it to move it. Drag the white points to reshape; drag a faint middle point to add a bend; double-click a point to remove it.')) + ' ' + t('Keys: arrows nudge, Ctrl+D duplicates, Delete removes.') + '</div>';
+    return h + '</div>';
+  }
+  function fmtFx(k, v) { return (k === 'a' || k === 'spread') ? Math.round(v) + '°' : String(r1(v)); }
 
   // ---------- chrome ----------
   function lutronPill(full) {
@@ -227,7 +403,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     return '<span class="pill ' + cls + '" title="' + esc(tm(S.lutron.lastError || '')) + '"><i></i>' + esc(t(txt)) + '</span>';
   }
   function header() {
-    var inst = allCircuits().filter(function (c) { return !c.ni; }), onN = inst.filter(isOn).length;
+    var inst = shownCircuits().filter(function (c) { return !c.ni; }), onN = inst.filter(isOn).length;
     var h = '<header><div class="brand"><b>M/Y ALBATROSS</b>' + (S.admin ? '' : '<span class="muted">' + t('Exterior lighting') + '</span>') + '</div><div class="hright">' + lutronPill();
     if (!S.admin) h += '<span class="muted" style="font-size:14px">' + t('{n} of {m} circuits on', { n: onN, m: inst.length }) + '</span>';
     h += '<div class="lang" role="group" aria-label="' + t('Language') + '"><button data-act="lang" data-id="en" aria-pressed="' + (LANG === 'en') + '" title="English">EN</button><button data-act="lang" data-id="ru" aria-pressed="' + (LANG === 'ru') + '" title="Русский">RU</button></div>';
@@ -242,9 +418,9 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
   }
   function rail() {
     var h = '<nav aria-label="' + t('Decks') + '"><button class="ritem' + (S.view === 'home' ? ' on' : '') + '" data-act="go" data-id="home"><span>' + t('Overview') + '</span><small>' + t('All decks') + '</small></button>';
-    decks().forEach(function (d) {
+    shownDecks().forEach(function (d) {
       var inst = (d.circuits || []).filter(function (c) { return !c.ni; });
-      h += '<button class="ritem' + (S.view === d.id ? ' on' : '') + '" data-act="go" data-id="' + esc(d.id) + '"><span>' + esc(nm(d)) + '</span><small>' + t('{n} of {m} on', { n: inst.filter(isOn).length, m: inst.length }) + '</small></button>';
+      h += '<button class="ritem' + (S.view === d.id ? ' on' : '') + '" data-act="go" data-id="' + esc(d.id) + '"><span>' + esc(nm(d)) + '</span><small>' + (d.hidden ? '<span style="color:#F6D8A8">' + t('Hidden from crew') + '</span>' : t('{n} of {m} on', { n: inst.filter(isOn).length, m: inst.length })) + '</small></button>';
     });
     if (S.admin) {
       h += '<button class="ritem admin' + (S.view === 'lutron' ? ' on' : '') + '" data-act="go" data-id="lutron"><span>' + t('Lutron setup') + '</span><small>' + t('Processor &amp; addresses') + '</small></button>';
@@ -259,14 +435,19 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
   // ---------- views ----------
   function homeView() {
     var h = '<div class="row between"><h1>' + t('Select a deck') + '</h1><span class="muted" style="font-size:13px">' + t('Ship-wide scenes apply to every deck') + '</span></div><div class="row">' + sceneChips('all') + '</div><div class="decks">';
-    decks().forEach(function (d) {
+    shownDecks().forEach(function (d) {
       var inst = (d.circuits || []).filter(function (c) { return !c.ni; }), onN = inst.filter(isOn).length;
-      h += '<button class="dcard" data-act="go" data-id="' + esc(d.id) + '"><div class="thumb"><div class="pbox" style="' + boxStyle(d, 100) + '">' + glowLayers(d, 0.35) + '<img src="' + esc(d.img) + '" alt="' + esc(t('{deck} plan', { deck: nm(d) })) + '" style="opacity:.7"></div></div>';
-      h += '<div class="row between" style="width:100%"><span style="font:600 20px \'Space Grotesk\',Inter,sans-serif">' + esc(nm(d)) + '</span><span class="muted" style="font-size:12px">' + esc(d.fr) + '</span></div>';
+      h += '<button class="dcard" data-act="go" data-id="' + esc(d.id) + '"' + (d.hidden ? ' style="border-style:dashed"' : '') + '><div class="thumb"><div class="pbox" style="' + boxStyle(d, 100) + '"><img src="' + esc(d.img) + '" alt="' + esc(t('{deck} plan', { deck: nm(d) })) + '" style="opacity:.7">' + planSvg(d, { ctx: 't', px: 1, thumb: true }) + '</div></div>';
+      h += '<div class="row between" style="width:100%"><span style="font:600 20px \'Space Grotesk\',Inter,sans-serif">' + esc(nm(d)) + (d.hidden ? '<span class="hidtag">' + t('Hidden from crew') + '</span>' : '') + '</span><span class="muted" style="font-size:12px">' + esc(d.fr) + '</span></div>';
       h += '<div class="row between muted" style="width:100%;font-size:13px"><span>' + t('{n} of {m} circuits on', { n: onN, m: inst.length }) + '</span><span style="color:var(--amber)">' + t('Open') + '</span></div>';
       h += '<div class="bar"><div style="width:' + (inst.length ? Math.round(100 * onN / inst.length) : 0) + '%"></div></div></button>';
     });
     h += '</div>';
+    if (S.admin) {
+      h += '<section class="panel" aria-label="' + t('Decks on the dashboard') + '"><div><h2>' + t('Decks on the dashboard') + '</h2><div class="muted" style="font-size:13px;margin-top:4px">' + t('Untick a deck to hide it from the crew dashboard and menu. Admins still see every deck. Press Save &amp; deploy to apply.') + '</div></div><div class="dshow">';
+      decks().forEach(function (d) { h += '<label class="chk" style="align-self:auto"><input type="checkbox" data-deckshow="' + esc(d.id) + '"' + (d.hidden ? '' : ' checked') + '>' + esc(nm(d)) + '</label>'; });
+      h += '</div></section>';
+    }
     if (S.admin) h += '<section class="panel" aria-label="' + t('Scene editor') + '"><h2>' + t('Scenes – all decks') + '</h2>' + sceneEditor(decks(), t('All decks'), 'all') + '</section>';
     return h;
   }
@@ -284,10 +465,12 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
   function deckView(d) {
     var inst = (d.circuits || []).filter(function (c) { return !c.ni; });
     var h = '<div class="row between"><div class="row" style="align-items:baseline"><h1>' + esc(nm(d)) + '</h1><span class="muted" style="font-size:13px">' + esc(d.fr) + '</span></div>';
-    h += '<span class="muted" style="font-size:13px">' + t('{n} of {m} on', { n: inst.filter(isOn).length, m: inst.length }) + ' · ' + (S.admin ? t('drag an area to move it, drag the white corners to reshape') : t('tap a lit area to find its circuit')) + '</span></div>';
+    h += '<span class="muted" style="font-size:13px">' + t('{n} of {m} on', { n: inst.filter(isOn).length, m: inst.length }) + ' · ' + (S.admin ? t('select a light to move, resize or aim it') : t('tap a light to switch or dim it')) + '</span></div>';
     if (S.admin) h += '<div class="adminbar">' + t('Admin mode – changes stay on this screen until you press <b>Save &amp; deploy</b>. Then every control panel gets the new layout, scenes and Lutron addresses.') + '</div>';
-    h += '<div class="plan"><div class="pbox" id="pbox" style="' + boxStyle(d, 230) + '">' + planInner(d) + '</div></div>';
-    h += '<div class="row"><span class="lbl">' + t('SCENES') + '</span>' + sceneChips(d.id) + '</div>';
+    if (S.admin && S.tab === 'lights') h += fxPalette(d);
+    var z = S.zoom[d.id] || 1;
+    h += '<div class="plan' + (S.admin && S.tool ? ' tool' : '') + '" id="plan"><div class="pwrap" style="' + boxStyle(d, 380, z) + '"><div class="pbox" id="pbox">' + planInner(d) + '</div>' + fxPop(d) + '</div></div>';
+    h += '<div class="row"><span class="lbl">' + t('SCENES') + '</span>' + sceneChips(d.id) + '<span style="flex:1"></span><span class="muted" style="font-size:12px">' + t('Zoom') + ' ' + Math.round(z * 100) + '%</span><button class="btn sm" data-act="zoom" data-id="-1" aria-label="' + esc(t('Zoom out')) + '">−</button><button class="btn sm" data-act="zoom" data-id="1" aria-label="' + esc(t('Zoom in')) + '">+</button></div>';
     if (noteOf(d)) h += '<div class="note">' + esc(noteOf(d)) + '</div>';
     if (S.admin) h += adminPanel(d);
     h += '<div class="grid4">' + (d.circuits || []).map(circuitCard).join('') + '</div>';
@@ -304,7 +487,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
       h += '<button class="li' + (S.sel === x.id ? ' on' : '') + '" data-act="pick" data-cid="' + esc(x.id) + '"><span class="sq" style="background:' + (isOn(x) ? '#F2B45A' : '#3A5069') + '"></span><span style="font-weight:600;font-size:13px;width:48px">' + esc(x.label) + '</span><span style="font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + esc(nm(x)) + '</span></button>';
     });
     h += '</div></div><div style="display:flex;flex-direction:column;gap:12px">';
-    if (!c) return h + '<div class="muted" style="padding:20px 0">' + t('Select a circuit in the list or tap an area on the plan to edit it.') + '</div></div></div>';
+    if (!c) return h + '<div class="muted" style="padding:20px 0">' + t('Select a circuit in the list or tap a light on the plan to edit it.') + '</div></div></div>';
     h += '<div class="form">';
     h += '<label class="f">' + t('Circuit no.') + '<input data-edit="label" value="' + esc(c.label) + '" maxlength="12"></label>';
     h += '<label class="f">' + t('Name (English)') + '<input data-edit="name" value="' + esc(c.name) + '" maxlength="40"></label>';
@@ -315,12 +498,10 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     h += '<label class="f">' + t('Start-up level %') + '<input data-edit="def" type="number" min="0" max="100" value="' + (c.def || 0) + '"></label>';
     h += '<label class="chk"><input type="checkbox" data-edit="on"' + (c.on ? ' checked' : '') + '>' + t('On at start-up') + '</label>';
     h += '<label class="chk"><input type="checkbox" data-edit="ni"' + (c.ni ? ' checked' : '') + '>' + t('Not installed') + '</label>';
-    h += '</div><div class="lbl">' + t('LIT AREAS ON THE GA ({n})', { n: (c.z || []).length }) + '</div><div class="row">';
-    h += '<button class="btn sm" data-act="addArea">' + t('+ Area') + '</button><button class="btn sm" data-act="addBeam">' + t('+ Floodlight beam') + '</button>';
-    var hasZ = S.selZone && S.selZone.cid === c.id && c.z && c.z[S.selZone.zi];
-    h += '<button class="btn sm" data-act="addCorner"' + (hasZ ? '' : ' disabled') + '>' + t('+ Corner') + '</button><button class="btn sm" data-act="delCorner"' + (hasZ && c.z[S.selZone.zi].length > 3 ? '' : ' disabled') + '>' + t('− Corner') + '</button>';
-    h += '<button class="btn sm danger" data-act="delArea"' + (hasZ ? '' : ' disabled') + '>' + t('Delete area') + '</button></div>';
-    h += '<div class="muted" style="font-size:12px">' + (hasZ ? t('Area selected: drag it to move, drag the white squares to reshape.') : t('Tap one of this circuit\'s areas on the plan to select it.')) + '</div>';
+    h += '</div><div class="lbl">' + t('LIGHTS ON THE GA ({n})', { n: (c.fx || []).length }) + '</div>';
+    h += '<div class="muted" style="font-size:13px">' + ((c.fx || []).length ? esc(fxCounts(c)) : t('No lights yet – pick a fixture type in the toolbar above the plan, then click on the plan.')) + '</div>';
+    var sf = S.selFx && S.selFx.cid === c.id && c.fx && c.fx[S.selFx.i];
+    h += sf ? fxEditor(d, c, sf) : '<div class="muted" style="font-size:12px">' + t('Tap one of this circuit\'s lights on the plan to edit it.') + '</div>';
     h += '<div class="row" style="justify-content:flex-end"><button class="btn sm danger" data-act="delCircuit">' + t('Delete circuit') + '</button></div>';
     return h + '</div></div>';
   }
@@ -527,15 +708,19 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     if ((S.view === 'lutron' || S.view === 'users') && !S.admin) S.view = 'home';
     var special = S.view === 'home' || S.view === 'lutron' || S.view === 'users';
     var d = special ? null : deckById(S.view);
-    if (!special && !d) S.view = 'home';
+    if (!special && (!d || (d.hidden && !S.admin))) { S.view = 'home'; d = null; }
     var main = S.view === 'lutron' ? lutronView() : S.view === 'users' ? usersView() : d ? deckView(d) : homeView();
+    var ops = snapOps();
     app.innerHTML = header() + '<div class="layout">' + rail() + '<main>' + main + '</main></div>';
+    fadeFrom(ops);
     if (keepSel) {
       var el = app.querySelector(keepSel);
       if (el) { el.focus(); try { var n = el.value.length; el.setSelectionRange(n, n); } catch (e) {} }
     }
+    if (d) measurePlan();
   }
-  function renderPlan() { var box = document.getElementById('pbox'), d = deckById(S.view); if (box && d) box.innerHTML = planInner(d); else render(); }
+  function renderPlan(fast) { var box = document.getElementById('pbox'), d = deckById(S.view); if (box && d) { var ops = snapOps(); box.innerHTML = planInner(d); fadeFrom(ops, fast); } else render(); }
+  window.addEventListener('resize', function () { if (deckById(S.view)) measurePlan(); });
   var rT = null;
   function scheduleRender() { clearTimeout(rT); rT = setTimeout(function () { var a = document.activeElement; if (a && a.type === 'range') return scheduleRender(); render(); }, 450); }
 
@@ -552,13 +737,30 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
   // ---------- events ----------
   document.addEventListener('click', function (e) {
     var el = e.target.closest('[data-act]');
+    if (S.pop && !e.target.closest('.fxpop') && !(el && el.getAttribute('data-act') === 'pick')) { S.pop = null; if (!el) { render(); return; } }
     if (!el || el.tagName === 'INPUT') return;
     var act = el.getAttribute('data-act'), id = el.getAttribute('data-id'), cid = el.getAttribute('data-cid');
     var d = deckById(S.view);
     switch (act) {
       case 'lang': setLang(id); break;
-      case 'go': S.view = id; S.sel = ''; S.selZone = null; S.lxTest = null; render(); lutronPolling(); if (id === 'users') refreshUsers(); return;
-      case 'pick': S.sel = cid; if (S.admin && d) { var c0 = circuitIn(d, cid); S.selZone = c0 && c0.z && c0.z.length ? { cid: cid, zi: 0 } : null; } break;
+      case 'go': S.view = id; S.sel = ''; S.selFx = null; S.tool = ''; S.draw = null; S.pop = null; S.lxTest = null; render(); lutronPolling(); if (id === 'users') refreshUsers(); return;
+      case 'pick':
+        S.sel = cid;
+        if (S.admin) { if (!(S.selFx && S.selFx.cid === cid)) S.selFx = null; }
+        else if (d && el.closest('#pbox')) { var pp = ptFrom(e); if (pp) S.pop = { deck: d.id, cid: cid, x: pp[0], y: pp[1] }; }
+        break;
+      case 'popClose': S.pop = null; break;
+      case 'tool':
+        S.tool = S.tool === id ? '' : id; S.draw = null; S.drawMouse = null; S.selFx = null;
+        if (S.tool && !(d && circuitIn(d, S.sel))) toast(t('Select a circuit first – in the list under the plan, or tap one of its lights.'));
+        break;
+      case 'zoom':
+        if (!d) return;
+        var zz = (S.zoom[d.id] || 1) * (id === '1' ? 1.25 : 0.8);
+        S.zoom[d.id] = zz < 1.05 ? 1 : Math.min(4, Math.round(zz * 100) / 100); break;
+      case 'fxCol': var fc = selFx(); if (!fc) return; fc.col = el.getAttribute('data-col'); markDirty(); break;
+      case 'fxDup': dupFx(); return;
+      case 'fxDel': delFx(); return;
       case 'toggle':
         var c = allCircuits().filter(function (x) { return x.id === cid; })[0], st = lv(c);
         var next = st.on ? { on: false, level: st.level } : { on: true, level: st.level > 0 ? st.level : 50 };
@@ -579,29 +781,13 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
       case 'tab': S.tab = id; break;
       case 'addCircuit':
         if (!d) return;
-        var nc = { id: uid('C'), label: 'GR' + (allCircuits().length + 1), name: 'New circuit', ref: '', tag: 'walk', def: 60, on: false, z: [[[45, 40], [55, 40], [55, 60], [45, 60]]], lutron: { zones: [] } };
-        d.circuits.push(nc); S.levels[nc.id] = { on: false, level: 60 }; S.sel = nc.id; S.selZone = { cid: nc.id, zi: 0 }; markDirty(); break;
+        var nc = { id: uid('C'), label: 'GR' + (allCircuits().length + 1), name: 'New circuit', ref: '', tag: 'walk', def: 60, on: false, fx: [], lutron: { zones: [] } };
+        d.circuits.push(nc); S.levels[nc.id] = { on: false, level: 60 }; S.sel = nc.id; S.selFx = null; markDirty();
+        toast(t('Circuit added – now pick a fixture type above the plan and click on the plan to place its lights')); break;
       case 'delCircuit':
         var dc = d && circuitIn(d, S.sel); if (!dc) return;
-        askConfirm(t('Delete {label} {name} from {deck}?', { label: dc.label, name: nm(dc), deck: nm(d) }), function () { d.circuits = d.circuits.filter(function (x) { return x.id !== dc.id; }); S.sel = ''; S.selZone = null; markDirty(); render(); });
+        askConfirm(t('Delete {label} {name} from {deck}?', { label: dc.label, name: nm(dc), deck: nm(d) }), function () { d.circuits = d.circuits.filter(function (x) { return x.id !== dc.id; }); S.sel = ''; S.selFx = null; markDirty(); render(); });
         return;
-      case 'addArea': case 'addBeam':
-        var ca = d && circuitIn(d, S.sel); if (!ca) return;
-        ca.z = ca.z || [];
-        ca.z.push(act === 'addArea' ? [[44, 40], [56, 40], [56, 60], [44, 60]] : [[50, 50], [40, 30], [40, 70]]);
-        S.selZone = { cid: ca.id, zi: ca.z.length - 1 }; markDirty(); break;
-      case 'delArea':
-        var cz = d && S.selZone && circuitIn(d, S.selZone.cid); if (!cz) return;
-        cz.z.splice(S.selZone.zi, 1); S.selZone = null; markDirty(); break;
-      case 'addCorner':
-        var cc = d && S.selZone && circuitIn(d, S.selZone.cid); if (!cc) return;
-        var p = cc.z[S.selZone.zi], bi = 0, best = -1;
-        for (var i = 0; i < p.length; i++) { var a = p[i], b = p[(i + 1) % p.length], L = Math.hypot(a[0] - b[0], a[1] - b[1]); if (L > best) { best = L; bi = i; } }
-        var A = p[bi], B = p[(bi + 1) % p.length];
-        p.splice(bi + 1, 0, [Math.round((A[0] + B[0]) * 5) / 10, Math.round((A[1] + B[1]) * 5) / 10]); markDirty(); break;
-      case 'delCorner':
-        var cr = d && S.selZone && circuitIn(d, S.selZone.cid); if (!cr) return;
-        if (cr.z[S.selZone.zi].length > 3) { cr.z[S.selZone.zi].pop(); markDirty(); } break;
       case 'sceneSel': S.sceneSel = el.getAttribute('data-sid'); break;
       case 'addScene':
         var ns = { id: uid('S'), name: 'New scene', levels: {} };
@@ -721,13 +907,21 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
       var v = Number(t.value), cur = S.levels[cid] || {};
       S.levels[cid] = { on: v > 0, level: v > 0 ? v : (cur.level || 0) }; S.sel = cid; S.sceneBy = {};
       var pct = t.parentNode.querySelector('.pct'); if (pct) { pct.textContent = v > 0 ? v + '%' : tr('Off'); pct.className = 'pct' + (v > 0 ? ' on' : ''); }
-      sendLevelThrottled(cid, v); renderPlan(); scheduleRender(); return;
+      sendLevelThrottled(cid, v); renderPlan(true); scheduleRender(); return;
     }
     if (act === 'sceneLevel') {
       var sc = curScene(); if (!sc) return;
       sc.levels = sc.levels || {}; sc.levels[cid] = Math.max(1, Number(t.value)); markDirty();
       var p2 = t.parentNode.querySelector('.pct'); if (p2) p2.textContent = sc.levels[cid] + '%';
       updateHeaderOnly(); return;
+    }
+    var fe = t.getAttribute('data-fxe');
+    if (fe) {
+      if (fe === 'type' || fe === 'move') return;
+      var fx = selFx(); if (!fx) return;
+      if (fe === 'col') fx.col = safeCol(t.value);
+      else { fx[fe] = Number(t.value); var fv = document.querySelector('[data-fxv="' + fe + '"]'); if (fv) fv.textContent = fmtFx(fe, fx[fe]); }
+      markDirty(); renderPlan(); updateHeaderOnly(); return;
     }
     var f = t.getAttribute('data-edit');
     if (f) {
@@ -750,6 +944,22 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
   });
   document.addEventListener('change', function (e) {
     var t = e.target;
+    var dsh = t.getAttribute && t.getAttribute('data-deckshow');
+    if (dsh) {
+      var dd = deckById(dsh); if (!dd) return;
+      if (t.checked) delete dd.hidden;
+      else if (!decks().some(function (x) { return x.id !== dsh && !x.hidden; })) { t.checked = true; toast(tr('At least one deck must stay on the dashboard')); return; }
+      else dd.hidden = true;
+      markDirty(); render(); return;
+    }
+    var fxe = t.getAttribute && t.getAttribute('data-fxe');
+    if (fxe === 'type') { var ft = selFx(); if (ft && FXT[t.value]) { var dft = FXT[t.value].d; ft.type = t.value; Object.keys(dft).forEach(function (k) { if (ft[k] == null) ft[k] = dft[k]; }); markDirty(); } render(); return; }
+    if (fxe === 'move') {
+      var dm = deckById(S.view), from = dm && S.selFx && circuitIn(dm, S.selFx.cid), to = dm && circuitIn(dm, t.value), fm = selFx();
+      if (fm && from && to && from !== to) { from.fx.splice(S.selFx.i, 1); to.fx = to.fx || []; to.fx.push(fm); S.sel = to.id; S.selFx = { cid: to.id, i: to.fx.length - 1 }; markDirty(); }
+      render(); return;
+    }
+    if (fxe) { render(); return; }
     if (t.getAttribute && t.getAttribute('data-act') === 'sceneMode') {
       var sm = curScene(); if (!sm) return;
       sm.levels = sm.levels || {};
@@ -772,39 +982,104 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     var tmp = document.createElement('div'); tmp.innerHTML = header(); hdr.replaceWith(tmp.firstChild);
   }
 
-  // ---------- dragging on the GA ----------
-  var drag = null;
-  function ptFrom(e) {
+  // ---------- editing lights on the GA ----------
+  var drag = null, lastHandle = null;
+  /** Pointer position as % of the plan. free = allow a margin outside the drawing (floods, underwater lights). */
+  function ptFrom(e, free) {
     var box = document.getElementById('pbox'); if (!box) return null;
-    var r = box.getBoundingClientRect();
-    return [Math.round(Math.max(0, Math.min(100, (e.clientX - r.left) / r.width * 100)) * 10) / 10, Math.round(Math.max(0, Math.min(100, (e.clientY - r.top) / r.height * 100)) * 10) / 10];
+    var r = box.getBoundingClientRect(), lo = free ? -30 : 0, hi = free ? 130 : 100;
+    return [r1(Math.max(lo, Math.min(hi, (e.clientX - r.left) / r.width * 100))), r1(Math.max(lo, Math.min(hi, (e.clientY - r.top) / r.height * 100)))];
+  }
+  function addFx(c, f) { c.fx = c.fx || []; c.fx.push(f); S.sel = c.id; S.selFx = { cid: c.id, i: c.fx.length - 1 }; markDirty(); }
+  function toolDown(d, pt, e) {
+    var c = circuitIn(d, S.sel), T = FXT[S.tool];
+    if (!c) { toast(t('Select a circuit first – in the list under the plan, or tap one of its lights.')); return; }
+    if (T.fam === 'pt') { addFx(c, Object.assign({ type: S.tool, x: pt[0], y: pt[1] }, clone(T.d))); render(); return; }
+    var now = Date.now();
+    if (!S.draw) S.draw = { type: S.tool, cid: c.id, pts: [] };
+    var dr = S.draw;
+    if (dr.pts.length && now - dr.t < 400 && Math.hypot(e.clientX - dr.sx, e.clientY - dr.sy) < 8) { finishDraw(); return; }
+    dr.pts.push(pt); dr.t = now; dr.sx = e.clientX; dr.sy = e.clientY; renderPlan();
+  }
+  function finishDraw() {
+    var dr = S.draw; if (!dr) return;
+    S.draw = null; S.drawMouse = null; S.tool = '';
+    var d = deckById(S.view), c = d && circuitIn(d, dr.cid), need = FXT[dr.type].fam === 'area' ? 3 : 2;
+    if (c && dr.pts.length >= need) addFx(c, Object.assign({ type: dr.type, pts: dr.pts }, clone(FXT[dr.type].d)));
+    else toast(t('Not enough points – the light was not added'));
+    render();
+  }
+  function dupFx() {
+    var d = deckById(S.view), f = selFx(); if (!f) return;
+    var c = circuitIn(d, S.selFx.cid), n = clone(f), dx = 1.5, dy = 1.5 * d.r;
+    if (n.pts) n.pts = n.pts.map(function (q) { return [r1(q[0] + dx), r1(q[1] + dy)]; }); else { n.x = r1(n.x + dx); n.y = r1(n.y + dy); }
+    addFx(c, n); render();
+  }
+  function delFx() {
+    var d = deckById(S.view), f = selFx(); if (!f) return;
+    var c = circuitIn(d, S.selFx.cid); c.fx.splice(S.selFx.i, 1); S.selFx = null; markDirty(); render();
   }
   document.addEventListener('pointerdown', function (e) {
-    if (!S.admin) return;
-    var t = e.target.closest('[data-drag]'); if (!t) return;
-    var d = deckById(S.view); if (!d) return;
-    var pt = ptFrom(e); if (!pt) return;
+    if (!S.admin || e.button > 0) return;
+    var d = deckById(S.view), box = document.getElementById('pbox');
+    if (!d || !box || !box.contains(e.target)) return;
+    var pt = ptFrom(e, true); if (!pt) return;
+    if (S.tool) { e.preventDefault(); toolDown(d, pt, e); return; }
+    var el = e.target.closest('[data-drag]');
+    if (!el) { if (S.selFx) { S.selFx = null; render(); } return; }
     e.preventDefault();
-    if (t.getAttribute('data-drag') === 'zone') {
-      var cid = t.getAttribute('data-cid'), zi = Number(t.getAttribute('data-zi')), c = circuitIn(d, cid), changed = S.sel !== cid;
-      S.sel = cid; S.selZone = { cid: cid, zi: zi };
-      drag = { type: 'zone', c: c, zi: zi, start: pt, orig: clone(c.z[zi]), moved: false };
-      if (changed) render(); else renderPlan();
-    } else {
-      drag = { type: 'vtx', c: circuitIn(d, S.selZone.cid), zi: S.selZone.zi, vi: Number(t.getAttribute('data-vi')), moved: false };
+    if (el.getAttribute('data-drag') === 'h') {
+      var f = selFx(); if (!f) return;
+      var mode = el.getAttribute('data-h'), now = Date.now();
+      if (mode.indexOf('v:') === 0 && lastHandle && lastHandle.k === mode && now - lastHandle.t < 400) {
+        lastHandle = null;
+        if (f.pts.length > (f.type === 'area' ? 3 : 2)) { f.pts.splice(Number(mode.slice(2)), 1); markDirty(); render(); }
+        return;
+      }
+      lastHandle = { k: mode, t: now };
+      if (mode.indexOf('m:') === 0) { var mi = Number(mode.slice(2)); f.pts.splice(mi + 1, 0, pt); mode = 'v:' + (mi + 1); markDirty(); }
+      drag = { mode: mode, f: f, d: d, start: pt, orig: clone(f), moved: false }; renderPlan(); return;
     }
+    var cid = el.getAttribute('data-cid'), fi = Number(el.getAttribute('data-fi')), c = circuitIn(d, cid);
+    if (!c || !c.fx || !c.fx[fi]) return;
+    var changed = !(S.selFx && S.selFx.cid === cid && S.selFx.i === fi);
+    S.sel = cid; S.selFx = { cid: cid, i: fi };
+    drag = { mode: 'move', f: c.fx[fi], d: d, start: pt, orig: clone(c.fx[fi]), moved: false };
+    if (changed) render(); else renderPlan();
   });
   document.addEventListener('pointermove', function (e) {
+    if (S.draw) { var pm = ptFrom(e, true); if (pm) { S.drawMouse = pm; renderPlan(); } return; }
     if (!drag) return;
-    var pt = ptFrom(e); if (!pt) return;
-    var p = drag.c.z[drag.zi];
-    if (drag.type === 'zone') {
+    var pt = ptFrom(e, true); if (!pt) return;
+    var f = drag.f, o = drag.orig, r = drag.d.r, m = drag.mode;
+    if (m === 'move') {
       var dx = pt[0] - drag.start[0], dy = pt[1] - drag.start[1];
-      for (var i = 0; i < p.length; i++) p[i] = [Math.round(Math.max(0, Math.min(100, drag.orig[i][0] + dx)) * 10) / 10, Math.round(Math.max(0, Math.min(100, drag.orig[i][1] + dy)) * 10) / 10];
-    } else p[drag.vi] = pt;
+      if (o.pts) f.pts = o.pts.map(function (q) { return [r1(q[0] + dx), r1(q[1] + dy)]; }); else { f.x = r1(o.x + dx); f.y = r1(o.y + dy); }
+    } else if (m.indexOf('v:') === 0) f.pts[Number(m.slice(2))] = pt;
+    else {
+      var vx = (pt[0] - f.x) * r, vy = pt[1] - f.y, dist = Math.hypot(vx, vy), ang = Math.atan2(vy, vx) * 180 / Math.PI;
+      if (m === 'tip') { f.a = Math.round(ang); if (FXT[f.type].kind === 'beam') f.len = r1(Math.max(2, dist)); else f.r = r1(Math.max(1, dist)); }
+      else if (m === 'spread') { var df = ((ang - f.a) % 360 + 540) % 360 - 180; f.spread = Math.round(Math.max(4, Math.min(170, Math.abs(df) * 2))); }
+      else if (m === 'r') f.r = r1(Math.max(1, dist));
+    }
     drag.moved = true; markDirty(); renderPlan();
   });
-  document.addEventListener('pointerup', function () { if (drag) { var m = drag.moved; drag = null; if (m) render(); } });
+  document.addEventListener('pointerup', function () { if (drag) { var mv = drag.moved; drag = null; if (mv) render(); } });
+  document.addEventListener('keydown', function (e) {
+    if (!S.admin || !deckById(S.view) || document.getElementById('modal').innerHTML) return;
+    if (e.target && e.target.matches && e.target.matches('input,select,textarea')) return;
+    if (e.key === 'Escape') { if (S.draw || S.tool) { S.draw = null; S.drawMouse = null; S.tool = ''; render(); } else if (S.selFx) { S.selFx = null; render(); } return; }
+    if (e.key === 'Enter' && S.draw) { e.preventDefault(); finishDraw(); return; }
+    var f = selFx(); if (!f) return;
+    if (e.key === 'Delete' || e.key === 'Backspace') { e.preventDefault(); delFx(); return; }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') { e.preventDefault(); dupFx(); return; }
+    var d = deckById(S.view), st = e.shiftKey ? 1 : 0.2, mv = { ArrowLeft: [-st, 0], ArrowRight: [st, 0], ArrowUp: [0, -st * d.r], ArrowDown: [0, st * d.r] }[e.key];
+    if (mv) {
+      e.preventDefault();
+      if (f.pts) f.pts = f.pts.map(function (q) { return [r1(q[0] + mv[0]), r1(q[1] + mv[1])]; }); else { f.x = r1(f.x + mv[0]); f.y = r1(f.y + mv[1]); }
+      markDirty(); renderPlan(); updateHeaderOnly();
+    }
+  });
 
   // ---------- login / dialogs ----------
   function closeModal() { document.getElementById('modal').innerHTML = ''; }
@@ -816,11 +1091,11 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     document.getElementById('loginForm').onsubmit = function (ev) {
       ev.preventDefault();
       api('POST', '/api/login', { password: document.getElementById('pw').value })
-        .then(function (r) { closeModal(); S.admin = true; S.user = r.user || null; S.tab = 'lights'; S.selZone = null; toast(t('Logged in as {name}', { name: S.user ? S.user.name : 'admin' })); render(); })
+        .then(function (r) { closeModal(); S.admin = true; S.user = r.user || null; S.tab = 'lights'; S.selFx = null; S.pop = null; toast(t('Logged in as {name}', { name: S.user ? S.user.name : 'admin' })); render(); })
         .catch(function (e) { document.getElementById('pwErr').textContent = tm(e.message); });
     };
   }
-  function logout() { api('POST', '/api/logout').catch(function () {}).then(function () { S.admin = false; S.user = null; S.users = null; S.selZone = null; if (S.view === 'lutron' || S.view === 'users') S.view = 'home'; clearInterval(lxPoll); render(); }); }
+  function logout() { api('POST', '/api/logout').catch(function () {}).then(function () { S.admin = false; S.user = null; S.users = null; S.selFx = null; S.tool = ''; S.draw = null; if (S.view === 'lutron' || S.view === 'users') S.view = 'home'; clearInterval(lxPoll); render(); }); }
   function askConfirm(msg, ok) {
     var m = document.getElementById('modal');
     m.innerHTML = '<div class="modal"><div class="dialog" role="alertdialog" aria-modal="true" aria-labelledby="ct"><h2 id="ct">' + t('Are you sure?') + '</h2><div style="font-size:14px">' + esc(msg) + '</div><div class="row" style="justify-content:flex-end"><button class="btn" id="cNo">' + t('Cancel') + '</button><button class="btn primary" id="cYes">' + t('Yes') + '</button></div></div></div>';
@@ -831,7 +1106,7 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && document.getElementById('modal').innerHTML) closeModal(); });
 
   // ---------- persistence ----------
-  function discard() { S.config = clone(S.saved); S.dirty = false; S.selZone = null; }
+  function discard() { S.config = clone(S.saved); S.dirty = false; S.selFx = null; S.tool = ''; S.draw = null; }
   function save() {
     S.saving = true; render();
     api('PUT', '/api/config', { decks: S.config.decks, scenes: S.config.scenes })
@@ -846,18 +1121,18 @@ table.tbl{width:100%;border-collapse:collapse;font-size:13px;min-width:860px}
     es.addEventListener('state', function (ev) {
       var m = JSON.parse(ev.data);
       S.levels = m.levels || {}; S.sceneBy = m.sceneBy || {};
-      if (drag) return;
+      if (drag || S.draw) return;
       var a = document.activeElement;
       if (a && a.type === 'range') return scheduleRender();
       if (a && (a.tagName === 'INPUT' || a.tagName === 'SELECT') && a.type !== 'range') { updateHeaderOnly(); return; }
       render();
     });
     es.addEventListener('lutron', function (ev) { S.lutron = JSON.parse(ev.data); var a = document.activeElement; if (a && (a.tagName === 'INPUT' || a.tagName === 'SELECT')) updateHeaderOnly(); else render(); });
-    es.addEventListener('config', function (ev) { var c = JSON.parse(ev.data); S.saved = clone(c); if (!S.dirty) { S.config = c; render(); } });
+    es.addEventListener('config', function (ev) { var c = normalize(JSON.parse(ev.data)); S.saved = clone(c); if (!S.dirty) { S.config = c; render(); } });
     es.onerror = function () { S.lutron = Object.assign({}, S.lutron, { state: 'error', connected: false, lastError: 'Lost connection to the lighting server' }); updateHeaderOnly(); };
   }
   api('GET', '/api/bootstrap').then(function (b) {
-    S.config = b.config; S.saved = clone(b.config); S.levels = b.levels || {}; S.sceneBy = b.sceneBy || {};
+    S.config = normalize(b.config); S.saved = clone(S.config); S.levels = b.levels || {}; S.sceneBy = b.sceneBy || {};
     S.admin = !!b.admin; S.user = b.user || null; S.lutron = b.lutron || S.lutron; S.adminConfigured = b.adminConfigured;
     render(); connectEvents();
   }).catch(function (e) { S.loadError = t('Cannot reach the lighting server: {err}', { err: tm(e.message) }); render(); setTimeout(function () { location.reload(); }, 10000); });

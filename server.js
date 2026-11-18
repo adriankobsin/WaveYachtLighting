@@ -184,16 +184,39 @@ function cleanRu(ru, fields) {
   fields.forEach(([k, max]) => { if (ru[k]) o[k] = str(ru[k], max); });
   return Object.keys(o).length ? o : undefined;
 }
+const FX_TYPES = ['flood', 'spot', 'down', 'pendant', 'wall', 'step', 'under', 'strip', 'neon', 'area'];
+/** Lights drawn on the GA. Positions are % of the plan, sizes % of the plan height.
+    Older layouts kept lit areas in c.z – those become "area" fixtures. */
+function cleanFx(c) {
+  const src = Array.isArray(c.fx) ? c.fx
+    : (Array.isArray(c.z) ? c.z.filter((p) => Array.isArray(p) && p.length >= 3).map((p) => ({ type: 'area', pts: p, col: '#FFB347' })) : []);
+  return src.slice(0, 300).map((f) => {
+    if (!f || FX_TYPES.indexOf(f.type) < 0) return null;
+    const o = { type: f.type, col: /^#[0-9a-fA-F]{6}$/.test(f.col || '') ? f.col : '#FFC98A' };
+    if (f.type === 'strip' || f.type === 'neon' || f.type === 'area') {
+      o.pts = (Array.isArray(f.pts) ? f.pts : []).slice(0, 80).map((q) => [num(q && q[0], -50, 150, 0), num(q && q[1], -50, 150, 0)]);
+      if (o.pts.length < (f.type === 'area' ? 3 : 2)) return null;
+      if (f.type !== 'area') o.w = num(f.w, 0.1, 20, 1);
+    } else {
+      o.x = num(f.x, -50, 150, 50); o.y = num(f.y, -50, 150, 50);
+      if (f.type !== 'down' && f.type !== 'pendant' && f.type !== 'under') o.a = num(f.a, -360, 360, 0);
+      if (f.type === 'flood' || f.type === 'spot') { o.len = num(f.len, 1, 400, 30); o.spread = num(f.spread, 1, 179, 40); }
+      else o.r = num(f.r, 0.5, 200, 6);
+    }
+    return o;
+  }).filter(Boolean);
+}
 function cleanConfig(body) {
   if (!body || !Array.isArray(body.decks) || !Array.isArray(body.scenes)) throw Object.assign(new Error('Layout must have decks and scenes'), { status: 400 });
   const decks = body.decks.slice(0, 20).map((d) => ({
     id: str(d.id, 40), name: str(d.name, 60), fr: str(d.fr, 60), img: str(d.img, 200), r: num(d.r, 0.2, 20, 4), note: str(d.note, 600),
     ru: cleanRu(d.ru, [['name', 60], ['note', 600]]),
+    ...(d.hidden ? { hidden: true } : {}),
     circuits: (Array.isArray(d.circuits) ? d.circuits : []).slice(0, 200).map((c) => {
       const o = {
         id: str(c.id, 40), label: str(c.label, 12), name: str(c.name, 60), ref: str(c.ref, 80), tag: str(c.tag, 20),
         def: num(c.def, 0, 100, 50), on: !!c.on,
-        z: (Array.isArray(c.z) ? c.z : []).slice(0, 40).map((p) => (Array.isArray(p) ? p : []).slice(0, 60).map((q) => [num(q && q[0], 0, 100, 0), num(q && q[1], 0, 100, 0)])),
+        fx: cleanFx(c),
         lutron: { zones: ((c.lutron && Array.isArray(c.lutron.zones)) ? c.lutron.zones : []).map((z) => str(z, 12).replace(/[^0-9]/g, '')).filter(Boolean).slice(0, 32) }
       };
       if (c.ni) o.ni = true;
