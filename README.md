@@ -210,3 +210,11 @@ keypad.
 | POST | `/api/alloff` | – |
 
 Admin routes (`/api/config`, `/api/lutron/*`) need the admin session cookie.
+
+## Fixture view concept demo
+
+`prototypes/fixtures/index.html` is a stand-alone concept for showing real fixture
+types on the deck plans (floodlights, spotlights, downlights, pendants, wall and step
+lights, underwater lights, LED strips, neon and areas), with an admin editor to place,
+move, resize and aim them. Build a self-contained copy with `npm run build-fixture-demo`
+(writes `prototypes/fixtures/dist/index.html`). It is not wired to the server yet.

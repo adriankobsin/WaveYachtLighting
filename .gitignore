@@ -3,3 +3,4 @@ data/
 test-data/
 demo/dist/
 .DS_Store
+prototypes/fixtures/dist/

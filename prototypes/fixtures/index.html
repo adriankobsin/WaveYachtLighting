@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Albatross lighting — fixture view demo</title>
+<style>
+:root{--bg:#0B1622;--panel:#112131;--panel2:#0F1E2D;--rail:#0E1B28;--line:#22344A;--line2:#3A5069;--text:#E7EEF5;--muted:#9FB2C6;--amber:#F2B45A}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif}
+button,input,select{font:inherit;color:inherit}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 20px;background:var(--rail);border-bottom:1px solid var(--line)}
+.brand b{font-weight:600;letter-spacing:.12em}.brand small{color:var(--muted);margin-left:10px}
+.seg{display:inline-flex;border:1px solid var(--line2);border-radius:10px;overflow:hidden}
+.seg button{border:none;background:transparent;padding:0 16px;height:40px;cursor:pointer;font-weight:600;font-size:14px;color:#C9D6E3}
+.seg button.on{background:var(--amber);color:#0B1622}
+.btn{height:38px;padding:0 12px;border-radius:9px;border:1px solid var(--line2);background:#16283A;display:inline-flex;align-items:center;gap:6px;font-weight:600;font-size:13px;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:#5B7390}.btn.danger{border-color:#8A4B4B;color:#F3C1C1}.btn.on{border-color:var(--amber);color:var(--amber)}
+main{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pal{display:flex;gap:6px;flex-wrap:wrap}
+.pal button{width:78px;height:64px;border-radius:10px;border:1px solid var(--line2);background:#0D1A27;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;font-size:11px;color:#C9D6E3;padding:2px}
+.pal button svg{width:34px;height:34px}
+.pal button.on{border-color:var(--amber);background:#1C3047;color:#fff}
+.wrap{position:relative;overflow:auto;border:1px solid var(--line);border-radius:14px;background:#07111B}
+.wrap svg{display:block;width:100%;touch-action:none;user-select:none;-webkit-user-select:none}
+.wrap.tool svg{cursor:crosshair}
+.hint{font-size:13px;color:var(--muted);min-height:18px}
+.cols{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px}
+@media(max-width:900px){.cols{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.card h3{margin:0 0 10px;font-size:15px;font-weight:600}
+.crow{display:grid;grid-template-columns:minmax(0,1fr) 64px 150px 42px;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--line)}
+.crow:first-of-type{border-top:none}
+.crow b{font-size:14px;font-weight:600}.crow small{display:block;color:var(--muted);font-size:12px;margin-top:2px}
+.tg{height:32px;border-radius:16px;border:1px solid var(--line2);background:#0D1A27;font-size:12px;font-weight:600;cursor:pointer}
+.tg.on{background:var(--amber);border-color:var(--amber);color:#0B1622}
+input[type=range]{accent-color:var(--amber);width:100%}
+.val{font-size:13px;color:var(--muted);text-align:right}
+.field{display:grid;grid-template-columns:110px minmax(0,1fr) 48px;gap:10px;align-items:center;margin:8px 0;font-size:13px}
+.field label{color:var(--muted)}
+.field select{height:34px;border-radius:8px;border:1px solid var(--line2);background:#0D1A27;padding:0 8px;grid-column:span 2}
+.sw{display:flex;gap:6px;flex-wrap:wrap;grid-column:span 2;align-items:center}
+.sw button{width:26px;height:26px;border-radius:50%;border:2px solid transparent;cursor:pointer}
+.sw button.on{border-color:#fff}
+.sw input[type=color]{width:30px;height:28px;border:none;background:none;padding:0;cursor:pointer}
+.help{font-size:13px;color:var(--muted);line-height:1.6;margin:0;padding-left:18px}
+.pop{position:absolute;z-index:5;width:250px;background:#132638;border:1px solid var(--line2);border-radius:12px;padding:12px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.pop .ph{display:flex;justify-content:space-between;gap:8px;margin-bottom:10px}
+.pop .ph b{font-size:14px}.pop .ph small{display:block;color:var(--muted);font-size:12px}
+.pop .x{border:none;background:none;color:var(--muted);font-size:18px;cursor:pointer;height:24px}
+.pop .r{display:grid;grid-template-columns:56px minmax(0,1fr) 40px;gap:8px;align-items:center}
+.fx .glow{transition:opacity 1.2s ease;pointer-events:none}
+svg.fast .fx .glow{transition:opacity .15s linear}
+.fx .sym *{fill:#0B1622;stroke:#7D90A6;stroke-width:1.3px;vector-effect:non-scaling-stroke;transition:fill .6s,stroke .6s}
+.fx.on .sym *{fill:var(--c);stroke:var(--c)}
+.fx.line .sym *,.fx.poly .sym *{fill:none;vector-effect:none;stroke-dasharray:4 3}
+.fx.line.on .sym *{stroke-dasharray:none;stroke:var(--c);fill:none}
+.fx.neon .sym *{stroke:#34465A;stroke-dasharray:none}
+.fx.neon.on .sym *{stroke:var(--c)}
+.fx.poly.on .sym *{fill:none;stroke:var(--c);stroke-opacity:.5}
+.fx.sel .sym *{stroke:#fff}
+.fx .core{pointer-events:none}
+.hit{fill:transparent;stroke:transparent;cursor:pointer}
+.hd{cursor:grab}
+.note{font-size:12px;color:var(--muted)}
+</style></head>
+<body>
+<header>
+  <div class="brand"><b>WAVE · MY ALBATROSS</b><small>Fixture view — concept demo</small></div>
+  <div class="seg" id="decks"></div>
+  <div class="seg" id="modes"><button data-m="crew">Crew</button><button data-m="admin">Admin</button></div>
+</header>
+<main>
+  <div class="bar" id="pal"></div>
+  <div class="bar">
+    <span class="note" id="zoomlbl"></span>
+    <button class="btn" id="zout" aria-label="Zoom out">−</button><button class="btn" id="zin" aria-label="Zoom in">+</button>
+    <button class="btn danger" id="reset" hidden>Reset demo layout</button>
+    <span style="flex:1"></span>
+    <span class="bar" id="scenes"></span>
+  </div>
+  <div class="wrap" id="wrap"><svg id="svg" xmlns="http://www.w3.org/2000/svg"></svg><div class="pop" id="pop" hidden></div></div>
+  <div class="hint" id="hint"></div>
+  <div class="cols"><section class="card" id="circ"></section><section class="card" id="insp"></section></div>
+</main>
+<script>
+const IMG={sundeck:'__IMG_sundeck__',main:'__IMG_main__'};
+const DECKS=[{id:'sundeck',name:'Sundeck',w:696,h:273,m:60,k:1},{id:'main',name:'Main deck',w:1590,h:306,m:100,k:1.5}];
+const COLS=[['#FFB869','2700K'],['#FFC98A','3000K'],['#FFE9C9','4000K'],['#E3F0FF','6000K'],['#3FB4FF','Blue'],['#4FE6D8','Aqua'],['#FF5FA2','Pink'],['#9B7BFF','Violet']];
+const TYPES={
+  flood:{n:'Floodlight',fam:'pt',kind:'beam',d:{a:0,len:90,spread:50,col:'#FFE9C9'}},
+  spot:{n:'Spotlight',fam:'pt',kind:'beam',d:{a:0,len:50,spread:18,col:'#FFC98A'}},
+  down:{n:'Downlight',fam:'pt',kind:'pool',d:{r:16,col:'#FFC98A'}},
+  pendant:{n:'Pendant',fam:'pt',kind:'pool',d:{r:17,col:'#FFB869'}},
+  wall:{n:'Wall light',fam:'pt',kind:'half',d:{a:0,r:20,col:'#FFC98A'}},
+  step:{n:'Step light',fam:'pt',kind:'half',d:{a:90,r:7,col:'#FFE9C9'}},
+  under:{n:'Underwater',fam:'pt',kind:'pool',d:{r:22,col:'#3FB4FF'}},
+  strip:{n:'LED strip',fam:'line',kind:'line',d:{w:2,col:'#FFD9A0'}},
+  neon:{n:'Neon',fam:'line',kind:'line',d:{w:3.5,col:'#FF5FA2'}},
+  area:{n:'Area',fam:'area',kind:'poly',d:{c:'#FFC98A'}}
+};
+const CIRC={
+  sundeck:[['GR7','Aft perimeter & funnel'],['GR30','Lounge & bar spots'],['DL31','Deck downlights'],['OL1','Owner lights'],['LED33','Jacuzzi lounge LED strip'],['P01','Forward floods P/S'],['PD1','Dining pendants (example)'],['NE1','Bar neon (example)'],['UW1','Jacuzzi underwater (example)']],
+  main:[['GR28','Swim platform & garage'],['GR27','Aft quarters P/S'],['GR26','Port tender bay'],['GR25','Starboard tender bay'],['GR24','Port side deck & gangway'],['GR23','Stbd side deck & gangway'],['GR11','Port floodlight'],['GR12','Aft port floodlight'],['GR13','Starboard floodlight'],['GR14','Aft starboard floodlight']]
+};
+const clone=o=>JSON.parse(JSON.stringify(o));
+let uid=1;
+function F(deck,c,type,o){return Object.assign({id:'f'+(uid++),deck,c,type},clone(TYPES[type].d),o)}
+function defaults(){
+  uid=1;const s='sundeck',m='main',L=[];
+  L.push(F(s,'P01','flood',{x:602,y:28,a:-20,len:100,spread:46}),F(s,'P01','flood',{x:602,y:245,a:20,len:100,spread:46}));
+  [[60,70],[60,205],[115,70],[115,205]].forEach(([x,y])=>L.push(F(s,'GR7','down',{x,y,r:18})));
+  [168,180,192,204].forEach(x=>L.push(F(s,'GR7','step',{x,y:90})));
+  L.push(F(s,'GR30','spot',{x:468,y:118,a:190,len:46,spread:20}),F(s,'GR30','spot',{x:468,y:150,a:170,len:46,spread:20}));
+  [360,400,440].forEach(x=>L.push(F(s,'GR30','down',{x,y:60,r:15})));
+  [[500,30],[545,30],[590,30],[500,243],[545,243],[590,243],[588,134]].forEach(([x,y])=>L.push(F(s,'DL31','down',{x,y,r:16})));
+  L.push(F(s,'OL1','wall',{x:474,y:62,a:0,r:22}),F(s,'OL1','wall',{x:474,y:212,a:0,r:22}));
+  L.push(F(s,'LED33','strip',{pts:[[513,110],[559,110],[559,158],[513,158],[513,110]]}),F(s,'LED33','strip',{pts:[[488,80],[572,80]]}));
+  L.push(F(s,'UW1','under',{x:536,y:134,r:19}));
+  [350,375,400,425].forEach(x=>L.push(F(s,'PD1','pendant',{x,y:194,r:16})));
+  L.push(F(s,'NE1','neon',{pts:[[368,101],[359,113],[356,127],[356,141],[359,155],[368,166]]}));
+  L.push(F(m,'GR11','flood',{x:760,y:16,a:-90,len:85,spread:55}),F(m,'GR12','flood',{x:150,y:28,a:-130,len:85,spread:55}),F(m,'GR13','flood',{x:760,y:290,a:90,len:85,spread:55}),F(m,'GR14','flood',{x:150,y:278,a:130,len:85,spread:55}));
+  [480,545,750,820,890,960,1030].forEach(x=>{L.push(F(m,'GR24','down',{x,y:30,r:22}));L.push(F(m,'GR23','down',{x,y:277,r:22}))});
+  [622,640,658,676].forEach(x=>{L.push(F(m,'GR24','step',{x,y:12,a:-90,r:9}));L.push(F(m,'GR23','step',{x,y:294,a:90,r:9}))});
+  [300,365,430].forEach(x=>L.push(F(m,'GR26','down',{x,y:52,r:24})));
+  [275,360,445].forEach(x=>L.push(F(m,'GR25','down',{x,y:240,r:24})));
+  L.push(F(m,'GR28','under',{x:-30,y:100,r:40}),F(m,'GR28','under',{x:-30,y:206,r:40}),F(m,'GR28','down',{x:45,y:120,r:16}),F(m,'GR28','down',{x:45,y:188,r:16}));
+  L.push(F(m,'GR27','wall',{x:135,y:46,a:90,r:26}),F(m,'GR27','wall',{x:135,y:262,a:-90,r:26}));
+  return {fx:L,lv:{GR7:50,GR30:70,DL31:0,OL1:60,LED33:100,P01:0,PD1:80,NE1:100,UW1:90,GR28:100,GR27:50,GR26:60,GR25:0,GR24:70,GR23:0,GR11:0,GR12:0,GR13:80,GR14:0},last:{}};
+}
+const KEY='wl-fixture-demo-v2';
+let D;try{D=JSON.parse(localStorage.getItem(KEY))}catch(e){}
+if(!D||!D.fx)D=defaults();
+uid=D.fx.reduce((m,f)=>Math.max(m,+f.id.slice(1)||0),0)+1;
+const S={deck:'sundeck',mode:'crew',sel:null,tool:null,draw:null,zoom:{sundeck:1,main:1},newc:{},pop:null,drag:null};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(D))}catch(e){}}
+const $=id=>document.getElementById(id);
+const svg=$('svg'),wrap=$('wrap'),pop=$('pop');
+const deck=()=>DECKS.find(d=>d.id===S.deck);
+const fxById=id=>D.fx.find(f=>f.id===id);
+const deckFx=()=>D.fx.filter(f=>f.deck===S.deck);
+const cName=id=>{for(const k in CIRC)for(const c of CIRC[k])if(c[0]===id)return c[1];return id};
+const lv=c=>D.lv[c]||0;
+const glowOp=L=>L<=0?0:+(0.12+0.88*Math.pow(L/100,.8)).toFixed(3);
+const esc=s=>String(s).replace(/[&<>"]/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+const r2=n=>Math.round(n*10)/10;
+const scale=()=>{const m=svg.getScreenCTM();return m?m.a:1};
+
+function grad(id,c,r,cx=0,cy=0,mid=.45){return `<radialGradient id="${id}" gradientUnits="userSpaceOnUse" cx="${cx}" cy="${cy}" r="${r}"><stop offset="0" stop-color="${c}" stop-opacity=".95"/><stop offset="${mid}" stop-color="${c}" stop-opacity=".6"/><stop offset="1" stop-color="${c}" stop-opacity="0"/></radialGradient>`}
+function fxSvg(f,o={}){
+  const t=TYPES[f.type],k=o.k||deck().k,L=o.lv!=null?o.lv:lv(f.c),on=L>0,gid=(o.p||'g')+f.id,hitR=o.hit===false?0:12/(o.sc||scale());
+  let glow='',sym='',hit='',open='',close='';
+  if(t.fam==='pt'){open=`<g transform="translate(${f.x} ${f.y}) rotate(${f.a||0})">`;close='</g>'}
+  if(t.kind==='beam'){
+    const s=f.spread/2*Math.PI/180,x=f.len*Math.cos(s),y=f.len*Math.sin(s);
+    glow=grad(gid,f.col,f.len,0,0,.4)+`<path d="M0 0L${x} ${-y}A${f.len} ${f.len} 0 0 1 ${x} ${y}Z" fill="url(#${gid})"/>`;
+    if(f.type==='spot')glow+=grad(gid+'p',f.col,Math.max(y,4),f.len*.82,0,.5)+`<ellipse cx="${f.len*.82}" cy="0" rx="${f.len*.16}" ry="${Math.max(y,4)}" fill="url(#${gid}p)"/>`;
+    sym=f.type==='flood'?`<rect x="${-3*k}" y="${-4*k}" width="${6*k}" height="${8*k}" rx="${k}"/>`:`<circle r="${2.4*k}"/><rect x="${1.4*k}" y="${-1.5*k}" width="${3.6*k}" height="${3*k}"/>`;
+  }else if(t.kind==='pool'){
+    glow=grad(gid,f.col,f.r)+`<circle r="${f.r}" fill="url(#${gid})"/>`;
+    if(f.type==='under')glow+=`<circle r="${f.r*.6}" fill="none" stroke="${f.col}" stroke-opacity=".5" stroke-width="${.8*k}"/>`;
+    sym=f.type==='pendant'?`<circle r="${3.2*k}"/><circle r="${1.2*k}"/>`:f.type==='under'?`<circle r="${2.6*k}"/><path d="M${-1.6*k} 0q${.8*k} ${-1*k} ${1.6*k} 0t${1.6*k} 0"/>`:`<circle r="${2.2*k}"/>`;
+  }else if(t.kind==='half'){
+    glow=grad(gid,f.col,f.r)+`<path d="M0 ${-f.r}A${f.r} ${f.r} 0 0 1 0 ${f.r}Z" fill="url(#${gid})"/>`;
+    sym=f.type==='wall'?`<rect x="${-2*k}" y="${-3.6*k}" width="${2.6*k}" height="${7.2*k}" rx="${.6*k}"/>`:`<rect x="${-.9*k}" y="${-2.4*k}" width="${1.8*k}" height="${4.8*k}"/>`;
+  }else if(t.kind==='line'){
+    const p=f.pts.map(q=>q.join(',')).join(' ');
+    glow=`<polyline points="${p}" fill="none" stroke="${f.col}" stroke-width="${f.w*(f.type==='neon'?3:4)}" stroke-opacity=".6" stroke-linecap="round" stroke-linejoin="round" filter="url(#${o.p||''}bl)"/>`;
+    if(f.type==='neon')glow=`<polyline points="${p}" fill="none" stroke="${f.col}" stroke-width="${f.w*7}" stroke-opacity=".4" stroke-linecap="round" stroke-linejoin="round" filter="url(#${o.p||''}bl2)"/>`+glow+`<polyline class="core" points="${p}" fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="${f.w*.35}" stroke-linecap="round" stroke-linejoin="round"/>`;
+    sym=`<polyline points="${p}" style="stroke-width:${f.w}px;stroke-linecap:round;stroke-linejoin:round"/>`;
+    if(hitR)hit=`<polyline class="hit" points="${p}" style="stroke-width:${hitR*2}px;fill:none;stroke-linecap:round"/>`;
+  }else{
+    const p=f.pts.map(q=>q.join(',')).join(' ');
+    glow=`<polygon points="${p}" fill="${f.col}" fill-opacity=".35" filter="url(#${o.p||''}bl)"/>`;
+    sym=`<polygon points="${p}" style="stroke-width:1px"/>`;
+    if(hitR)hit=`<polygon class="hit" points="${p}"/>`;
+  }
+  if(t.fam==='pt'&&hitR)hit=`<circle class="hit" r="${hitR}"/>`;
+  return `<g class="fx ${t.kind} ${f.type}${on?' on':''}${S.sel===f.id&&!o.p?' sel':''}" data-id="${f.id}" style="--c:${f.col}">${open}<g class="glow" style="opacity:${glowOp(L)}">${glow}</g><g class="sym">${sym}</g>${hit}${close}</g>`;
+}
+function icon(type){
+  const t=TYPES[type],f=Object.assign({id:'i'+type,type},clone(t.d));
+  const P={flood:{x:7,y:17,a:0,len:24,spread:56},spot:{x:7,y:17,a:0,len:24,spread:24},down:{x:17,y:17,r:12},pendant:{x:17,y:17,r:13},wall:{x:9,y:17,a:0,r:17},step:{x:17,y:8,a:90,r:14},under:{x:17,y:17,r:13},strip:{pts:[[5,24],[17,11],[29,24]],w:2},neon:{pts:[[5,20],[10,12],[15,22],[20,12],[25,22],[29,14]],w:2},area:{pts:[[6,8],[28,8],[28,26],[6,26]]}};
+  Object.assign(f,P[type]);
+  return `<svg viewBox="0 0 34 34"><defs><filter id="i${type}bl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.4"/></filter><filter id="i${type}bl2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5"/></filter></defs>${fxSvg(f,{lv:100,k:1.1,p:'i'+type,hit:false})}</svg>`;
+}
+
+function renderBase(){
+  const d=deck(),vb=[-d.m,-d.m,d.w+2*d.m,d.h+2*d.m];
+  svg.setAttribute('viewBox',vb.join(' '));
+  svg.style.width=(100*S.zoom[d.id])+'%';
+  svg.innerHTML=`<defs><filter id="bl" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${2.2*d.k}"/></filter><filter id="bl2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="${4.5*d.k}"/></filter></defs>
+  <rect x="${vb[0]}" y="${vb[1]}" width="${vb[2]}" height="${vb[3]}" fill="#07111B"/>
+  <image href="${IMG[d.id]}" x="0" y="0" width="${d.w}" height="${d.h}" opacity=".5"/>
+  <g id="fxl"></g><g id="drawl"></g><g id="hl"></g>`;
+  renderFx();
+}
+function renderFx(){
+  const l=$('fxl');if(!l)return;
+  const sc=scale();
+  l.innerHTML=deckFx().sort((a,b)=>(TYPES[a.type].fam==='area'?-1:0)-(TYPES[b.type].fam==='area'?-1:0)).map(f=>fxSvg(f,{sc})).join('');
+  renderHandles();
+}
+function applyLevels(){
+  document.querySelectorAll('#fxl .fx').forEach(el=>{const f=fxById(el.dataset.id);if(!f)return;const L=lv(f.c);el.classList.toggle('on',L>0);el.querySelector('.glow').style.opacity=glowOp(L)});
+}
+function hd(x,y,h,R,kind){
+  const fill=kind==='spread'?'#F2B45A':kind==='mid'?'rgba(255,255,255,.35)':'#fff';
+  return `<circle class="hd" data-h="${h}" cx="${x}" cy="${y}" r="${kind==='mid'?R*.75:R}" fill="${fill}" stroke="#F2B45A" stroke-width="${R*.35}"/>`;
+}
+function renderHandles(){
+  const hl=$('hl');if(!hl)return;
+  const f=S.sel&&fxById(S.sel);
+  if(S.mode!=='admin'||!f||f.deck!==S.deck){hl.innerHTML='';return}
+  const t=TYPES[f.type],sc=scale(),R=6/sc;let h='';
+  const rad=a=>a*Math.PI/180;
+  if(t.fam==='pt'){
+    h+=`<circle cx="${f.x}" cy="${f.y}" r="${14/sc}" fill="none" stroke="#fff" stroke-dasharray="${3/sc} ${3/sc}" stroke-width="${1.2/sc}" pointer-events="none"/>`;
+    if(t.kind==='beam'){
+      const a=rad(f.a),s=rad(f.spread/2);
+      h+=`<line x1="${f.x}" y1="${f.y}" x2="${f.x+f.len*Math.cos(a)}" y2="${f.y+f.len*Math.sin(a)}" stroke="#fff" stroke-opacity=".6" stroke-dasharray="${4/sc} ${3/sc}" stroke-width="${1/sc}" pointer-events="none"/>`;
+      h+=hd(f.x+f.len*Math.cos(a),f.y+f.len*Math.sin(a),'tip',R)+hd(f.x+f.len*Math.cos(a+s),f.y+f.len*Math.sin(a+s),'spread',R,'spread');
+    }else if(t.kind==='half'){const a=rad(f.a);h+=hd(f.x+f.r*Math.cos(a),f.y+f.r*Math.sin(a),'tip',R)}
+    else h+=hd(f.x+f.r,f.y,'r',R);
+  }else{
+    const P=f.pts,closed=t.fam==='area';
+    for(let i=0;i<P.length-(closed?0:1);i++){const a=P[i],b=P[(i+1)%P.length];h+=hd((a[0]+b[0])/2,(a[1]+b[1])/2,'m:'+i,R,'mid')}
+    P.forEach((p,i)=>h+=hd(p[0],p[1],'v:'+i,R));
+  }
+  hl.innerHTML=h;
+}
+function renderDraw(mouse){
+  const l=$('drawl');if(!l)return;
+  if(!S.draw){l.innerHTML='';return}
+  const sc=scale(),pts=S.draw.pts.concat(mouse?[mouse]:[]);
+  l.innerHTML=`<polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="#F2B45A" stroke-width="${2/sc}" stroke-dasharray="${5/sc} ${4/sc}"/>`+S.draw.pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="${4/sc}" fill="#F2B45A"/>`).join('');
+}
+
+function renderHeader(){
+  $('decks').innerHTML=DECKS.map(d=>`<button data-d="${d.id}" class="${d.id===S.deck?'on':''}">${d.name}</button>`).join('');
+  document.querySelectorAll('#modes button').forEach(b=>b.classList.toggle('on',b.dataset.m===S.mode));
+  $('reset').hidden=S.mode!=='admin';
+  $('zoomlbl').textContent='Zoom '+Math.round(S.zoom[S.deck]*100)+'%';
+  $('scenes').innerHTML=`<span class="note">Scenes</span>`+[['off','All off'],['evening','Evening'],['full','Full']].map(([k,n])=>`<button class="btn" data-sc="${k}">${n}</button>`).join('');
+}
+function newCircuit(){return S.newc[S.deck]||CIRC[S.deck][0][0]}
+function renderPal(){
+  const p=$('pal');
+  if(S.mode!=='admin'){p.innerHTML='';p.hidden=true;return}
+  p.hidden=false;
+  p.innerHTML=`<div class="pal">${Object.keys(TYPES).map(k=>`<button data-t="${k}" class="${S.tool===k?'on':''}" title="Add ${TYPES[k].n}">${icon(k)}<span>${TYPES[k].n}</span></button>`).join('')}</div>
+  <div class="field" style="margin:0 0 0 8px;grid-template-columns:auto 220px"><label>New fixtures go on</label><select id="newc">${CIRC[S.deck].map(c=>`<option value="${c[0]}"${c[0]===newCircuit()?' selected':''}>${c[0]} · ${esc(c[1])}</option>`).join('')}</select></div>
+`;
+}
+function counts(cid){
+  const m={};deckFx().filter(f=>f.c===cid).forEach(f=>{const n=TYPES[f.type].n;m[n]=(m[n]||0)+1});
+  return Object.entries(m).map(([n,c])=>c+' × '+n.toLowerCase()).join(' · ')||'No fixtures yet';
+}
+function renderCirc(){
+  $('circ').innerHTML=`<h3>${deck().name} circuits</h3>`+CIRC[S.deck].map(([id,n])=>{const L=lv(id);return `<div class="crow"><div><b>${id} · ${esc(n)}</b><small>${counts(id)}</small></div><button class="tg${L>0?' on':''}" data-tog="${id}">${L>0?'On':'Off'}</button><input type="range" min="0" max="100" step="1" value="${L}" data-lv="${id}" aria-label="${id} level"><span class="val" data-v="${id}">${L}%</span></div>`}).join('');
+}
+function renderInsp(){
+  const el=$('insp');
+  if(S.mode!=='admin'){el.innerHTML=`<h3>How it works</h3><ul class="help"><li>Every fitting from the lighting drawing is shown the way it lights the deck: floodlight and spotlight beams, downlight and pendant pools, wall and step lights, LED strips, neon and underwater lights.</li><li>Fixtures that are off stay visible as grey outlines, so the crew can see what's there.</li><li>Tap any fixture on the plan to switch or dim its circuit right there.</li><li>Lights fade on screen at the same speed as the Lutron fade.</li><li>Switch to <b>Admin</b> to add, move, resize and aim fixtures.</li></ul>`;return}
+  const f=S.sel&&fxById(S.sel);
+  if(!f){el.innerHTML=`<h3>Fixture editor</h3><ul class="help"><li>Pick a fixture type in the toolbar above, then click on the plan to place it. Point fixtures stay armed so you can place a row in one go. Press Esc to stop.</li><li>LED strip, neon and area: click to add points along the path, then double-click or press Enter to finish.</li><li>Click a fixture to select it. Drag it to move it.</li><li>White handle: drag to aim and set the reach (beams, wall lights) or the size (pools).</li><li>Amber handle on beams: drag to make the beam wider or narrower.</li><li>Strips: drag the points; drag a faint middle handle to add a bend; double-click a point to remove it.</li><li>Keys: arrows nudge, Ctrl+D duplicates, Delete removes.</li></ul>`;return}
+  const t=TYPES[f.type],fam=Object.keys(TYPES).filter(k=>TYPES[k].fam===t.fam);
+  const sl=(lab,key,min,max,step,unit='')=>`<div class="field"><label>${lab}</label><input type="range" min="${min}" max="${max}" step="${step}" value="${f[key]}" data-f="${key}"><span class="val" data-fv="${key}">${r2(f[key])}${unit}</span></div>`;
+  let h=`<h3>${t.n} · ${f.c}</h3>
+  <div class="field"><label>Type</label><select data-f="type">${fam.map(k=>`<option value="${k}"${k===f.type?' selected':''}>${TYPES[k].n}</option>`).join('')}</select></div>
+  <div class="field"><label>Circuit</label><select data-f="c">${CIRC[S.deck].map(c=>`<option value="${c[0]}"${c[0]===f.c?' selected':''}>${c[0]} · ${esc(c[1])}</option>`).join('')}</select></div>
+  <div class="field"><label>Colour</label><div class="sw">${COLS.map(([c,n])=>`<button title="${n}" style="background:${c}" data-col="${c}" class="${c.toLowerCase()===f.col.toLowerCase()?'on':''}"></button>`).join('')}<input type="color" value="${f.col}" data-f="c_col" title="Custom colour"></div></div>`;
+  if(t.kind==='beam')h+=sl('Direction','a',-180,180,1,'°')+sl('Reach','len',8,300,1)+sl('Beam width','spread',4,170,1,'°');
+  if(t.kind==='half')h+=sl('Direction','a',-180,180,1,'°')+sl('Size','r',3,120,1);
+  if(t.kind==='pool')h+=sl('Size','r',3,120,1);
+  if(t.kind==='line')h+=sl('Thickness','w',.5,10,.5);
+  h+=`<div class="bar" style="margin-top:12px"><button class="btn" id="dup">Duplicate</button><button class="btn danger" id="del">Delete</button></div>`;
+  el.innerHTML=h;
+}
+function hint(){
+  let h='';
+  if(S.mode==='admin'){
+    if(S.draw)h=`Drawing ${TYPES[S.draw.type].n.toLowerCase()}: click to add points · double-click or Enter to finish · Esc to cancel`;
+    else if(S.tool)h=`Click on the plan to place a ${TYPES[S.tool].n.toLowerCase()} on ${newCircuit()}${TYPES[S.tool].fam==='pt'?' · Esc to stop':''}`;
+    else h='Admin: select a fixture to move, resize or aim it. Changes in this demo save in your browser only.';
+  }else h='Tap a fixture on the plan to control its circuit.';
+  $('hint').textContent=h;
+  wrap.classList.toggle('tool',!!S.tool);
+}
+function renderAll(){renderHeader();renderPal();renderBase();renderCirc();renderInsp();hint()}
+
+function setLevel(c,L,fast){
+  L=Math.max(0,Math.min(100,Math.round(L)));
+  if(L>0)D.last[c]=L;D.lv[c]=L;
+  svg.classList.toggle('fast',!!fast);
+  applyLevels();
+  document.querySelectorAll(`[data-tog="${c}"]`).forEach(tg=>{tg.classList.toggle('on',L>0);tg.textContent=L>0?'On':'Off'});
+  document.querySelectorAll(`[data-lv="${c}"]`).forEach(r=>{if(+r.value!==L)r.value=L});
+  document.querySelectorAll(`[data-v="${c}"]`).forEach(v=>v.textContent=L+'%');
+  save();
+}
+function toggle(c){setLevel(c,lv(c)>0?0:(D.last[c]||100))}
+function scene(k){
+  svg.classList.remove('fast');
+  CIRC[S.deck].forEach(([c])=>{
+    const ts=deckFx().filter(f=>f.c===c).map(f=>f.type),flood=ts.length&&ts.every(t=>t==='flood');
+    setLevel(c,k==='off'?0:k==='full'?100:(flood?0:ts.includes('under')||ts.includes('neon')?90:60));
+  });
+}
+
+function openPop(id){const f=fxById(id);S.pop=f.c;S.popAt=[f.x!=null?f.x:f.pts[0][0],f.y!=null?f.y:f.pts[0][1]];renderPop()}
+function renderPop(){
+  if(!S.pop){pop.hidden=true;return}
+  const c=S.pop,L=lv(c),m=svg.getScreenCTM(),p=svg.createSVGPoint();p.x=S.popAt[0];p.y=S.popAt[1];const q=p.matrixTransform(m),wr=wrap.getBoundingClientRect();
+  pop.hidden=false;
+  pop.innerHTML=`<div class="ph"><div><b>${c} · ${esc(cName(c))}</b><small>${counts(c)}</small></div><button class="x" aria-label="Close">×</button></div><div class="r"><button class="tg${L>0?' on':''}" data-tog="${c}">${L>0?'On':'Off'}</button><input type="range" min="0" max="100" step="1" value="${L}" data-lv="${c}" aria-label="Level"><span class="val" data-v="${c}">${L}%</span></div>`;
+  let x=q.x-wr.left+wrap.scrollLeft+14,y=q.y-wr.top+wrap.scrollTop+14;
+  x=Math.min(x,wrap.scrollLeft+wrap.clientWidth-260);x=Math.max(x,wrap.scrollLeft+6);
+  if(y+110>wrap.scrollTop+wrap.clientHeight)y=Math.max(wrap.scrollTop+6,y-130);
+  pop.style.left=x+'px';pop.style.top=y+'px';
+}
+function closePop(){S.pop=null;pop.hidden=true}
+
+function svgPt(e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const q=p.matrixTransform(svg.getScreenCTM().inverse());return [r2(q.x),r2(q.y)]}
+function select(id){S.sel=id;renderFx();renderInsp()}
+function place(type,p){
+  const f=F(S.deck,newCircuit(),type,{x:p[0],y:p[1]});
+  const k=deck().k;if(f.r)f.r=r2(f.r*k);if(f.len)f.len=r2(f.len*k);
+  D.fx.push(f);if(!lv(f.c))setLevel(f.c,D.last[f.c]||80);
+  S.sel=f.id;save();renderFx();renderCirc();renderInsp();
+}
+function finishDraw(){
+  const d=S.draw;if(!d)return;
+  const sc=scale(),pts=[];d.pts.forEach(p=>{const l=pts[pts.length-1];if(!l||Math.hypot(p[0]-l[0],p[1]-l[1])*sc>4)pts.push(p)});
+  const need=TYPES[d.type].fam==='area'?3:2;
+  S.draw=null;S.tool=null;renderDraw();renderPal();
+  if(pts.length>=need){const f=F(S.deck,newCircuit(),d.type,{pts});if(f.w)f.w=r2(f.w*deck().k);D.fx.push(f);if(!lv(f.c))setLevel(f.c,D.last[f.c]||80);S.sel=f.id;save();renderFx();renderCirc();renderInsp()}
+  hint();
+}
+function cancelTool(){S.tool=null;S.draw=null;renderDraw();renderPal();hint()}
+
+svg.addEventListener('pointerdown',e=>{
+  if(e.button>0)return;
+  const p=svgPt(e),h=e.target.closest('[data-h]'),fe=e.target.closest('.fx');
+  if(S.mode==='admin'&&S.tool){
+    e.preventDefault();
+    if(TYPES[S.tool].fam==='pt')place(S.tool,p);
+    else{if(!S.draw)S.draw={type:S.tool,pts:[]};S.draw.pts.push(p);renderDraw(p);hint()}
+    return;
+  }
+  if(S.mode==='admin'&&h){
+    const f=fxById(S.sel);let mode=h.dataset.h;
+    if(mode.startsWith('m:')){const i=+mode.slice(2);f.pts.splice(i+1,0,p);mode='v:'+(i+1)}
+    S.drag={mode,id:f.id,start:p,o:clone(f)};svg.setPointerCapture(e.pointerId);renderHandles();return;
+  }
+  if(fe){
+    const id=fe.dataset.id;
+    if(S.mode==='crew'){openPop(id);return}
+    select(id);closePop();S.drag={mode:'move',id,start:p,o:clone(fxById(id))};svg.setPointerCapture(e.pointerId);return;
+  }
+  closePop();
+  if(S.mode==='admin'&&S.sel){S.sel=null;renderFx();renderInsp()}
+});
+svg.addEventListener('pointermove',e=>{
+  if(S.draw){renderDraw(svgPt(e));return}
+  const g=S.drag;if(!g)return;
+  const p=svgPt(e),f=fxById(g.id),o=g.o,dx=p[0]-g.start[0],dy=p[1]-g.start[1];
+  if(g.mode==='move'){if(o.pts)f.pts=o.pts.map(q=>[r2(q[0]+dx),r2(q[1]+dy)]);else{f.x=r2(o.x+dx);f.y=r2(o.y+dy)}}
+  else if(g.mode.startsWith('v:'))f.pts[+g.mode.slice(2)]=p;
+  else{
+    const vx=p[0]-f.x,vy=p[1]-f.y,d=Math.hypot(vx,vy),ang=Math.atan2(vy,vx)*180/Math.PI;
+    if(g.mode==='tip'){f.a=Math.round(ang);if(TYPES[f.type].kind==='beam')f.len=r2(Math.max(8,d));else f.r=r2(Math.max(3,d))}
+    else if(g.mode==='spread'){let df=((ang-f.a)%360+540)%360-180;f.spread=Math.round(Math.max(4,Math.min(170,Math.abs(df)*2)))}
+    else if(g.mode==='r')f.r=r2(Math.max(3,d));
+  }
+  renderFx();
+  if(g.mode!=='move')syncInsp(f);
+});
+function endDrag(){if(S.drag){S.drag=null;save();renderInsp()}}
+svg.addEventListener('pointerup',endDrag);svg.addEventListener('pointercancel',endDrag);
+svg.addEventListener('dblclick',e=>{
+  if(S.draw){e.preventDefault();finishDraw();return}
+  const h=e.target.closest('[data-h]');
+  if(S.mode==='admin'&&h&&h.dataset.h.startsWith('v:')){const f=fxById(S.sel),need=TYPES[f.type].fam==='area'?3:2;if(f.pts.length>need){f.pts.splice(+h.dataset.h.slice(2),1);save();renderFx()}}
+});
+function syncInsp(f){['a','len','spread','r','w'].forEach(k=>{const i=document.querySelector(`#insp [data-f="${k}"]`),v=document.querySelector(`#insp [data-fv="${k}"]`);if(i&&f[k]!=null){i.value=f[k];v.textContent=r2(f[k])+(k==='a'||k==='spread'?'°':'')}})}
+
+document.addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.d){S.deck=b.dataset.d;S.sel=null;cancelTool();closePop();renderAll();return}
+  if(b.dataset.m){S.mode=b.dataset.m;S.sel=null;S.tool=null;S.draw=null;closePop();renderAll();return}
+  if(b.dataset.t){if(S.tool===b.dataset.t)cancelTool();else{S.tool=b.dataset.t;S.draw=null;S.sel=null;renderFx();renderInsp();renderPal();hint()}return}
+  if(b.dataset.tog){toggle(b.dataset.tog);return}
+  if(b.dataset.sc){scene(b.dataset.sc);return}
+  if(b.dataset.col){const f=fxById(S.sel);f.col=b.dataset.col;save();renderFx();renderInsp();return}
+  if(b.classList.contains('x')){closePop();return}
+  if(b.id==='zin'||b.id==='zout'){const z=S.zoom[S.deck]*(b.id==='zin'?1.25:.8);S.zoom[S.deck]=Math.max(1,Math.min(4,z));svg.style.width=(100*S.zoom[S.deck])+'%';renderHeader();renderFx();closePop();return}
+  if(b.id==='dup')dup();
+  if(b.id==='del')del();
+  if(b.id==='reset'){if(confirmReset()){D=defaults();uid=D.fx.length+1;save();S.sel=null;renderAll()}}
+});
+function confirmReset(){const b=$('reset');if(b.dataset.arm){return true}b.dataset.arm=1;b.textContent='Click again to reset';setTimeout(()=>{if(b.isConnected){delete b.dataset.arm;b.textContent='Reset demo layout'}},3000);return false}
+function dup(){const f=fxById(S.sel);if(!f)return;const n=clone(f),o=6*deck().k;n.id='f'+(uid++);if(n.pts)n.pts=n.pts.map(q=>[q[0]+o,q[1]+o]);else{n.x+=o;n.y+=o}D.fx.push(n);S.sel=n.id;save();renderFx();renderCirc();renderInsp()}
+function del(){if(!S.sel)return;D.fx=D.fx.filter(f=>f.id!==S.sel);S.sel=null;save();renderFx();renderCirc();renderInsp()}
+document.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.dataset.lv){setLevel(t.dataset.lv,+t.value,true);return}
+  const f=S.sel&&fxById(S.sel);if(!f)return;
+  const k=t.dataset.f;if(!k)return;
+  if(k==='c_col'){f.col=t.value;renderFx();save();return}
+  if(k==='type'||k==='c')return;
+  f[k]=+t.value;const v=document.querySelector(`[data-fv="${k}"]`);if(v)v.textContent=r2(f[k])+(k==='a'||k==='spread'?'°':'');
+  renderFx();save();
+});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.id==='newc'){S.newc[S.deck]=t.value;hint();return}
+  if(t.dataset.lv){svg.classList.remove('fast');return}
+  const f=S.sel&&fxById(S.sel);if(!f)return;
+  if(t.dataset.f==='type'){const nd=TYPES[t.value].d;f.type=t.value;['len','spread','r'].forEach(k=>{if(nd[k]!=null&&f[k]==null)f[k]=nd[k]*deck().k});if(nd.a!=null&&f.a==null)f.a=nd.a;save();renderFx();renderCirc();renderInsp()}
+  if(t.dataset.f==='c'){f.c=t.value;save();renderFx();renderCirc();renderInsp()}
+  if(t.dataset.f==='c_col'){renderInsp()}
+});
+document.addEventListener('keydown',e=>{
+  if(S.mode!=='admin')return;
+  if(e.target.matches('input,select'))return;
+  if(e.key==='Escape'){if(S.draw||S.tool)cancelTool();else if(S.sel){S.sel=null;renderFx();renderInsp()}return}
+  if(e.key==='Enter'&&S.draw){finishDraw();return}
+  const f=S.sel&&fxById(S.sel);if(!f)return;
+  if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();del();return}
+  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='d'){e.preventDefault();dup();return}
+  const st=e.shiftKey?5:1,mv={ArrowLeft:[-st,0],ArrowRight:[st,0],ArrowUp:[0,-st],ArrowDown:[0,st]}[e.key];
+  if(mv){e.preventDefault();if(f.pts)f.pts=f.pts.map(q=>[q[0]+mv[0],q[1]+mv[1]]);else{f.x+=mv[0];f.y+=mv[1]}save();renderFx()}
+});
+window.addEventListener('resize',()=>{renderFx();if(S.pop)renderPop()});
+wrap.addEventListener('scroll',()=>{if(S.pop)renderPop()});
+renderAll();
+requestAnimationFrame(()=>renderFx());
+</script>
+</body></html>

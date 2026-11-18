@@ -8,7 +8,8 @@
     "set-password": "node scripts/set-password.js",
     "fetch-certs": "node scripts/fetch-lap-certs.js",
     "mock-processor": "node test/mock-processor.js",
-    "build-demo": "node scripts/build-demo.js"
+    "build-demo": "node scripts/build-demo.js",
+    "build-fixture-demo": "node scripts/build-fixture-demo.js"
   },
   "license": "UNLICENSED",
   "dependencies": {
